@@ -12,11 +12,11 @@ import com.example.raphaelattali.rythmrun.music.Music;
 
 public interface MusicPlayerInterface {
     //jouer la musique qui se trouve à fileName
-    public void playMusic(String fileName);
+    void playMusic(String fileName);
 
     //jouer le morceau donné en paramètre
-    public void playMusic(Music music);
+    void playMusic(Music music);
 
     //arrêter la musique
-    public void stopMusic();
+    void stopMusic();
 }

@@ -5,4 +5,6 @@ package com.example.raphaelattali.rythmrun.interfaces.sensors;
  */
 
 public interface TemperatureInterface {
+    // Renvoie la température en degrés Celsius
+    int getTemperature();
 }

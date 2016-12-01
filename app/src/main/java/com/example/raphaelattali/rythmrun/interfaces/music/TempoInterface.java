@@ -15,10 +15,10 @@ public interface TempoInterface {
     /**
      * On peut récupérer la musique dans un fichier fileName et renvoyer son tempo en bmp
      */
-    public float determineTempoOf(String fileName);
+    float determineTempoOf(String fileName);
 
     /**
      * On peut récupérer une musique de classe Music et renvoyer son tempo en bmp
      */
-    public float determineTempoOf(Music music);
+    float determineTempoOf(Music music);
 }

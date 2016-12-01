@@ -12,5 +12,5 @@ import com.example.raphaelattali.rythmrun.music.Music;
 
 public interface AudioWarningsInterface {
     // Renvoie un message audio, à partir de l'alerte numérotée warningNumber
-    public Music generateAudioWarning(int warningNumber);
+    Music generateAudioWarning(int warningNumber);
 }

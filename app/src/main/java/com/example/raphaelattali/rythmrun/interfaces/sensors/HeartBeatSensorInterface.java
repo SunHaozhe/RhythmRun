@@ -5,6 +5,10 @@ package com.example.raphaelattali.rythmrun.interfaces.sensors;
  */
 
 public interface HeartBeatSensorInterface {
+
+    // Se connecte au capteur présent dans la ceinture du coureur
+    void connect();
+
     // Renvoie le nombre de battements par minute
-    public float getInstantHeartbeat();
+    float getInstantHeartbeat();
 }

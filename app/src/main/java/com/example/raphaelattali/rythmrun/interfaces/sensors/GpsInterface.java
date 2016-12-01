@@ -9,14 +9,14 @@ import android.location.Location;
 public interface GpsInterface {
 
     //Renvoie la localisation du coureur
-    public Location getLocation();
+    Location getLocation();
 
     //Renvoie la vitesse actuelle du coureur
-    public float getInstantSpeed();
+    float getInstantSpeed();
 
     //Renvoie la vitesse moyenne du coureur
-    public float getAverageSpeed();
+    float getAverageSpeed();
 
     //Renvoie la distance parcouru en mètres
-    public int metersCrossed();
+    int metersCrossed();
 }
