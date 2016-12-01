@@ -14,8 +14,10 @@ import com.example.raphaelattali.rythmrun.music.Music;
 
 public interface PhaseVocoderInterface {
     /**
-     * Doit renvoyer une musique modifiée, telle que le tempo soit désormais celui demandé
-     * On donne en argument le rythme (en bmp) et la musique d'origine, et la fonction la transforme et la renvoie
+     * Doit renvoyer une musique modifiée, telle que le tempo soit
+     * désormais celui demandé
+     * On donne en argument le rythme (en bmp) et la musique d'origine,
+     * et la méthode la transforme et la renvoie
      */
     Music modifyMusicToFitTempo(Music music, float tempo);
 
