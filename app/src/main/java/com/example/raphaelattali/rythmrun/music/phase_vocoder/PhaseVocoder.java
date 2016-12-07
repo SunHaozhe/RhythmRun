@@ -4,6 +4,8 @@ package com.example.raphaelattali.rythmrun.music.phase_vocoder;
  * Created by Raphael Attali on 07/12/2016.
  */
 
+import android.util.Log;
+
 import com.example.raphaelattali.rythmrun.interfaces.music.PhaseVocoderInterface;
 import com.example.raphaelattali.rythmrun.music.Music;
 
@@ -36,6 +38,8 @@ public class PhaseVocoder implements PhaseVocoderInterface {
      */
     @Override
     public Music modifyMusicToFitTempo(Music music, float tempo) {
+
+        Log.i("INFO_Phase_Vocoder","La méthode modifyMusicToFitTempo n'a pas encore été implémentée");
 
         return null;
     }
