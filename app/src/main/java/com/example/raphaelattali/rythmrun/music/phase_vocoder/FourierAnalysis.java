@@ -16,7 +16,7 @@ import java.util.List;
  * @version 1.0
  */
 
-public class FourierTransform {
+public class FourierAnalysis {
 
     /**
      * <b>Permet de décomposer une onde périodique en une somme d'ondes sinusoidales</b>

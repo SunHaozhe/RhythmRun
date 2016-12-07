@@ -12,7 +12,7 @@ import com.example.raphaelattali.rythmrun.music.phase_vocoder.PhaseVocoder;
  * Hérite de PeriodicWave
  *
  * @see PeriodicWave
- * @see FourierTransform
+ * @see FourierAnalysis
  * @see PhaseVocoder
  *
  * @author Raphael Attali
