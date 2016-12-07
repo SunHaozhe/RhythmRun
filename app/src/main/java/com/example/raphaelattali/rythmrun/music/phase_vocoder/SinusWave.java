@@ -23,6 +23,27 @@ public class SinusWave extends PeriodicWave{
     // La phase à l'origine est importante dans les calculs suivants
     private double phaseAtZero = 0;
 
+
+    /**
+     * <b>Constructeur de SinusWave</b>
+     * Onde sinusoidale avec une phase nulle à l'origine
+     *
+     * @see PeriodicWave#frequency
+     * @see PeriodicWave#amplitude
+     * @see SinusWave#phaseAtZero
+     *
+     * @param frequency
+     *      La fréquence de la sinusoïde
+     * @param amplitude
+     *      L'amplitude de la sinusoïde
+     */
+
+    public SinusWave(double frequency, double amplitude){
+        super(frequency, amplitude);
+        phaseAtZero = 0;
+    }
+
+
     /**
      * <b>Constructeur de SinusWave</b>
      * Contrairement à une onde périodique, on peut désormais donner la phase à l'origine
@@ -45,7 +66,7 @@ public class SinusWave extends PeriodicWave{
     }
 
     /**
-     * <b>Evalue le sinus en une abscisse x</b>
+     * <b>Evalue l'onde en un temps donné t</b>
      *
      * @param t
      *      Le temps auquel on évalue l'onde
