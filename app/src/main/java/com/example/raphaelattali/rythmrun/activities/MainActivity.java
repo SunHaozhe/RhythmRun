@@ -17,6 +17,7 @@ import com.example.raphaelattali.rythmrun.interfaces.sensors.HeartBeatSensorInte
 import com.example.raphaelattali.rythmrun.interfaces.sensors.PodometerInterface;
 import com.example.raphaelattali.rythmrun.interfaces.sensors.TemperatureInterface;
 import com.example.raphaelattali.rythmrun.music.Music;
+import com.example.raphaelattali.rythmrun.music.phase_vocoder.PhaseVocoder;
 
 //EXEMPLE ANDROID
 
@@ -42,8 +43,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,Main2Activity.class);
                 startActivity(intent);
-
             }
         });
+
+        // Bouton test du vocodeur
+        Button phaseVocodButton =(Button)findViewById(R.id.test_phase_vocod_button);
+        phaseVocodButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PhaseVocoder pv = new PhaseVocoder();
+                pv.modifyMusicToFitTempo(null,0);
+            }
+        });
+        // FIN test
     }
 }
