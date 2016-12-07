@@ -25,7 +25,7 @@ public class FourierTransform {
      *      L'onde périodique brute, à décomposer
      * @return La liste des ondes sinuoidales qui composent l'onde initiale
      */
-    public List<SinusWave> decompose(PeriodicWave rawWave){
+    public static List<SinusWave> decompose(PeriodicWave rawWave){
 
         // Ne fonctionne pas encore
         return null;
