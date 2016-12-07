@@ -70,7 +70,7 @@ public class SinusWave {
      */
     public double valuation(double t){
 
-        double parameterOfSinusWave = 2*Math.PI*frequency*t;
+        double parameterOfSinusWave = 2*Math.PI*frequency*t + phaseAtZero;
 
         // A * sin( 2*pi*f*t + phi)
         return amplitude*Math.sin(parameterOfSinusWave);
