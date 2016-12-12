@@ -6,5 +6,5 @@ package com.example.raphaelattali.rythmrun.interfaces.sensors;
 
 public interface PodometerInterface {
     //Récupérer la fréquence de pas actuelle du coureur
-    float getRunningPaceFrequency();
+    public float getRunningPaceFrequency();
 }
