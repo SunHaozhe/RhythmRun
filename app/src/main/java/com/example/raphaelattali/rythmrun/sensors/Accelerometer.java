@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -24,9 +25,22 @@ public class Accelerometer implements SensorEventListener {
     float ax, ay, az;
     private SensorManager mSensorManager;
     private Sensor mSensor;
+    private boolean active;
+
+    public boolean isActive() {
+        return active;
+    }
 
     public float getAx() {
         return ax;
+    }
+
+    public float getAy() {
+        return ay;
+    }
+
+    public float getAz() {
+        return az;
     }
 
     /**
@@ -40,14 +54,15 @@ public class Accelerometer implements SensorEventListener {
         this.nombre_echantillons = nombre_echantillons;
         this.plage_echantillonage = nombre_echantillons/frequence_echantillonage;
         valeurs = new float[3][nombre_echantillons];
-        ax = 21f; ay = 0; az = 0;
+        ax = 21f; ay = 21f; az = 21f;
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
         if (mSensor == null) {
             ax = 42.0f;
         }
-
+        active = false;
+        Log.d("lucas", "min delay : " + String.valueOf(mSensor.getMinDelay()));
         //completeTab(periode);
     }
 
@@ -63,6 +78,8 @@ public class Accelerometer implements SensorEventListener {
         this.nombre_echantillons = (int) (plage_echantillonage*frequence_echantillonage);
         valeurs = new float[3][nombre_echantillons];
         ax = 0; ay = 0; az = 0;
+        active = false;
+        Log.d("lucas", "min delay : " + String.valueOf(mSensor.getMinDelay()));
         //completeTab(periode);
     }
 
@@ -82,6 +99,7 @@ public class Accelerometer implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
+            active = true;
             ax=event.values[0];
             ay=event.values[1];
             az=event.values[2];

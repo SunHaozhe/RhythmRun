@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -55,7 +56,7 @@ public class Main2Activity extends AppCompatActivity {
         });
 
         final Context mContext = this;
-
+        Log.d("lucas", "on va verifier les permissions d ecriture");
         // Permission d'ecriture
         int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -64,108 +65,61 @@ public class Main2Activity extends AppCompatActivity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            // Ca va pas marcher
+
+
+            Log.d("lucas", "on va demander à l'utilisateur");
+
             ActivityCompat.requestPermissions(
                     this,
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+        Log.d("lucas", "on a les permissions d'écriture");
+
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+
+                Log.i("lucas", "on est rentrés dans le thread");
                 Accelerometer acc = new Accelerometer(0.1f, 10, mContext);
-                OutputStreamWriter o;
-                boolean f = false;
-                if (f) {
+
+                    File file = new File("/storage/emulated/0/Download/donnees.csv");
+                    Log.i("lucas", "on a créé le file");
                     try {
-                        o = new OutputStreamWriter(mContext.openFileOutput("donnees.txt", Context.MODE_WORLD_READABLE));
+                        FileOutputStream fOS = new FileOutputStream(file);
+                        Log.i("lucas", "on a ouvert le fileoutputstream");
+                        OutputStreamWriter oSW = new OutputStreamWriter(fOS);
 
+                        Log.i("lucas", "on a ouvert l'outputstreamwriter");
+                        int c = 0;
+                        int m = 0;
+                        String x, y, z;
 
-                        while (k == 0) {
-                            final String x = String.valueOf(acc.getAx());
-                            o.write(x);
-                            o.write(" ");
-                            test_button.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    test_button.setText(x);
-                                }
-
-
-                            });
+                        while (k == 0&&c<1000&&m<300000) {
+                            if (acc.isActive()) {
+                                c++;
+                                x = String.valueOf(acc.getAx());
+                                y = String.valueOf(acc.getAy());
+                                z = String.valueOf(acc.getAz());
+                                oSW.append(x + "," + y + "," + z + "\n");
+                            }
+                            m++;
                             try {
                                 Thread.sleep(30);
                             } catch (InterruptedException e) {
                             }
                         }
-                        o.close();
-                    } catch (FileNotFoundException e) {
+                        Log.i("lucas", "on est sortis du while");
+                        oSW.flush();
+                        oSW.close();
+                        fOS.close();
+                        } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-
-                        test_button.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                test_button.setText("fait1");
-                            }
-                        });
-                        File path = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOCUMENTS);
-                        File file = new File(path, "donnees.txt");
-
-                        test_button.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                test_button.setText("fait2");
-                            }
-                        });
-                        try {
-                            //file.mkdirs();
-                            //OutputStream os = new FileOutputStream(file);
-                            PrintWriter pw = new PrintWriter(file);
-                            //byte[] bytes;
-
-                            test_button.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    test_button.setText("fait3");
-                                }
-                            });
-                            while (k == 0) {
-                                final String x = String.valueOf(acc.getAx());
-                                //bytes = x.getBytes();
-                                //os.write(bytes);
-                                //os.write(" ".getBytes());
-
-
-                                try {
-                                    Thread.sleep(30);
-                                } catch (InterruptedException e) {
-                                }
-                            }
-
-                            test_button.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    test_button.setText("fait4");
-                                }
-                            });
-
-                            //os.flush();
-                            //os.close();
-                            pw.close();
-                            } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
             }
         });
         thread.start();
