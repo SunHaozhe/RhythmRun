@@ -50,7 +50,8 @@ public class RecapActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggleWarning();
+                Intent intent = new Intent(view.getContext(),RunActivity.class);
+                startActivity(intent);
             }
         });
 

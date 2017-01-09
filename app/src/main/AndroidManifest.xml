@@ -10,6 +10,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.Main2Activity" />
+
         <activity
             android:name=".activities.gui.HomeActivity"
             android:label="@string/title_activity_home"
@@ -20,14 +21,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.gui.NewRunActivity"
             android:label="@string/title_activity_new_run"
             android:parentActivityName=".activities.gui.HomeActivity" />
+
         <activity
             android:name=".activities.gui.RecapActivity"
             android:label="@string/title_activity_recap"
-            android:parentActivityName=".activities.gui.NewRunActivity"/>
+            android:parentActivityName=".activities.gui.NewRunActivity" />
+
+        <activity
+            android:name=".activities.gui.RunActivity"
+            android:label="@string/title_activity_run"
+            android:parentActivityName=".activities.gui.HomeActivity"/>
+
     </application>
 
 </manifest>

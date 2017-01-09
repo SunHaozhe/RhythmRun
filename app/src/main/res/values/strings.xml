@@ -11,7 +11,9 @@
     <string name="home_new_run">New Run</string>
     <string name="title_activity_new_run">New Run</string>
 
-    <string name="title_activity_recap">New Run</string>
+    <string name="title_activity_recap">Recap</string>
+
+    <string name="title_activity_run">Run</string>
 
     <string-array name="music_styles">
         <item>Electro</item>
