@@ -68,6 +68,9 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_run:
                 startActivityFromClass(RunActivity.class);
                 break;
+            case R.id.nav_Settings:
+                startActivityFromClass(SettingsActivity.class);
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
