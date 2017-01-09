@@ -17,7 +17,8 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp">
 
         <TextView
             android:id="@+id/tvHomeDistance"
@@ -48,7 +49,8 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp">
 
         <TextView
             android:id="@+id/tvHomePace"
@@ -79,8 +81,11 @@
 
     <Button
         android:id="@+id/buttonHomeNewRun"
-        android:layout_width="200dp"
-        android:layout_height="80dp"
+        android:layout_marginTop="50dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/roun_shape_btn"
+        android:textColor="#FFFFFF"
         android:text="@string/home_new_run"/>
 
 </LinearLayout>
