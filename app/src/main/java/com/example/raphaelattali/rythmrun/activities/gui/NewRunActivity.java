@@ -1,6 +1,8 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +10,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.example.raphaelattali.rythmrun.R;
 
@@ -16,6 +19,10 @@ import layout.PaceFragment;
 import layout.MusicFragment;
 
 public class NewRunActivity extends AppCompatActivity {
+
+    public static final String EXTRA_DISTANCE="distance";
+    public static final String EXTRA_PACE="pace";
+    public static final String EXTRA_MUSIC="music";
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
@@ -36,7 +43,7 @@ public class NewRunActivity extends AppCompatActivity {
         FragmentManager manager=getSupportFragmentManager();
 
         //object of PagerAdapter passing fragment manager object as a parameter of constructor of PagerAdapter class.
-        PagerAdapter adapter=new PagerAdapter(manager);
+        final PagerAdapter adapter=new PagerAdapter(manager);
 
         //set Adapter to view pager
         viewPager.setAdapter(adapter);
@@ -50,9 +57,26 @@ public class NewRunActivity extends AppCompatActivity {
         //Setting tabs from adpater
         tabLayout.setTabsFromPagerAdapter(adapter);
 
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fabNewRun);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), RecapActivity.class);
+                intent.putExtra(EXTRA_DISTANCE, adapter.getItineraryFragment().getDistance());
+                intent.putExtra(EXTRA_PACE,adapter.getPaceFragment().getPace());
+                intent.putExtra(EXTRA_MUSIC,adapter.getMusicFragment().getMusicStyle());
+                startActivity(intent);
+            }
+        });
+
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter{
+
+        private ItineraryFragment itineraryFragment;
+        private PaceFragment paceFragment;
+        private MusicFragment musicFragment;
+
         public PagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -63,16 +87,28 @@ public class NewRunActivity extends AppCompatActivity {
             Fragment frag=null;
             switch (position){
                 case 0:
-                    frag=new ItineraryFragment();
-                    break;
+                    itineraryFragment = new ItineraryFragment();
+                    return itineraryFragment;
                 case 1:
-                    frag=new PaceFragment();
-                    break;
+                    paceFragment = new PaceFragment();
+                    return paceFragment;
                 case 2:
-                    frag=new MusicFragment();
-                    break;
+                    musicFragment = new MusicFragment();
+                    return musicFragment;
             }
-            return frag;
+            return null;
+        }
+
+        public ItineraryFragment getItineraryFragment() {
+            return itineraryFragment;
+        }
+
+        public PaceFragment getPaceFragment() {
+            return paceFragment;
+        }
+
+        public MusicFragment getMusicFragment() {
+            return musicFragment;
         }
 
         @Override

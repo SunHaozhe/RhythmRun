@@ -23,7 +23,11 @@
         <activity
             android:name=".activities.gui.NewRunActivity"
             android:label="@string/title_activity_new_run"
-            android:parentActivityName=".activities.gui.HomeActivity"></activity>
+            android:parentActivityName=".activities.gui.HomeActivity" />
+        <activity
+            android:name=".activities.gui.RecapActivity"
+            android:label="@string/title_activity_recap"
+            android:parentActivityName=".activities.gui.NewRunActivity"/>
     </application>
 
 </manifest>

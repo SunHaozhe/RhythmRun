@@ -24,4 +24,8 @@ public class ItineraryFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_itinerary, container, false);
     }
 
+    public double getDistance(){
+        return 10.7;
+    }
+
 }
