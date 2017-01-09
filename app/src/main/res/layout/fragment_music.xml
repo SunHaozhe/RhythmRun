@@ -4,9 +4,55 @@
     android:layout_height="match_parent"
     tools:context="layout.MusicFragment">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="salutmusic" />
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+
+        <TextView
+            android:id="@+id/tvNewRunLabel6"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="20dp"
+            android:textSize="15dp"
+            android:textColor="@color/colorBold"
+            android:text="Choose your style:"/>
+
+        <CheckBox
+            android:id="@+id/cbMusic"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@id/tvNewRunLabel6"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:background="@drawable/inverted_border"
+            android:text="Random"/>
+
+        <Spinner
+            android:id="@+id/spMusic"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvNewRunLabel6"
+            android:layout_marginTop="20dp"
+            android:padding="7dp"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:id="@+id/tvNewRunFoundFiles"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/spMusic"
+            android:layout_centerHorizontal="true"
+            android:text="5 songs found."
+            />
+
+    </RelativeLayout>
 
 </FrameLayout>
