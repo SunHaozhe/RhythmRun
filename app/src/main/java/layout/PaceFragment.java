@@ -1,7 +1,9 @@
 package layout;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +34,8 @@ public class PaceFragment extends Fragment {
     private double speed;
     private double pace;
 
+    private String unit = "km";
+
     public PaceFragment() {
         // Required empty public constructor
     }
@@ -55,10 +59,19 @@ public class PaceFragment extends Fragment {
             }
         });
 
-        //Displays informations at start
-        update(50);
-
         return rootView;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+        unit = sharedPreferences.getString("unit_list","km");
+        Log.d("I","This is the onResume() of the pace fragment");
+        Log.d("unit","unit in pace fragment: "+unit);
+
+        //Displays informations at start
+        update(seekBarUpdater.getProgress());
     }
 
     public void update(int progress){
@@ -71,8 +84,14 @@ public class PaceFragment extends Fragment {
             tvPace.setText("-");
         }
         else {
-            tvSpeed.setText(fancySpeed(speed) + " km/h");
-            tvPace.setText(fancyPace(pace) + " min/km");
+            if(unit.equals("mi")){
+                tvSpeed.setText(fancySpeed(speed*0.621) + " mi/h");
+                tvPace.setText(fancyPace(pace/0.621) + " /mi");
+            }
+            else{
+                tvSpeed.setText(fancySpeed(speed) + " km/h");
+                tvPace.setText(fancyPace(pace) + " /km");
+            }
         }
 
     }
