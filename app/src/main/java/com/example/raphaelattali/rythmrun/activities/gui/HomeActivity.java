@@ -40,8 +40,10 @@ public class HomeActivity extends AppCompatActivity
         buttonNewRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.setBackground(getResources().getDrawable(R.drawable.roun_shape_btn_pressed));
                 Intent intent = new Intent(view.getContext(),NewRunActivity.class);
                 startActivity(intent);
+                view.setBackground(getResources().getDrawable(R.drawable.roun_shape_btn));
             }
         });
     }
