@@ -11,6 +11,7 @@
     tools:context="com.example.raphaelattali.rythmrun.activities.gui.RecapActivity">
 
     <RelativeLayout
+        android:id="@+id/recapLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border"
@@ -92,5 +93,35 @@
             android:text=""/>
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/RecapToHide"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/recapLayout1"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:visibility="invisible"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="16dp"
+            android:text="Warning: this might be to hard for you! Consider slowing down a bit!"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonRecapGO"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/roun_shape_btn"
+        android:layout_below="@id/recapLayout1"
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF"
+        android:textSize="30dp"
+        android:text="GO"/>
 
 </RelativeLayout>
