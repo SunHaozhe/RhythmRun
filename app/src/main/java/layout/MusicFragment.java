@@ -47,9 +47,7 @@ public class MusicFragment extends Fragment {
     }
 
     public String getMusicStyle(){
-        Spinner spinner = (Spinner) this.getView().findViewById(R.id.spMusic);
-        CheckBox cb = (CheckBox) this.getView().findViewById(R.id.cbMusic);
-        if(cb.isChecked()){
+        if(checkBox.isChecked()){
             return "Random";
         }
         else{
