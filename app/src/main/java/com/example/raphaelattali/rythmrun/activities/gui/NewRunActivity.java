@@ -1,8 +1,6 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,13 +8,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.example.raphaelattali.rythmrun.R;
 
 import layout.ItineraryFragment;
 import layout.PaceFragment;
-import values.MusicFragment;
+import layout.MusicFragment;
 
 public class NewRunActivity extends AppCompatActivity {
 
