@@ -39,9 +39,6 @@
             android:name=".activities.gui.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".activities.gui.HomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.raphaelattali.rythmrun.activities.gui.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.gui.LibraryActivity"

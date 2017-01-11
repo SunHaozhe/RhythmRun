@@ -15,6 +15,8 @@ public class SongActivity extends AppCompatActivity {
     private TextView tvTitle;
     private TextView tvArtist;
     private TextView tvAlbum;
+    private TextView tvGenre;
+    private TextView tvDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,8 @@ public class SongActivity extends AppCompatActivity {
         tvTitle = (TextView) findViewById(R.id.tvSongTitle);
         tvArtist = (TextView) findViewById(R.id.tvSongArtist);
         tvAlbum = (TextView) findViewById(R.id.tvSongAlbum);
+        tvGenre = (TextView) findViewById(R.id.tvSongGenre);
+        tvDuration = (TextView) findViewById(R.id.tvSongDuration);
 
         Intent intent = getIntent();
         String songPath = intent.getStringExtra(LibraryActivity.EXTRA_SONG);
@@ -33,6 +37,8 @@ public class SongActivity extends AppCompatActivity {
         tvTitle.setText(song.getTitle());
         tvArtist.setText(song.getArtist());
         tvAlbum.setText(song.getAlbum());
+        tvGenre.setText(song.getGenre());
+        tvDuration.setText(song.getDuration());
 
         if(song.hasArt()){
             imageView.setImageBitmap(song.getBitmap());

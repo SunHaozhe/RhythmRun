@@ -147,7 +147,7 @@ public class PaceFragment extends Fragment {
             paceFragment.update(progress);
         }
 
-        public int getProgress(){ return progress; };
+        public int getProgress(){ return progress; }
 
         public void onStartTrackingTouch(SeekBar seekBar) {
 

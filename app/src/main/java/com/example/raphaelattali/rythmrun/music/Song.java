@@ -10,6 +10,7 @@ import android.media.MediaMetadataRetriever;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 
 /**
  * Created by ychalier on 1/11/17.
@@ -22,6 +23,8 @@ public class Song {
     private String artist;
     private String album;
     private String path;
+    private String genre;
+    private String duration;
 
     public Song(File file) {
         path = file.getPath();
@@ -40,6 +43,23 @@ public class Song {
         title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
         artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
         album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+        genre = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
+        duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        if(duration != null){
+            int durationS = Integer.parseInt(duration) / 1000;
+            int durationH = durationS / 3600;
+            int durationM = (durationS - (3600*durationH))/60;
+            durationS = durationS - (3600*durationH) - (60*durationM);
+            duration="";
+            if(durationH > 0)
+                duration=durationH +":";
+            if(durationH > 0 && durationM < 10)
+                duration=duration + "0";
+            duration=duration + durationM+":";
+            if(durationS < 10)
+                duration=duration + "0";
+            duration=duration + durationS;
+        }
 
         InputStream inputStream = null;
         if (mmr.getEmbeddedPicture() != null) {
@@ -71,6 +91,14 @@ public class Song {
 
     public String getPath(){
         return path;
+    }
+
+    public String getDuration(){
+        return duration;
+    }
+
+    public String getGenre(){
+        return genre;
     }
 
     public Drawable getColor(){
