@@ -2,6 +2,7 @@ package com.example.raphaelattali.rythmrun.activities.gui;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +29,7 @@ import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
 import com.example.raphaelattali.rythmrun.activities.MainActivity;
+import com.example.raphaelattali.rythmrun.music.Song;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -40,11 +44,12 @@ public class LibraryActivity extends AppCompatActivity {
     private List<Song> songs;
     private ListView listView;
 
+    public final static String EXTRA_SONG = "song";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
-
 
         //Check if external storage is available for reading
         String state = Environment.getExternalStorageState();
@@ -83,57 +88,6 @@ public class LibraryActivity extends AppCompatActivity {
 
     }
 
-    public class Song{
-        private int color;
-        private Bitmap bitmap;
-        private String title;
-        private String artist;
-        private String album;
-
-        public Song(File file) {
-            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-            mmr.setDataSource(file.getPath());
-
-            title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-            artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-            album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-
-            InputStream inputStream = null;
-            if (mmr.getEmbeddedPicture() != null) {
-                inputStream = new ByteArrayInputStream(mmr.getEmbeddedPicture());
-                bitmap = BitmapFactory.decodeStream(inputStream);
-            }
-            else{
-                color = Color.BLUE;
-            }
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getArtist() {
-            return artist;
-        }
-
-        public String getAlbum() {
-            return album;
-        }
-
-        public Bitmap getBitmap(){
-            return bitmap;
-        }
-
-        public Drawable getColor(){
-            return new ColorDrawable(color);
-        }
-
-        public boolean hasArt(){
-            return bitmap!=null;
-        }
-
-    }
-
     public class SongAdapter extends ArrayAdapter<Song> {
 
         public SongAdapter(Context context, List<Song> songs) {
@@ -156,7 +110,7 @@ public class LibraryActivity extends AppCompatActivity {
                 convertView.setTag(viewHolder);
             }
 
-            Song song = getItem(position);
+            final Song song = getItem(position);
 
             viewHolder.title.setText(song.getTitle());
             viewHolder.artist.setText(song.getArtist());
@@ -166,6 +120,15 @@ public class LibraryActivity extends AppCompatActivity {
             else{
                 viewHolder.thumbnail.setImageDrawable(song.getColor());
             }
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), SongActivity.class);
+                    intent.putExtra(EXTRA_SONG,song.getPath());
+                    startActivity(intent);
+                }
+            });
 
             return convertView;
         }

@@ -46,8 +46,11 @@
         <activity
             android:name=".activities.gui.LibraryActivity"
             android:label="@string/title_activity_library"
-            android:parentActivityName=".activities.gui.HomeActivity">
-        </activity>
+            android:parentActivityName=".activities.gui.HomeActivity"></activity>
+        <activity
+            android:name=".activities.gui.SongActivity"
+            android:label="@string/title_activity_library"
+            android:parentActivityName=".activities.gui.LibraryActivity"></activity>
     </application>
 
 </manifest>
