@@ -2,11 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="layout.ItineraryFragment">
+    tools:context=".activities.gui.ItineraryFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="map not implemented yet." />
+    <Button
+        android:id="@+id/buttonItinerary"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="VALIDATE ITINERARY"/>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/itineraryMapView"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/buttonItinerary"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

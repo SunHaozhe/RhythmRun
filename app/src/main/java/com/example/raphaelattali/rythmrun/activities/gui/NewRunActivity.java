@@ -9,14 +9,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.raphaelattali.rythmrun.R;
-
-import layout.ItineraryFragment;
-import layout.PaceFragment;
-import layout.MusicFragment;
 
 public class NewRunActivity extends AppCompatActivity {
 

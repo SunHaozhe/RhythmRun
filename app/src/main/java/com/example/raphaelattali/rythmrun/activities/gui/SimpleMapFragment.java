@@ -23,24 +23,62 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
-public class SimpleMapFragment extends Fragment {
+public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
 
-    private MapView mapView;
-    private GoogleMap googleMap;
+    protected MapView mapView;
+    protected GoogleMap googleMap;
 
-    public static final int UPDATE_IDLE = 1000; //ms
+    private LocationManager locationManager;
+    private String provider;
+
+    public static final int UPDATE_IDLE = 10000; //ms
 
     public SimpleMapFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_simple_map, container, false);
 
-        mapView = (MapView) rootView.findViewById(R.id.simpleMapView);
+        final View rootView = initView(inflater, container);
+
+        Criteria criteria = new Criteria();
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        provider = locationManager.getBestProvider(criteria, false);
+        if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return rootView;
+        }
+
+        locationManager.requestLocationUpdates(provider, UPDATE_IDLE, 2, new LocationListener() {
+
+            @Override
+            public void onLocationChanged(Location location) {
+                //TODO: log positions
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+            }
+
+        });
+
         mapView.onCreate(savedInstanceState);
         mapView.onResume(); //needed to get the map to display immediately
 
@@ -50,57 +88,38 @@ public class SimpleMapFragment extends Fragment {
             e.printStackTrace();
         }
 
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap map) {
-                googleMap = map;
-                if (ActivityCompat.checkSelfPermission(rootView.getContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                googleMap.setMyLocationEnabled(true);
-            }
-        });
-
-        Criteria criteria = new Criteria();
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        String provider = locationManager.getBestProvider(criteria,false);
-        locationManager.requestLocationUpdates(provider, UPDATE_IDLE, 2, new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                double lat = location.getLatitude();
-                double lng = location.getLongitude();
-                LatLng coordinate = new LatLng(lat, lng);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
-                googleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-
-            }
-
-            });
+        mapView.getMapAsync(this);
 
         return rootView;
+    }
+
+    public View initView(LayoutInflater inflater, ViewGroup container){
+        View rootView = inflater.inflate(R.layout.fragment_simple_map, container, false);
+        mapView = (MapView) rootView.findViewById(R.id.simpleMapView);
+        return rootView;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
+        if (ActivityCompat.checkSelfPermission(this.getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+
+        Location location = locationManager.getLastKnownLocation(provider);
+        LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude());
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
     }
 
     @Override

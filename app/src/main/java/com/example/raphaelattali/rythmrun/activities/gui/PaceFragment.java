@@ -1,8 +1,7 @@
-package layout;
+package com.example.raphaelattali.rythmrun.activities.gui;
 
 
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -16,8 +15,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
-
-import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
