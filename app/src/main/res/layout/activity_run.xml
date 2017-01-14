@@ -13,6 +13,7 @@
     <fragment
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:name="com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment"/>
+        android:name="com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment"
+        android:id="@+id/fragmentRun" />
 
 </RelativeLayout>

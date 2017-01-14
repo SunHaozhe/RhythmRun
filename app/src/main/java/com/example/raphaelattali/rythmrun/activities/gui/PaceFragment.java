@@ -1,6 +1,5 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,25 +17,31 @@ import com.example.raphaelattali.rythmrun.Distance;
 import com.example.raphaelattali.rythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
 
-import org.w3c.dom.Text;
-
 public class PaceFragment extends Fragment {
-
-    private SeekBarUpdater seekBarUpdater;
-    private CheckBox checkBox;
-    private TextView tvPace;
-    private Distance distance = new Distance(0);
-    private TextView tvTime;
 
     final static double minSpeed = 1; //km/h
     final static double maxSpeed = 25;
 
+    private SeekBarUpdater seekBarUpdater;
+    private CheckBox checkBox;
+    private TextView tvPace;
+    private TextView tvTime;
+
+    private Distance distance = new Distance(0);
     private Pace pace;
+
     private String unit = "km";
     private String paceMode = "p";
 
     public PaceFragment() {
         // Required empty public constructor
+    }
+
+    public double getPace() {
+        if(checkBox.isChecked()){
+            return -1;
+        }
+        return pace.getValue();
     }
 
     @Override
@@ -70,16 +75,16 @@ public class PaceFragment extends Fragment {
 
         TextView tvLabel = (TextView) getView().findViewById(R.id.tvNewRunLabel3);
         if(paceMode.equals("p")){
-            tvLabel.setText("YOUR PACE");
+            tvLabel.setText(R.string.pace_your_pace);
         }
         else{
-            tvLabel.setText("YOUR SPEED");
+            tvLabel.setText(R.string.pace_your_speed);
         }
 
         Log.d("I","This is the onResume() of the pace fragment");
         Log.d("unit","unit in pace fragment: "+unit);
 
-        //Displays informations at start
+        //Displays information at start
         update(seekBarUpdater.getProgress());
     }
 
@@ -97,19 +102,16 @@ public class PaceFragment extends Fragment {
         }
     }
 
-    public double getPace() {
-        if(checkBox.isChecked()){
-            return -1;
-        }
-        return pace.getValue();
-    }
-
+    //Used to parse distance from maps direction
     public void setDistance(double d){
-        //d in meters, distance in kilometers
+        //d is in meters
         distance = new Distance(d/1000);
-        TextView tv = (TextView) getView().findViewById(R.id.tvNewRunDistance);
-        tv.setText(distance.toStr(unit,true));
-        update(seekBarUpdater.getProgress()); //Displays time
+        TextView tvDist = (TextView) getView().findViewById(R.id.tvNewRunDistance);
+        if(tvDist!=null)
+            tvDist.setText(distance.toStr(unit,true));
+
+        //Needed to update the time display
+        update(seekBarUpdater.getProgress());
     }
 
     public class SeekBarUpdater implements SeekBar.OnSeekBarChangeListener {
@@ -117,7 +119,7 @@ public class PaceFragment extends Fragment {
         PaceFragment paceFragment;
         int progress=50;
 
-        public SeekBarUpdater(PaceFragment paceFragment) {
+        SeekBarUpdater(PaceFragment paceFragment) {
             this.paceFragment = paceFragment;
         }
 
@@ -126,7 +128,7 @@ public class PaceFragment extends Fragment {
             paceFragment.update(progress);
         }
 
-        public int getProgress(){ return progress; }
+        int getProgress(){ return progress; }
 
         public void onStartTrackingTouch(SeekBar seekBar) {
 

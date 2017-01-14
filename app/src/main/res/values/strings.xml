@@ -1,7 +1,17 @@
 <resources>
-    <string name="app_name">Rythm Run</string>
+    <string name="app_name">Rhythm Run</string>
 
     <string name="title_activity_home">Rhythm Run</string>
+    <string name="home_distance_this_week">this week</string>
+    <string name="home_average_pace">average pace</string>
+    <string name="home_average_speed">average speed</string>
+
+    <string name="unit_pace">/%1$s</string>
+    <string name="unit_speed">%1$s/h</string>
+
+    <string name="pace">%1$s /%2$s</string>
+    <string name="speed">%1$s %2$s/h</string>
+    <string name="distance">%1$s %2$s</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -11,12 +21,28 @@
     <string name="home_new_run">New Run</string>
     <string name="title_activity_new_run">New Run</string>
 
+    <string name="pace_your_speed">YOUR SPEED</string>
+    <string name="pace_your_pace">YOUR PACE</string>
+    <string name="pace_your_distance">YOUR DISTANCE</string>
+    <string name="pace_selected_itinerary">Selected itinerary</string>
+    <string name="pace_estimated_time">Estimated time</string>
+
+    <string name="music_choose_style">Choose your style:</string>
+    <string name="music_random">Random</string>
+
     <string name="title_activity_recap">Recap</string>
+    <string name="recap_of_your_run">RECAP OF YOUR RUN</string>
+    <string name="recap_selected_pace">Selected pace:</string>
+    <string name="recap_selected_speed">Selected speed:</string>
+    <string name="recap_selected_distance">Selected distance:</string>
+    <string name="recap_selected_music">Selected music:</string>
+    <string name="recap_free">Free</string>
+    <string name="recap_warning">Warning: this might be to hard for you! Consider slowing down a bit!</string>
+    <string name="recap_button_go">GO</string>
 
     <string name="title_activity_run">Run</string>
 
     <string name="title_activity_library">Library</string>
-
     <string-array name="music_styles">
         <item>Electro</item>
         <item>Rock</item>

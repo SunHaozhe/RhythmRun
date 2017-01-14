@@ -1,11 +1,7 @@
 package com.example.raphaelattali.rythmrun;
 
-/**
- * Created by Yohan on 14/01/2017.
- */
-
 public class Pace {
-    private double value; //Always in minutes per kilometers
+    private double value; //min/km
 
     public static String fancyPace(double d){
         int sec = Integer.parseInt(Double.toString(d*60).substring(0,Double.toString(d*60).indexOf(".")));
@@ -30,23 +26,6 @@ public class Pace {
 
     public double getValue(){
         return value;
-    }
-
-    public double getSpeed(){ //km per hour
-        return 60/value;
-    }
-
-    public String toStr(String unit, String mode){
-        return toStr(unit,mode,false);
-    }
-
-    public String toStr(String unit, String mode, boolean displayUnits){
-        if(mode.equals("p")){
-            return toStrPace(unit, displayUnits);
-        }
-        else{
-            return toStrSpeed(unit, displayUnits);
-        }
     }
 
     public String toStrPace(String unit){
@@ -76,7 +55,16 @@ public class Pace {
         if(displayUnits){
             end=" "+unit+"/h";
         }
-        return new Distance(getSpeed()).toStr(unit)+end;
+        return new Distance(60/value).toStr(unit)+end;
+    }
+
+    public String toStr(String unit, String mode, boolean displayUnits){
+        if(mode.equals("p")){
+            return toStrPace(unit, displayUnits);
+        }
+        else{
+            return toStrSpeed(unit, displayUnits);
+        }
     }
 
 }

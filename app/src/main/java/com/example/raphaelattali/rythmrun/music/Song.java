@@ -7,14 +7,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 
+import com.example.raphaelattali.rythmrun.Pace;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
-
-/**
- * Created by ychalier on 1/11/17.
- */
 
 public class Song {
     private int color;
@@ -45,23 +42,10 @@ public class Song {
         album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
         genre = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
         duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        if(duration != null){
-            int durationS = Integer.parseInt(duration) / 1000;
-            int durationH = durationS / 3600;
-            int durationM = (durationS - (3600*durationH))/60;
-            durationS = durationS - (3600*durationH) - (60*durationM);
-            duration="";
-            if(durationH > 0)
-                duration=durationH +":";
-            if(durationH > 0 && durationM < 10)
-                duration=duration + "0";
-            duration=duration + durationM+":";
-            if(durationS < 10)
-                duration=duration + "0";
-            duration=duration + durationS;
-        }
+        if(duration != null)
+            duration = Pace.fancyPace(Double.parseDouble(duration)/60);
 
-        InputStream inputStream = null;
+        InputStream inputStream;
         if (mmr.getEmbeddedPicture() != null) {
             inputStream = new ByteArrayInputStream(mmr.getEmbeddedPicture());
             bitmap = BitmapFactory.decodeStream(inputStream);

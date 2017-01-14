@@ -1,23 +1,18 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.raphaelattali.rythmrun.R;
-import com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment;
-import com.google.android.gms.maps.CameraUpdateFactory;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -44,8 +39,8 @@ import java.util.List;
 
 public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
-    public static interface OnMarkerChangeListener {
-        public abstract void onMarkerChange();
+    public interface OnMarkerChangeListener {
+       void onMarkerChange();
     }
 
     private OnMarkerChangeListener markerChangeListener;
@@ -61,8 +56,8 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         }
     }
 
-    private ArrayList<LatLng> markerPoints = new ArrayList<LatLng>();
-    private ArrayList<Marker> markers = new ArrayList<Marker>();
+    private ArrayList<LatLng> markerPoints = new ArrayList<>();
+    private ArrayList<Marker> markers = new ArrayList<>();
     private FloatingActionButton floatingActionButton;
     private Polyline polyline;
     private float distance;
@@ -197,6 +192,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         return url;
     }
 
+    @SuppressWarnings("TryFinallyCanBeTryWithResources")
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
@@ -215,20 +211,21 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
 
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
-            String line = "";
+            String line;
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
 
             data = sb.toString();
-            Log.d("downloadUrl", data.toString());
+            Log.d("downloadUrl", data);
             br.close();
 
         } catch (Exception e) {
             Log.d("Exception", e.toString());
         } finally {
+            //noinspection ThrowFromFinallyBlock
             iStream.close();
             urlConnection.disconnect();
         }
@@ -236,17 +233,17 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     }
 
     public float distanceOfPolyline(PolylineOptions polylineOptions){
-        List<LatLng> latlngs = polylineOptions.getPoints();
-        int size = latlngs.size() - 1;
+        List<LatLng> table = polylineOptions.getPoints();
+        int size = table.size() - 1;
         float[] results = new float[1];
         float sum = 0;
 
         for(int i = 0; i < size; i++){
             Location.distanceBetween(
-                    latlngs.get(i).latitude,
-                    latlngs.get(i).longitude,
-                    latlngs.get(i+1).latitude,
-                    latlngs.get(i+1).longitude,
+                    table.get(i).latitude,
+                    table.get(i).longitude,
+                    table.get(i+1).latitude,
+                    table.get(i+1).longitude,
                     results);
             sum += results[0];
         }
@@ -294,6 +291,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
             try {
                 jObject = new JSONObject(jsonData[0]);
+                //noinspection RedundantStringToString
                 Log.d("ParserTask",jsonData[0].toString());
                 DataParser parser = new DataParser();
                 Log.d("ParserTask", parser.toString());
@@ -340,7 +338,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                 lineOptions.width(10);
                 lineOptions.color(Color.RED);
 
-                Log.d("onPostExecute","onPostExecute lineoptions decoded");
+                Log.d("onPostExecute","onPostExecute line options decoded");
 
             }
 
@@ -350,7 +348,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                 distance = distanceOfPolyline(lineOptions);
             }
             else {
-                Log.d("onPostExecute","without Polylines drawn");
+                Log.d("onPostExecute","without Poly lines drawn");
             }
         }
     }
@@ -358,6 +356,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     public class DataParser {
 
         /** Receives a JSONObject and returns a list of lists containing latitude and longitude */
+        @SuppressWarnings("unchecked")
         public List<List<HashMap<String,String>>> parse(JSONObject jObject){
 
             List<List<HashMap<String, String>>> routes = new ArrayList<>() ;
@@ -380,7 +379,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
                         /** Traversing all steps */
                         for(int k=0;k<jSteps.length();k++){
-                            String polyline = "";
+                            String polyline;
                             polyline = (String)((JSONObject)((JSONObject)jSteps.get(k)).get("polyline")).get("points");
                             List<LatLng> list = decodePoly(polyline);
 
@@ -398,18 +397,12 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
             } catch (JSONException e) {
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception ignored){
             }
-
 
             return routes;
         }
 
-
-        /**
-         * Method to decode polyline points
-         * Courtesy : https://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
-         * */
         private List<LatLng> decodePoly(String encoded) {
 
             List<LatLng> poly = new ArrayList<>();
@@ -423,8 +416,8 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                     result |= (b & 0x1f) << shift;
                     shift += 5;
                 } while (b >= 0x20);
-                int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-                lat += dlat;
+                int d_lat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                lat += d_lat;
 
                 shift = 0;
                 result = 0;
@@ -433,8 +426,8 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                     result |= (b & 0x1f) << shift;
                     shift += 5;
                 } while (b >= 0x20);
-                int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-                lng += dlng;
+                int d_lng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                lng += d_lng;
 
                 LatLng p = new LatLng((((double) lat / 1E5)),
                         (((double) lng / 1E5)));

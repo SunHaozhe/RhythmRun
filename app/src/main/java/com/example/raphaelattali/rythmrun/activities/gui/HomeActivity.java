@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -42,10 +43,10 @@ public class HomeActivity extends AppCompatActivity
         buttonNewRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.setBackground(getResources().getDrawable(R.drawable.roun_shape_btn_pressed));
+                view.setBackground(getResources().getDrawable(R.drawable.round_shape_btn_pressed));
                 Intent intent = new Intent(view.getContext(),NewRunActivity.class);
                 startActivity(intent);
-                view.setBackground(getResources().getDrawable(R.drawable.roun_shape_btn));
+                view.setBackground(getResources().getDrawable(R.drawable.round_shape_btn));
             }
         });
     }
@@ -58,7 +59,7 @@ public class HomeActivity extends AppCompatActivity
         TextView tvDistanceUnit = (TextView) findViewById(R.id.tvHomeDistanceUnit);
         TextView tvPace = (TextView) findViewById(R.id.tvHomePace);
         TextView tvPaceUnit = (TextView) findViewById(R.id.tvHomePaceUnit);
-        TextView tvAvergagePace = (TextView) findViewById(R.id.tvHomeAveragePace);
+        TextView tvAveragePace = (TextView) findViewById(R.id.tvHomeAveragePace);
 
         Distance distance = getDistance();
         Pace pace = getPace();
@@ -71,13 +72,13 @@ public class HomeActivity extends AppCompatActivity
         tvDistanceUnit.setText(unit);
         if(paceMode.equals("p")){
             tvPace.setText(pace.toStrPace(unit));
-            tvPaceUnit.setText("/"+unit);
-            tvAvergagePace.setText("average pace");
+            tvPaceUnit.setText(getString(R.string.unit_pace,unit));
+            tvAveragePace.setText(R.string.home_average_pace);
         }
         else{
             tvPace.setText(pace.toStrSpeed(unit));
-            tvPaceUnit.setText(unit+"/h");
-            tvAvergagePace.setText("average speed");
+            tvPaceUnit.setText(getString(R.string.unit_speed,unit));
+            tvAveragePace.setText(R.string.home_average_speed);
         }
     }
 
@@ -93,7 +94,7 @@ public class HomeActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 

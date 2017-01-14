@@ -21,44 +21,42 @@ import com.example.raphaelattali.rythmrun.R;
 public class RecapActivity extends AppCompatActivity {
 
     private boolean shownWarning = false;
+
     private LinearLayout linearLayout;
-    private String unit;
-    private String paceMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recap);
 
-        linearLayout = (LinearLayout) findViewById(R.id.RecapToHide);
-
-        TextView tvDistance = (TextView) findViewById(R.id.tvRecapDistance);
-        TextView tvPace = (TextView) findViewById(R.id.tvRecapPace);
-        TextView tvMusic = (TextView) findViewById(R.id.tvRecapMusic);
-
         Intent intent = getIntent();
         Distance distance = new Distance(intent.getDoubleExtra(NewRunActivity.EXTRA_DISTANCE,0.0)/1000);
         Pace pace = new Pace(intent.getDoubleExtra(NewRunActivity.EXTRA_PACE,0.0));
         String music = intent.getStringExtra(NewRunActivity.EXTRA_MUSIC);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        unit = sharedPreferences.getString("unit_list","km");
-        paceMode = sharedPreferences.getString("pace","p");
+        linearLayout = (LinearLayout) findViewById(R.id.RecapToHide);
+        TextView tvDistance = (TextView) findViewById(R.id.tvRecapDistance);
+        TextView tvPace = (TextView) findViewById(R.id.tvRecapPace);
+        TextView tvMusic = (TextView) findViewById(R.id.tvRecapMusic);
 
-        tvDistance.setText(distance.toStr(unit)+" "+unit);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String unit = sharedPreferences.getString("unit_list","km");
+        String paceMode = sharedPreferences.getString("pace","p");
+
+        tvDistance.setText(distance.toStr(unit,true));
         TextView tvRecapLabel2 = (TextView) findViewById(R.id.tvRecapLabel2);
         if(paceMode.equals("p")){
-            tvRecapLabel2.setText("Selected pace:");
+            tvRecapLabel2.setText(R.string.recap_selected_pace);
         }
         else{
-            tvRecapLabel2.setText("Selected speed:");
+            tvRecapLabel2.setText(R.string.recap_selected_speed);
         }
 
         if(pace.getValue() >= 0){
             tvPace.setText(pace.toStr(unit,paceMode,true));
         }
         else{
-            tvPace.setText("free");
+            tvPace.setText(R.string.recap_free);
         }
         tvMusic.setText(music);
 

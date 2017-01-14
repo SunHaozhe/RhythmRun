@@ -1,9 +1,5 @@
 package com.example.raphaelattali.rythmrun;
 
-/**
- * Created by Yohan on 14/01/2017.
- */
-
 public class Distance {
     public final static double KM_TO_MI = 0.621371;
 

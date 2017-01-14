@@ -1,6 +1,5 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -25,13 +24,13 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
 
+    public static final int UPDATE_IDLE = 10000; //ms
+
     protected MapView mapView;
     protected GoogleMap googleMap;
 
     private LocationManager locationManager;
     private String provider;
-
-    public static final int UPDATE_IDLE = 10000; //ms
 
     public SimpleMapFragment() {
         // Required empty public constructor

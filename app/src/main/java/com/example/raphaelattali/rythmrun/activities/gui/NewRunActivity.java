@@ -1,7 +1,6 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -12,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TabHost;
 
 import com.example.raphaelattali.rythmrun.R;
 
@@ -23,8 +21,8 @@ public class NewRunActivity extends AppCompatActivity implements ItineraryFragme
     public static final String EXTRA_MUSIC="music";
 
     private ViewPager viewPager;
-    private TabLayout tabLayout;
     private FloatingActionButton floatingActionButton;
+
     private boolean itineraryFragmentHasChanged = false;
 
     private boolean seenItinerary=true;
@@ -35,15 +33,11 @@ public class NewRunActivity extends AppCompatActivity implements ItineraryFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_run);
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getActionBar().setDisplayHomeAsUpEnabled(true);*/
 
         viewPager = (ViewPager) findViewById(R.id.vpNewRun);
-        tabLayout = (TabLayout) findViewById(R.id.tlNewRun);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tlNewRun);
 
-        // Fragment manager to add fragment in viewpager we will pass object of Fragment manager to adpater class.
+        // Fragment manager to add fragment in viewpager we will pass object of Fragment manager to adapter class.
         FragmentManager manager=getSupportFragmentManager();
 
         //object of PagerAdapter passing fragment manager object as a parameter of constructor of PagerAdapter class.
@@ -52,23 +46,21 @@ public class NewRunActivity extends AppCompatActivity implements ItineraryFragme
         //set Adapter to view pager
         viewPager.setAdapter(adapter);
 
-        //set tablayout with viewpager
+        //set tab layout with viewpager
         tabLayout.setupWithViewPager(viewPager);
 
         // adding functionality to tab and viewpager to manage each other when a page is changed or when a tab is selected
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        //Setting tabs from adpater
+        //Setting tabs from adapter
         tabLayout.setTabsFromPagerAdapter(adapter);
 
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fabNewRun);
-
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int current = viewPager.getCurrentItem();
 
-                if(current==0 && itineraryFragmentHasChanged){
+                if(viewPager.getCurrentItem()==0 && itineraryFragmentHasChanged){
                     try {
                         adapter.getItineraryFragment().initiateDirection();
                         floatingActionButton.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
@@ -143,14 +135,12 @@ public class NewRunActivity extends AppCompatActivity implements ItineraryFragme
         private PaceFragment paceFragment;
         private MusicFragment musicFragment;
 
-        public PagerAdapter(FragmentManager fm) {
+        PagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-
-            Fragment frag=null;
             switch (position){
                 case 0:
                     itineraryFragment = new ItineraryFragment();
@@ -165,15 +155,15 @@ public class NewRunActivity extends AppCompatActivity implements ItineraryFragme
             return null;
         }
 
-        public ItineraryFragment getItineraryFragment() {
+        ItineraryFragment getItineraryFragment() {
             return itineraryFragment;
         }
 
-        public PaceFragment getPaceFragment() {
+        PaceFragment getPaceFragment() {
             return paceFragment;
         }
 
-        public MusicFragment getMusicFragment() {
+        MusicFragment getMusicFragment() {
             return musicFragment;
         }
 

@@ -1,6 +1,5 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
