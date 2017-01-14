@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -41,7 +43,9 @@ import java.util.List;
 public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
     private ArrayList<LatLng> markerPoints = new ArrayList<LatLng>();
+    private ArrayList<Marker> markers = new ArrayList<Marker>();
     private Button button;
+    private FloatingActionButton floatingActionButton;
     private float distance;
 
     public ItineraryFragment() {
@@ -56,15 +60,14 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = getUrl(markerPoints);
-                Log.d("onMapClick", url);
-                FetchUrl FetchUrl = new FetchUrl();
+                initiateDirection();
+            }
+        });
 
-                // Start downloading json data from Google Directions API
-                FetchUrl.execute(url);
-                //move map camera
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(0)));
-                googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeLastMarker();
             }
         });
 
@@ -76,6 +79,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         View rootView = inflater.inflate(R.layout.fragment_itinerary, container, false);
         mapView = (MapView) rootView.findViewById(R.id.itineraryMapView);
         button = (Button) rootView.findViewById(R.id.buttonItinerary);
+        floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fabItinerary);
         return rootView;
     }
 
@@ -97,34 +101,78 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                 MarkerOptions options = new MarkerOptions();
                 // Setting the position of the marker
                 options.position(point);
+                options.draggable(true);
                 if (markerPoints.size() == 1) {
+                    options.title("Start");
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 } else {
+                    if(markerPoints.size()>2){
+                        markers.get(markers.size()-1).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                        markers.get(markers.size()-1).setTitle("Waypoint "+Integer.toString(markers.size()-1));
+                    }
+                    options.title("End");
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 }
+
                 // Add new marker to the Google Map
-                googleMap.addMarker(options);
+                markers.add(googleMap.addMarker(options));
             }
         });
+        googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                markerPoints.set(markers.indexOf(marker), marker.getPosition());
+            }
+        });
+    }
+
+    public void initiateDirection(){
+        if(markerPoints.size()>1){
+            String url = getUrl(markerPoints);
+            Log.d("onMapClick", url);
+            FetchUrl FetchUrl = new FetchUrl();
+
+            // Start downloading json data from Google Directions API
+            FetchUrl.execute(url);
+            //move map camera
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(0)));
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+        }
+    }
+
+    public void removeLastMarker(){
+        if(markers.size()>0){
+            markers.get(markers.size()-1).remove();
+            markers.remove(markers.size()-1);
+            markerPoints.remove(markerPoints.size()-1);
+        }
     }
 
     public double getDistance(){
         return distance;
     }
 
-    public String getUrl(ArrayList<LatLng> MarkerPoints){
-        LatLng origin = MarkerPoints.get(0);
-        LatLng dest = MarkerPoints.get(MarkerPoints.size()-1);
+    public String getUrl(ArrayList<LatLng> markerPoints){
+        LatLng origin = markerPoints.get(0);
+        LatLng dest = markerPoints.get(markerPoints.size()-1);
 
         String url= "https://maps.googleapis.com/maps/api/directions/json?" +
                 "mode=walking"+
                 "&origin="+origin.latitude+","+origin.longitude+
                 "&destination="+dest.latitude+","+dest.longitude;
-        if(MarkerPoints.size()>=3){
+        if(markerPoints.size()>=3)
             url = url + "&waypoints=";
-        }
-        for(int i=1;i<MarkerPoints.size()-1;i++){
-            url = url + MarkerPoints.get(i).latitude + "," + MarkerPoints.get(i).longitude + "|";
+        for(int i=1;i<markerPoints.size()-1;i++){
+            url = url + markerPoints.get(i).latitude + "," + markerPoints.get(i).longitude + "|";
         }
         url = url + "&sensor=false";
         return url;
