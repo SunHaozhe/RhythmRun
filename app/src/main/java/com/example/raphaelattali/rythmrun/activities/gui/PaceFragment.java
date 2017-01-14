@@ -1,4 +1,4 @@
-package layout;
+package com.example.raphaelattali.rythmrun.activities.gui;
 
 
 import android.content.SharedPreferences;
@@ -15,8 +15,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
-
-import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -146,7 +144,7 @@ public class PaceFragment extends Fragment {
             paceFragment.update(progress);
         }
 
-        public int getProgress(){ return progress; };
+        public int getProgress(){ return progress; }
 
         public void onStartTrackingTouch(SeekBar seekBar) {
 

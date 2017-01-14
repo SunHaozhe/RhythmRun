@@ -1,4 +1,4 @@
-package layout;
+package com.example.raphaelattali.rythmrun.activities.gui;
 
 
 import android.os.Bundle;

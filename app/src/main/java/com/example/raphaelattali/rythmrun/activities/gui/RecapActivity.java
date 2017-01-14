@@ -14,8 +14,6 @@ import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
 
-import layout.PaceFragment;
-
 public class RecapActivity extends AppCompatActivity {
 
     private boolean shownWarning = false;
@@ -37,7 +35,7 @@ public class RecapActivity extends AppCompatActivity {
         double pace = intent.getDoubleExtra(NewRunActivity.EXTRA_PACE,0.0);
         String music = intent.getStringExtra(NewRunActivity.EXTRA_MUSIC);
 
-        tvDistance.setText(distance+" km");
+        tvDistance.setText(fancyDistance(distance/1000)+" km");
         if(pace >= 0){
             tvPace.setText(PaceFragment.fancyPace(pace)+" /km");
         }
@@ -55,6 +53,20 @@ public class RecapActivity extends AppCompatActivity {
             }
         });
 
+        if(distance > 1000){
+            toggleWarning();
+        }
+
+    }
+
+    public String fancyDistance(double distance){
+        String s = Double.toString(distance);
+        int dotIndex = s.indexOf('.');
+        if (s.charAt(dotIndex + 1) == '0') {
+            return s.substring(0, dotIndex);
+        } else {
+            return s.substring(0, dotIndex + 2);
+        }
     }
 
     public boolean toggleWarning(){
