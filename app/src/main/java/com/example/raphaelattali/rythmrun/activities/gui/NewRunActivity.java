@@ -1,6 +1,7 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -9,11 +10,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.TabHost;
 
 import com.example.raphaelattali.rythmrun.R;
 
-public class NewRunActivity extends AppCompatActivity {
+public class NewRunActivity extends AppCompatActivity implements ItineraryFragment.OnMarkerChangeListener {
 
     public static final String EXTRA_DISTANCE="distance";
     public static final String EXTRA_PACE="pace";
@@ -21,6 +24,12 @@ public class NewRunActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private FloatingActionButton floatingActionButton;
+    private boolean itineraryFragmentHasChanged = false;
+
+    private boolean seenItinerary=true;
+    private boolean seenPace=false;
+    private boolean seenMusic=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +61,79 @@ public class NewRunActivity extends AppCompatActivity {
         //Setting tabs from adpater
         tabLayout.setTabsFromPagerAdapter(adapter);
 
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fabNewRun);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fabNewRun);
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), RecapActivity.class);
-                intent.putExtra(EXTRA_DISTANCE, adapter.getItineraryFragment().getDistance());
-                intent.putExtra(EXTRA_PACE,adapter.getPaceFragment().getPace());
-                intent.putExtra(EXTRA_MUSIC,adapter.getMusicFragment().getMusicStyle());
-                startActivity(intent);
+                int current = viewPager.getCurrentItem();
+
+                if(current==0 && itineraryFragmentHasChanged){
+                    try {
+                        adapter.getItineraryFragment().initiateDirection();
+                        floatingActionButton.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
+                        itineraryFragmentHasChanged=false;
+                    }
+                    catch (NullPointerException e){
+                        Log.d("I","Itinerary fragment is null ?");
+                    }
+                }
+                else{
+                    if(!seenItinerary){
+                        viewPager.setCurrentItem(0,true);
+                    } else if(!seenPace){
+                        viewPager.setCurrentItem(1,true);
+                    } else if(!seenMusic){
+                        viewPager.setCurrentItem(2,true);
+                    } else {
+                        Intent intent = new Intent(view.getContext(), RecapActivity.class);
+                        intent.putExtra(EXTRA_DISTANCE, adapter.getItineraryFragment().getDistance());
+                        intent.putExtra(EXTRA_PACE,adapter.getPaceFragment().getPace());
+                        intent.putExtra(EXTRA_MUSIC,adapter.getMusicFragment().getMusicStyle());
+                        startActivity(intent);
+                    }
+                }
             }
         });
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+                    case 0:
+                        seenItinerary=true;
+                        break;
+                    case 1:
+                        seenPace=true;
+                        floatingActionButton.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
+                        break;
+                    case 2:
+                        seenMusic=true;
+                        floatingActionButton.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
+                        break;
+                }
+                if(seenItinerary && seenPace && seenMusic){
+                    floatingActionButton.setImageResource(R.drawable.ic_check_black_24dp);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onMarkerChange() {
+        floatingActionButton.setImageResource(R.drawable.ic_directions_black_24dp);
+        itineraryFragmentHasChanged=true;
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter{

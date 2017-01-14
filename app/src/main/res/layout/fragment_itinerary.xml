@@ -5,24 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".activities.gui.ItineraryFragment">
 
-    <Button
-        android:id="@+id/buttonItinerary"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="VALIDATE ITINERARY"/>
-
     <com.google.android.gms.maps.MapView
         android:id="@+id/itineraryMapView"
         android:layout_width="wrap_content"
-        android:layout_below="@id/buttonItinerary"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabItinerary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/buttonItinerary"
+        android:layout_alignParentBottom="true"
         app:srcCompat="@drawable/ic_delete" />
 
 </RelativeLayout>

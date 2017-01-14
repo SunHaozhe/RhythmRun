@@ -1,6 +1,7 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
@@ -42,10 +44,27 @@ import java.util.List;
 
 public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
+    public static interface OnMarkerChangeListener {
+        public abstract void onMarkerChange();
+    }
+
+    private OnMarkerChangeListener markerChangeListener;
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        try{
+            this.markerChangeListener = (OnMarkerChangeListener) activity;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private ArrayList<LatLng> markerPoints = new ArrayList<LatLng>();
     private ArrayList<Marker> markers = new ArrayList<Marker>();
-    private Button button;
     private FloatingActionButton floatingActionButton;
+    private Polyline polyline;
     private float distance;
 
     public ItineraryFragment() {
@@ -56,13 +75,6 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initiateDirection();
-            }
-        });
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +90,6 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     public View initView(LayoutInflater inflater, ViewGroup container){
         View rootView = inflater.inflate(R.layout.fragment_itinerary, container, false);
         mapView = (MapView) rootView.findViewById(R.id.itineraryMapView);
-        button = (Button) rootView.findViewById(R.id.buttonItinerary);
         floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fabItinerary);
         return rootView;
     }
@@ -89,7 +100,6 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng point) {
-
                 if (markerPoints.size() > 22) {
                     markerPoints.clear();
                     googleMap.clear();
@@ -116,6 +126,9 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
                 // Add new marker to the Google Map
                 markers.add(googleMap.addMarker(options));
+
+                markerChangeListener.onMarkerChange();
+
             }
         });
         googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -137,6 +150,11 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
     public void initiateDirection(){
         if(markerPoints.size()>1){
+            if(polyline != null){
+                polyline.remove();
+                polyline=null;
+            }
+
             String url = getUrl(markerPoints);
             Log.d("onMapClick", url);
             FetchUrl FetchUrl = new FetchUrl();
@@ -144,8 +162,8 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
             // Start downloading json data from Google Directions API
             FetchUrl.execute(url);
             //move map camera
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(0)));
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+            //googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(0)));
+            //googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
         }
     }
 
@@ -154,6 +172,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
             markers.get(markers.size()-1).remove();
             markers.remove(markers.size()-1);
             markerPoints.remove(markerPoints.size()-1);
+            markerChangeListener.onMarkerChange();
         }
     }
 
@@ -327,7 +346,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
             // Drawing polyline in the Google Map for the i-th route
             if(lineOptions != null) {
-                googleMap.addPolyline(lineOptions);
+                polyline = googleMap.addPolyline(lineOptions);
                 distance = distanceOfPolyline(lineOptions);
             }
             else {
