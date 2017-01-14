@@ -24,8 +24,7 @@ public class SongActivity extends AppCompatActivity {
         TextView tvDuration = (TextView) findViewById(R.id.tvSongDuration);
 
         Intent intent = getIntent();
-        String songPath = intent.getStringExtra(LibraryActivity.EXTRA_SONG);
-        Song song = new Song(songPath);
+        Song song = Song.songs.get(intent.getIntExtra(LibraryActivity.EXTRA_SONG,0));
 
         tvTitle.setText(song.getTitle());
         tvArtist.setText(song.getArtist());

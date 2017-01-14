@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -41,6 +44,30 @@ public class LibraryActivity extends AppCompatActivity {
         if(Song.songs==null)
             Song.loadSongs();
 
+        createAdapter();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.library_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_library_refresh:
+                Song.loadSongs();
+                createAdapter();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void createAdapter(){
         SongAdapter songAdapter = new SongAdapter(this, Song.songs);
         ListView listView = (ListView) findViewById(R.id.lvLibrary);
         listView.setAdapter(songAdapter);
@@ -86,7 +113,7 @@ public class LibraryActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), SongActivity.class);
                     if (song != null) {
-                        intent.putExtra(EXTRA_SONG, song.getPath());
+                        intent.putExtra(EXTRA_SONG, Song.songs.indexOf(song));
                     }
                     startActivity(intent);
                 }

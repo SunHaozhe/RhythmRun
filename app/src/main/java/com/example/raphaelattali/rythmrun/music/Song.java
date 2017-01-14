@@ -48,6 +48,22 @@ public class Song {
         } else {
             Log.d("Files", "files is null: no files found ?");
         }
+
+        sortSongs();
+    }
+
+    public static void sortSongs(){
+        for(int i=1;i<songs.size();i++){
+            int j=i;
+            while(j>0 && (songs.get(i).getArtist().compareTo(songs.get(j-1).getArtist())<0 ||
+                    (songs.get(i).getArtist().compareTo(songs.get(j).getArtist()) == 0 &&
+                    songs.get(i).getTitle().compareTo(songs.get(j).getTitle())<0))){
+                j-=1;
+            }
+            Song temp = songs.get(i);
+            songs.set(i,songs.get(j));
+            songs.set(j,temp);
+        }
     }
 
     public static List<Song> getSongsByGenre(String genre){
@@ -76,15 +92,7 @@ public class Song {
 
     public Song(File file) {
         path = file.getPath();
-        initiate();
-    }
 
-    public Song(String path){
-        this.path = path;
-        initiate();
-    }
-
-    private void initiate(){
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(path);
 
