@@ -40,7 +40,14 @@
         <item>mi</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pref_title_pace">Speed display</string>
+    <string-array name="pref_pace_titles">
+        <item>Pace</item>
+        <item>Speed</item>
+    </string-array>
+    <string-array name="pref_pace_values">
+        <item>p</item>
+        <item>s</item>
+    </string-array>
 
 </resources>

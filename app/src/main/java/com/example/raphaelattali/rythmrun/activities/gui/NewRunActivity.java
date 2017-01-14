@@ -111,6 +111,7 @@ public class NewRunActivity extends AppCompatActivity implements ItineraryFragme
                     case 1:
                         seenPace=true;
                         floatingActionButton.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
+                        adapter.getPaceFragment().setDistance(adapter.getItineraryFragment().getDistance());
                         break;
                     case 2:
                         seenMusic=true;
