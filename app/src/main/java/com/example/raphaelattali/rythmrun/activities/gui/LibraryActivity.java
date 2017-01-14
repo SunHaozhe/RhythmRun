@@ -18,8 +18,6 @@ import android.widget.TextView;
 import com.example.raphaelattali.rythmrun.R;
 import com.example.raphaelattali.rythmrun.music.Song;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryActivity extends AppCompatActivity {
@@ -40,26 +38,10 @@ public class LibraryActivity extends AppCompatActivity {
             Log.d("Files", "external storage is NOT readable");
         }
 
-        List<Song> songs = new ArrayList<>();
+        if(Song.songs==null)
+            Song.loadSongs();
 
-        String path = Environment.getExternalStorageDirectory().toString() + "/Music";
-        Log.d("Files", "Path: " + path);
-        File directory = new File(path);
-        File[] files = directory.listFiles();
-        if (files != null) {
-            Log.d("Files", "Size: " + files.length);
-            for (File file:files) {
-                //Adds the song to the list
-                if (file.getName().endsWith(".mp3")) {
-                    Log.d("Files", "FileName:" + file.getName());
-                    songs.add(new Song(file));
-                }
-            }
-        } else {
-            Log.d("Files", "files is null: no files found ?");
-        }
-
-        SongAdapter songAdapter = new SongAdapter(this, songs);
+        SongAdapter songAdapter = new SongAdapter(this, Song.songs);
         ListView listView = (ListView) findViewById(R.id.lvLibrary);
         listView.setAdapter(songAdapter);
     }

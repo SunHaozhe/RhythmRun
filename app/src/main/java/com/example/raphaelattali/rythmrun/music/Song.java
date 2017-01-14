@@ -6,14 +6,19 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
+import android.os.Environment;
+import android.util.Log;
 
 import com.example.raphaelattali.rythmrun.Pace;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Song {
+
     private int color;
     private Bitmap bitmap;
     private String title;
@@ -22,6 +27,52 @@ public class Song {
     private String path;
     private String genre;
     private String duration;
+
+    public static List<Song> songs;
+    public static void loadSongs(){
+        songs = new ArrayList<>();
+
+        String path = Environment.getExternalStorageDirectory().toString() + "/Music";
+        Log.d("Files", "Path: " + path);
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        if (files != null) {
+            Log.d("Files", "Size: " + files.length);
+            for (File file:files) {
+                //Adds the song to the list
+                if (file.getName().endsWith(".mp3")) {
+                    Log.d("Files", "FileName:" + file.getName());
+                    songs.add(new Song(file));
+                }
+            }
+        } else {
+            Log.d("Files", "files is null: no files found ?");
+        }
+    }
+
+    public static List<Song> getSongsByGenre(String genre){
+        if(songs==null)
+            loadSongs();
+        List<Song> songsOfGenre = new ArrayList<>();
+        for(Song song:songs){
+            if(song.getGenre() != null){
+                if(song.getGenre().equals(genre))
+                    songsOfGenre.add(song);
+            }
+        }
+        return songsOfGenre;
+    }
+
+    public static ArrayList<String> getAllGenres(){
+        if(songs==null)
+            loadSongs();
+        ArrayList<String> genres = new ArrayList<>();
+        for(Song song:songs){
+            if(song.getGenre() != null && !genres.contains(song.getGenre()))
+                genres.add(song.getGenre());
+        }
+        return genres;
+    }
 
     public Song(File file) {
         path = file.getPath();
@@ -42,6 +93,7 @@ public class Song {
         album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
         genre = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
         duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
         if(duration != null)
             duration = Pace.fancyPace(Double.parseDouble(duration)/60);
 

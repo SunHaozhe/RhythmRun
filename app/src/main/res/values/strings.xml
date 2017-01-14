@@ -29,6 +29,8 @@
 
     <string name="music_choose_style">Choose your style:</string>
     <string name="music_random">Random</string>
+    <string name="music_no_files_found">No song found.</string>
+    <string name="music_files_found">%1$d song(s) found.</string>
 
     <string name="title_activity_recap">Recap</string>
     <string name="recap_of_your_run">RECAP OF YOUR RUN</string>
@@ -43,14 +45,6 @@
     <string name="title_activity_run">Run</string>
 
     <string name="title_activity_library">Library</string>
-    <string-array name="music_styles">
-        <item>Electro</item>
-        <item>Rock</item>
-        <item>Pop</item>
-        <item>Techno</item>
-        <item>Jazz</item>
-        <item>Classical</item>
-    </string-array>
 
     <string name="title_activity_settings">Settings</string>
 
