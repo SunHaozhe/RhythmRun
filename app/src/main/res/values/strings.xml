@@ -70,5 +70,6 @@
         <item>p</item>
         <item>s</item>
     </string-array>
+    <string name="title_activity_description_project_about">DescriptionProjectActivityAbout</string>
 
 </resources>
