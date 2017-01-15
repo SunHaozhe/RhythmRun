@@ -19,13 +19,17 @@ import java.util.Date;
 public class Accelerometer implements SensorEventListener {
     private float frequence_echantillonage;
     private int nombre_echantillons;
-    private float plage_echantillonage; //temps pendant lequel on garde les donnees
+    private float plage_echantillonage; //temps pendant lequel on garde les donnees, en secondes
     private float periode;
     private float[][] valeurs;
     float ax, ay, az;
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private boolean active;
+    private boolean finished = false;
+    private boolean abs; //acceleration en valeur absolue
+    private boolean auMoinsUnTour = false;
+    int k = 0;
 
     public boolean isActive() {
         return active;
@@ -45,21 +49,22 @@ public class Accelerometer implements SensorEventListener {
 
     /**
      *
-     * @param periode
-     * @param nombre_echantillons
+     * @param periode inverse de la frequence d'echantillonage, en secondes
+     * @param nombre_echantillons taille du tableau de valeurs
      */
-    public Accelerometer(float periode, int nombre_echantillons, Context context) {
+    public Accelerometer(float periode, int nombre_echantillons, Context context, boolean abs) {
+        this.abs = abs;
         this.periode = periode;
         frequence_echantillonage = 1/periode;
         this.nombre_echantillons = nombre_echantillons;
         this.plage_echantillonage = nombre_echantillons/frequence_echantillonage;
         valeurs = new float[3][nombre_echantillons];
-        ax = 21f; ay = 21f; az = 21f;
+        ax = 0f; ay = 0f; az = 0f;
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
         if (mSensor == null) {
-            ax = 42.0f;
+            Log.i("lucas", "pas d'accelerometre");
         }
         active = false;
         Log.d("lucas", "min delay : " + String.valueOf(mSensor.getMinDelay()));
@@ -71,7 +76,8 @@ public class Accelerometer implements SensorEventListener {
      * @param periode
      * @param plage_echantillonage
      */
-    public Accelerometer(float periode, float plage_echantillonage) {
+    public Accelerometer(float periode, float plage_echantillonage, Context context, boolean abs) {
+        this.abs = abs;
         this.periode = periode;
         frequence_echantillonage = 1/periode;
         this.plage_echantillonage = plage_echantillonage;
@@ -89,7 +95,8 @@ public class Accelerometer implements SensorEventListener {
      * @param arg1
      */
     @Override
-    public void onAccuracyChanged(Sensor arg0, int arg1) { //osef
+    public void onAccuracyChanged(Sensor arg0, int arg1) {
+        Log.i("lucas", "accuracy changed");
     }
 
     /**
@@ -112,7 +119,7 @@ public class Accelerometer implements SensorEventListener {
      * @param delaySec
      *      Delai d'actualisation
      */
-    public void completeTab(float delaySec)
+    private void completeTab(float delaySec)
     {
         Thread thread = new Thread(new Runnable() {
             Date date = new Date();
@@ -120,14 +127,53 @@ public class Accelerometer implements SensorEventListener {
             @Override
             public void run() {
                 temps_debut = date.getTime();
-                valeurs[0][0] = (float)0.0;
+                while(finished == false) {
+                    if (abs) {
+                        valeurs[0][k] = valeurAbsolue(ax);
+                        valeurs[1][k] = valeurAbsolue(ay);
+                        valeurs[2][k] = valeurAbsolue(az);
+                    }
+                    valeurs[0][k] = ax;
+                    valeurs[1][k] = ay;
+                    valeurs[2][k] = az;
+                    if (k==nombre_echantillons-1) auMoinsUnTour = true;
+                    k = (k+1)%nombre_echantillons;
+                    try {
+                        Thread.sleep((long) (1000*periode));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
         thread.start();
     }
 
+    public void stop() {
+        finished = true;
+    }
 
+    public float[][] getArray() {
+        return valeurs;
+    }
 
+    private final float valeurAbsolue(float x) {
+        if (x>0) {
+            return x;
+        }
+        return -x;
+    }
 
+    public final boolean auMoinsUnTour() {
+        return auMoinsUnTour;
+    }
+
+    public int getNombreEchantillons() {
+        return nombre_echantillons;
+    }
+
+    public final int getCurrentIndex() {
+        return k;
+    }
 
 }

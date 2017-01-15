@@ -47,10 +47,10 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
 
         test_button = (Button) findViewById(R.id.test_button);
+        test_button.setText("L'accelerometre s'allume...");
         test_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                test_button.setText("hop");
                 k = 1;
             }
         });
@@ -83,38 +83,35 @@ public class Main2Activity extends AppCompatActivity {
             public void run() {
 
                 Log.i("lucas", "on est rentrés dans le thread");
-                Accelerometer acc = new Accelerometer(0.1f, 10, mContext);
+                Accelerometer acc = new Accelerometer(0.1f, 10, mContext, false);
 
                     File file = new File("/storage/emulated/0/Download/donnees.csv");
                     Log.i("lucas", "on a créé le file");
                     try {
-                        FileOutputStream fOS = new FileOutputStream(file);
+                        //FileOutputStream fOS = new FileOutputStream(file);
+                        //Log.i("lucas", "on a ouvert le fileoutputstream");
+                        //OutputStreamWriter oSW = new OutputStreamWriter(fOS);
+                        PrintWriter pw = new PrintWriter(file);
                         Log.i("lucas", "on a ouvert le fileoutputstream");
-                        OutputStreamWriter oSW = new OutputStreamWriter(fOS);
-
-                        Log.i("lucas", "on a ouvert l'outputstreamwriter");
-                        int c = 0;
-                        int m = 0;
                         String x, y, z;
-
-                        while (k == 0&&c<1000&&m<300000) {
+                        while (k == 0) {
                             if (acc.isActive()) {
-                                c++;
                                 x = String.valueOf(acc.getAx());
                                 y = String.valueOf(acc.getAy());
                                 z = String.valueOf(acc.getAz());
-                                oSW.append(x + "," + y + "," + z + "\n");
+                                //oSW.append(x + "," + y + "," + z + "\n");
+                                pw.write(x + "," + y + "," + z + "\n");
                             }
-                            m++;
                             try {
                                 Thread.sleep(30);
                             } catch (InterruptedException e) {
                             }
                         }
                         Log.i("lucas", "on est sortis du while");
-                        oSW.flush();
-                        oSW.close();
-                        fOS.close();
+                        //oSW.flush();
+                        //oSW.close();
+                        //fOS.close();
+                        pw.close();
                         } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
