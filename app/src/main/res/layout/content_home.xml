@@ -27,8 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:textColor="@color/colorBold"
-            android:textSize="60dp"
-            android:text="42"/>
+            android:textSize="60sp"/>
 
         <TextView
             android:id="@+id/tvHomeDistanceUnit"
@@ -37,8 +36,7 @@
             android:layout_toRightOf="@id/tvHomeDistance"
             android:layout_alignBaseline="@id/tvHomeDistance"
             android:textColor="@color/colorBold"
-            android:textSize="30dp"
-            android:text="km"/>
+            android:textSize="30sp"/>
 
     </RelativeLayout>
 
@@ -46,7 +44,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="this week"/>
+        android:text="@string/home_distance_this_week"/>
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -59,8 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:textColor="@color/colorBold"
-            android:textSize="60dp"
-            android:text="5:02"/>
+            android:textSize="60sp" />
 
         <TextView
             android:id="@+id/tvHomePaceUnit"
@@ -69,23 +66,23 @@
             android:layout_toRightOf="@id/tvHomePace"
             android:layout_alignBaseline="@id/tvHomePace"
             android:textColor="@color/colorBold"
-            android:textSize="30dp"
-            android:text="/km"/>
+            android:textSize="30sp" />
 
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/tvHomeAveragePace"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="average pace"/>
+        android:text="@string/home_average_pace"/>
 
     <Button
         android:id="@+id/buttonHomeNewRun"
         android:layout_marginTop="50dp"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@drawable/roun_shape_btn"
+        android:background="@drawable/round_shape_btn"
         android:textColor="#FFFFFF"
         android:text="@string/home_new_run"/>
 

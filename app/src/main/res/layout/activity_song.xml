@@ -14,7 +14,8 @@
         android:id="@+id/ivSong"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/tvSongTitle"
@@ -22,16 +23,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/ivSong"
         android:textColor="@color/colorBold"
-        android:textSize="20dp"
-        android:text="Bohemian Rhapsody"/>
+        android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/tvSongArtist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvSongTitle"
-        android:textColor="@color/colorBold"
-        android:text="Queen"/>
+        android:textColor="@color/colorBold"/>
 
     <TextView
         android:id="@+id/tvSongAlbum"
@@ -39,8 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvSongArtist"
         android:textColor="@color/colorBold"
-        android:textStyle="italic"
-        android:text="Greatest Hits"/>
+        android:textStyle="italic"/>
 
     <TextView
         android:id="@+id/tvSongGenre"
@@ -48,15 +46,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvSongTitle"
         android:layout_alignParentRight="true"
-        android:textStyle="italic"
-        android:text="Pop"/>
+        android:textStyle="italic"/>
 
     <TextView
         android:id="@+id/tvSongDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/tvSongTitle"
-        android:layout_alignRight="@id/tvSongGenre"
-        android:text="00:00"/>
+        android:layout_alignRight="@id/tvSongGenre"/>
 
 </RelativeLayout>

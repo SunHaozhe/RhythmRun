@@ -1,27 +1,26 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.app.Activity;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.raphaelattali.rythmrun.R;
-import com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment;
-import com.google.android.gms.maps.CameraUpdateFactory;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
@@ -40,8 +39,27 @@ import java.util.List;
 
 public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
-    private ArrayList<LatLng> markerPoints = new ArrayList<LatLng>();
-    private Button button;
+    public interface OnMarkerChangeListener {
+       void onMarkerChange();
+    }
+
+    private OnMarkerChangeListener markerChangeListener;
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        try{
+            this.markerChangeListener = (OnMarkerChangeListener) activity;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private ArrayList<LatLng> markerPoints = new ArrayList<>();
+    private ArrayList<Marker> markers = new ArrayList<>();
+    private FloatingActionButton floatingActionButton;
+    private Polyline polyline;
     private float distance;
 
     public ItineraryFragment() {
@@ -53,18 +71,10 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = getUrl(markerPoints);
-                Log.d("onMapClick", url);
-                FetchUrl FetchUrl = new FetchUrl();
-
-                // Start downloading json data from Google Directions API
-                FetchUrl.execute(url);
-                //move map camera
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(0)));
-                googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+                removeLastMarker();
             }
         });
 
@@ -75,7 +85,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     public View initView(LayoutInflater inflater, ViewGroup container){
         View rootView = inflater.inflate(R.layout.fragment_itinerary, container, false);
         mapView = (MapView) rootView.findViewById(R.id.itineraryMapView);
-        button = (Button) rootView.findViewById(R.id.buttonItinerary);
+        floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fabItinerary);
         return rootView;
     }
 
@@ -85,7 +95,6 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng point) {
-
                 if (markerPoints.size() > 22) {
                     markerPoints.clear();
                     googleMap.clear();
@@ -97,39 +106,93 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                 MarkerOptions options = new MarkerOptions();
                 // Setting the position of the marker
                 options.position(point);
+                options.draggable(true);
                 if (markerPoints.size() == 1) {
+                    options.title("Start");
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 } else {
+                    if(markerPoints.size()>2){
+                        markers.get(markers.size()-1).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                        markers.get(markers.size()-1).setTitle("Waypoint "+Integer.toString(markers.size()-1));
+                    }
+                    options.title("End");
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 }
+
                 // Add new marker to the Google Map
-                googleMap.addMarker(options);
+                markers.add(googleMap.addMarker(options));
+
+                markerChangeListener.onMarkerChange();
+
             }
         });
+        googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                markerPoints.set(markers.indexOf(marker), marker.getPosition());
+            }
+        });
+    }
+
+    public void initiateDirection(){
+        if(markerPoints.size()>1){
+            if(polyline != null){
+                polyline.remove();
+                polyline=null;
+            }
+
+            String url = getUrl(markerPoints);
+            Log.d("onMapClick", url);
+            FetchUrl FetchUrl = new FetchUrl();
+
+            // Start downloading json data from Google Directions API
+            FetchUrl.execute(url);
+            //move map camera
+            //googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(0)));
+            //googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+        }
+    }
+
+    public void removeLastMarker(){
+        if(markers.size()>0){
+            markers.get(markers.size()-1).remove();
+            markers.remove(markers.size()-1);
+            markerPoints.remove(markerPoints.size()-1);
+            markerChangeListener.onMarkerChange();
+        }
     }
 
     public double getDistance(){
         return distance;
     }
 
-    public String getUrl(ArrayList<LatLng> MarkerPoints){
-        LatLng origin = MarkerPoints.get(0);
-        LatLng dest = MarkerPoints.get(MarkerPoints.size()-1);
+    public String getUrl(ArrayList<LatLng> markerPoints){
+        LatLng origin = markerPoints.get(0);
+        LatLng dest = markerPoints.get(markerPoints.size()-1);
 
         String url= "https://maps.googleapis.com/maps/api/directions/json?" +
                 "mode=walking"+
                 "&origin="+origin.latitude+","+origin.longitude+
                 "&destination="+dest.latitude+","+dest.longitude;
-        if(MarkerPoints.size()>=3){
+        if(markerPoints.size()>=3)
             url = url + "&waypoints=";
-        }
-        for(int i=1;i<MarkerPoints.size()-1;i++){
-            url = url + MarkerPoints.get(i).latitude + "," + MarkerPoints.get(i).longitude + "|";
+        for(int i=1;i<markerPoints.size()-1;i++){
+            url = url + markerPoints.get(i).latitude + "," + markerPoints.get(i).longitude + "|";
         }
         url = url + "&sensor=false";
         return url;
     }
 
+    @SuppressWarnings("TryFinallyCanBeTryWithResources")
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
@@ -148,20 +211,21 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
 
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
 
-            String line = "";
+            String line;
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
 
             data = sb.toString();
-            Log.d("downloadUrl", data.toString());
+            Log.d("downloadUrl", data);
             br.close();
 
         } catch (Exception e) {
             Log.d("Exception", e.toString());
         } finally {
+            //noinspection ThrowFromFinallyBlock
             iStream.close();
             urlConnection.disconnect();
         }
@@ -169,17 +233,17 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     }
 
     public float distanceOfPolyline(PolylineOptions polylineOptions){
-        List<LatLng> latlngs = polylineOptions.getPoints();
-        int size = latlngs.size() - 1;
+        List<LatLng> table = polylineOptions.getPoints();
+        int size = table.size() - 1;
         float[] results = new float[1];
         float sum = 0;
 
         for(int i = 0; i < size; i++){
             Location.distanceBetween(
-                    latlngs.get(i).latitude,
-                    latlngs.get(i).longitude,
-                    latlngs.get(i+1).latitude,
-                    latlngs.get(i+1).longitude,
+                    table.get(i).latitude,
+                    table.get(i).longitude,
+                    table.get(i+1).latitude,
+                    table.get(i+1).longitude,
                     results);
             sum += results[0];
         }
@@ -227,6 +291,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
             try {
                 jObject = new JSONObject(jsonData[0]);
+                //noinspection RedundantStringToString
                 Log.d("ParserTask",jsonData[0].toString());
                 DataParser parser = new DataParser();
                 Log.d("ParserTask", parser.toString());
@@ -273,17 +338,17 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                 lineOptions.width(10);
                 lineOptions.color(Color.RED);
 
-                Log.d("onPostExecute","onPostExecute lineoptions decoded");
+                Log.d("onPostExecute","onPostExecute line options decoded");
 
             }
 
             // Drawing polyline in the Google Map for the i-th route
             if(lineOptions != null) {
-                googleMap.addPolyline(lineOptions);
+                polyline = googleMap.addPolyline(lineOptions);
                 distance = distanceOfPolyline(lineOptions);
             }
             else {
-                Log.d("onPostExecute","without Polylines drawn");
+                Log.d("onPostExecute","without Poly lines drawn");
             }
         }
     }
@@ -291,6 +356,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     public class DataParser {
 
         /** Receives a JSONObject and returns a list of lists containing latitude and longitude */
+        @SuppressWarnings("unchecked")
         public List<List<HashMap<String,String>>> parse(JSONObject jObject){
 
             List<List<HashMap<String, String>>> routes = new ArrayList<>() ;
@@ -313,7 +379,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
                         /** Traversing all steps */
                         for(int k=0;k<jSteps.length();k++){
-                            String polyline = "";
+                            String polyline;
                             polyline = (String)((JSONObject)((JSONObject)jSteps.get(k)).get("polyline")).get("points");
                             List<LatLng> list = decodePoly(polyline);
 
@@ -331,18 +397,12 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
             } catch (JSONException e) {
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception ignored){
             }
-
 
             return routes;
         }
 
-
-        /**
-         * Method to decode polyline points
-         * Courtesy : https://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
-         * */
         private List<LatLng> decodePoly(String encoded) {
 
             List<LatLng> poly = new ArrayList<>();
@@ -356,8 +416,8 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                     result |= (b & 0x1f) << shift;
                     shift += 5;
                 } while (b >= 0x20);
-                int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-                lat += dlat;
+                int d_lat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                lat += d_lat;
 
                 shift = 0;
                 result = 0;
@@ -366,8 +426,8 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                     result |= (b & 0x1f) << shift;
                     shift += 5;
                 } while (b >= 0x20);
-                int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-                lng += dlng;
+                int d_lng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                lng += d_lng;
 
                 LatLng p = new LatLng((((double) lat / 1E5)),
                         (((double) lng / 1E5)));

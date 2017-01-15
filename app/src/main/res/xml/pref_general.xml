@@ -9,4 +9,13 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_title_units" />
 
+    <ListPreference
+        android:defaultValue="p"
+        android:entries="@array/pref_pace_titles"
+        android:entryValues="@array/pref_pace_values"
+        android:key="pace"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_pace" />
+
 </PreferenceScreen>

@@ -11,28 +11,20 @@ import com.example.raphaelattali.rythmrun.music.Song;
 
 public class SongActivity extends AppCompatActivity {
 
-    private ImageView imageView;
-    private TextView tvTitle;
-    private TextView tvArtist;
-    private TextView tvAlbum;
-    private TextView tvGenre;
-    private TextView tvDuration;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song);
 
-        imageView = (ImageView) findViewById(R.id.ivSong);
-        tvTitle = (TextView) findViewById(R.id.tvSongTitle);
-        tvArtist = (TextView) findViewById(R.id.tvSongArtist);
-        tvAlbum = (TextView) findViewById(R.id.tvSongAlbum);
-        tvGenre = (TextView) findViewById(R.id.tvSongGenre);
-        tvDuration = (TextView) findViewById(R.id.tvSongDuration);
+        ImageView imageView = (ImageView) findViewById(R.id.ivSong);
+        TextView tvTitle = (TextView) findViewById(R.id.tvSongTitle);
+        TextView tvArtist = (TextView) findViewById(R.id.tvSongArtist);
+        TextView tvAlbum = (TextView) findViewById(R.id.tvSongAlbum);
+        TextView tvGenre = (TextView) findViewById(R.id.tvSongGenre);
+        TextView tvDuration = (TextView) findViewById(R.id.tvSongDuration);
 
         Intent intent = getIntent();
-        String songPath = intent.getStringExtra(LibraryActivity.EXTRA_SONG);
-        Song song = new Song(songPath);
+        Song song = Song.songs.get(intent.getIntExtra(LibraryActivity.EXTRA_SONG,0));
 
         tvTitle.setText(song.getTitle());
         tvArtist.setText(song.getArtist());

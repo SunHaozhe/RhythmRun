@@ -1,6 +1,8 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,35 +14,49 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.raphaelattali.rythmrun.Distance;
+import com.example.raphaelattali.rythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
 
 public class RecapActivity extends AppCompatActivity {
 
     private boolean shownWarning = false;
-    LinearLayout linearLayout;
+
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recap);
 
-        linearLayout = (LinearLayout) findViewById(R.id.RecapToHide);
+        Intent intent = getIntent();
+        Distance distance = new Distance(intent.getDoubleExtra(NewRunActivity.EXTRA_DISTANCE,0.0)/1000);
+        Pace pace = new Pace(intent.getDoubleExtra(NewRunActivity.EXTRA_PACE,0.0));
+        String music = intent.getStringExtra(NewRunActivity.EXTRA_MUSIC);
 
+        linearLayout = (LinearLayout) findViewById(R.id.RecapToHide);
         TextView tvDistance = (TextView) findViewById(R.id.tvRecapDistance);
         TextView tvPace = (TextView) findViewById(R.id.tvRecapPace);
         TextView tvMusic = (TextView) findViewById(R.id.tvRecapMusic);
 
-        Intent intent = getIntent();
-        double distance = intent.getDoubleExtra(NewRunActivity.EXTRA_DISTANCE,0.0);
-        double pace = intent.getDoubleExtra(NewRunActivity.EXTRA_PACE,0.0);
-        String music = intent.getStringExtra(NewRunActivity.EXTRA_MUSIC);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String unit = sharedPreferences.getString("unit_list","km");
+        String paceMode = sharedPreferences.getString("pace","p");
 
-        tvDistance.setText(fancyDistance(distance/1000)+" km");
-        if(pace >= 0){
-            tvPace.setText(PaceFragment.fancyPace(pace)+" /km");
+        tvDistance.setText(distance.toStr(unit,true));
+        TextView tvRecapLabel2 = (TextView) findViewById(R.id.tvRecapLabel2);
+        if(paceMode.equals("p")){
+            tvRecapLabel2.setText(R.string.recap_selected_pace);
         }
         else{
-            tvPace.setText("free");
+            tvRecapLabel2.setText(R.string.recap_selected_speed);
+        }
+
+        if(pace.getValue() >= 0){
+            tvPace.setText(pace.toStr(unit,paceMode,true));
+        }
+        else{
+            tvPace.setText(R.string.recap_free);
         }
         tvMusic.setText(music);
 
@@ -53,20 +69,7 @@ public class RecapActivity extends AppCompatActivity {
             }
         });
 
-        if(distance > 1000){
-            toggleWarning();
-        }
-
-    }
-
-    public String fancyDistance(double distance){
-        String s = Double.toString(distance);
-        int dotIndex = s.indexOf('.');
-        if (s.charAt(dotIndex + 1) == '0') {
-            return s.substring(0, dotIndex);
-        } else {
-            return s.substring(0, dotIndex + 2);
-        }
+        toggleWarning();
     }
 
     public boolean toggleWarning(){

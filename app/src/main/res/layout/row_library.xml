@@ -11,7 +11,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         tools:background="#AAA"
-        />
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/title"

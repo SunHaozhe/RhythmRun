@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +16,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.raphaelattali.rythmrun.Distance;
+import com.example.raphaelattali.rythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
 
 public class HomeActivity extends AppCompatActivity
@@ -40,10 +43,10 @@ public class HomeActivity extends AppCompatActivity
         buttonNewRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.setBackground(getResources().getDrawable(R.drawable.roun_shape_btn_pressed));
+                view.setBackground(getResources().getDrawable(R.drawable.round_shape_btn_pressed));
                 Intent intent = new Intent(view.getContext(),NewRunActivity.class);
                 startActivity(intent);
-                view.setBackground(getResources().getDrawable(R.drawable.roun_shape_btn));
+                view.setBackground(getResources().getDrawable(R.drawable.round_shape_btn));
             }
         });
     }
@@ -56,22 +59,27 @@ public class HomeActivity extends AppCompatActivity
         TextView tvDistanceUnit = (TextView) findViewById(R.id.tvHomeDistanceUnit);
         TextView tvPace = (TextView) findViewById(R.id.tvHomePace);
         TextView tvPaceUnit = (TextView) findViewById(R.id.tvHomePaceUnit);
+        TextView tvAveragePace = (TextView) findViewById(R.id.tvHomeAveragePace);
 
-        double distance = getDistance();
-        double pace = getPace();
+        Distance distance = getDistance();
+        Pace pace = getPace();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String unit = sharedPreferences.getString("unit_list","km");
+        String paceMode = sharedPreferences.getString("pace","p");
 
-        if(unit.equals("mi")){
-            distance *= 0.621;
-            pace /= 0.621;
-        }
-
-        tvDistance.setText(PaceFragment.fancySpeed(distance));
+        tvDistance.setText(distance.toStr(unit));
         tvDistanceUnit.setText(unit);
-        tvPace.setText(PaceFragment.fancyPace(pace));
-        tvPaceUnit.setText("/"+unit);
+        if(paceMode.equals("p")){
+            tvPace.setText(pace.toStrPace(unit));
+            tvPaceUnit.setText(getString(R.string.unit_pace,unit));
+            tvAveragePace.setText(R.string.home_average_pace);
+        }
+        else{
+            tvPace.setText(pace.toStrSpeed(unit));
+            tvPaceUnit.setText(getString(R.string.unit_speed,unit));
+            tvAveragePace.setText(R.string.home_average_speed);
+        }
     }
 
     @Override
@@ -86,7 +94,7 @@ public class HomeActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -112,12 +120,12 @@ public class HomeActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    public double getDistance(){
-        return 42.1;
+    public Distance getDistance(){
+        return new Distance(42.1);
     }
 
-    public double getPace(){
-        return 5.6;
+    public Pace getPace(){
+        return new Pace(5.6);
     }
 
 }
