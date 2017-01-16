@@ -52,7 +52,7 @@ public class Accelerometer implements SensorEventListener {
      * @param periode inverse de la frequence d'echantillonage, en secondes
      * @param nombre_echantillons taille du tableau de valeurs
      */
-    public Accelerometer(float periode, int nombre_echantillons, Context context, boolean abs) {
+    public Accelerometer(float periode, int nombre_echantillons, Context context) {
         this.abs = abs;
         this.periode = periode;
         frequence_echantillonage = 1/periode;
@@ -67,7 +67,7 @@ public class Accelerometer implements SensorEventListener {
             Log.i("lucas", "pas d'accelerometre");
         }
         active = false;
-        Log.d("lucas", "min delay : " + String.valueOf(mSensor.getMinDelay()));
+        //Log.d("lucas", "min delay : " + String.valueOf(mSensor.getMinDelay()));
         //completeTab(periode);
     }
 
@@ -76,7 +76,7 @@ public class Accelerometer implements SensorEventListener {
      * @param periode
      * @param plage_echantillonage
      */
-    public Accelerometer(float periode, float plage_echantillonage, Context context, boolean abs) {
+    public Accelerometer(float periode, float plage_echantillonage, Context context) {
         this.abs = abs;
         this.periode = periode;
         frequence_echantillonage = 1/periode;
@@ -85,8 +85,8 @@ public class Accelerometer implements SensorEventListener {
         valeurs = new float[3][nombre_echantillons];
         ax = 0; ay = 0; az = 0;
         active = false;
-        Log.d("lucas", "min delay : " + String.valueOf(mSensor.getMinDelay()));
-        //completeTab(periode);
+        //Log.d("lucas", "min delay : " + String.valueOf(mSensor.getMinDelay()));
+        completeTab();
     }
 
     /**
@@ -116,10 +116,8 @@ public class Accelerometer implements SensorEventListener {
     /**
      * Renseigne le tableau de valeurs a intervalle de temps reguliere
      *
-     * @param delaySec
-     *      Delai d'actualisation
      */
-    private void completeTab(float delaySec)
+    private void completeTab()
     {
         Thread thread = new Thread(new Runnable() {
             Date date = new Date();
@@ -128,14 +126,13 @@ public class Accelerometer implements SensorEventListener {
             public void run() {
                 temps_debut = date.getTime();
                 while(finished == false) {
-                    if (abs) {
-                        valeurs[0][k] = valeurAbsolue(ax);
-                        valeurs[1][k] = valeurAbsolue(ay);
-                        valeurs[2][k] = valeurAbsolue(az);
-                    }
-                    valeurs[0][k] = ax;
+                    //valeurs[0][k] = ax;
+                    valeurs[0][k] = (float)Math.sin(2*3.14159*k/10.0f); //3Hz environ
                     valeurs[1][k] = ay;
                     valeurs[2][k] = az;
+                    if (valeurAbsolue(ax) > 1) {
+                        Log.i("lucas", "paf");
+                    }
                     if (k==nombre_echantillons-1) auMoinsUnTour = true;
                     k = (k+1)%nombre_echantillons;
                     try {

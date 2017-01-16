@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -17,29 +18,46 @@ public class Podometer implements PodometerInterface, SensorEventListener {
 
     Context context;
     float paceFrequency = 1.0f;
-    float min, max;
+    private int min, max; //on restreint le domaine de la tfd car on a un ODG des frequences cherchees
     private final float alpha = 0.25f;
     private boolean[] pas;
     private int numberOfValues;
     private float[][] values;
     private float[][] accValues;
-    Accelerometer acc;
+    private float tfd[];
+    private float tempsReleves;
+    private float periodeEchantillonage;
+    private Accelerometer acc;
 
     public Podometer(Context context) {
+        Log.i("lucas", "constructeur du podometre");
         this.context = context;
-        acc = new Accelerometer(0.03f, 5.0f, context, false);
+        tempsReleves = 5.0f;
+        periodeEchantillonage = 0.03f;
+        acc = new Accelerometer(periodeEchantillonage, tempsReleves, context);
         numberOfValues = acc.getNombreEchantillons();
         values = new float[3][numberOfValues];
         accValues = acc.getArray();
-        if (!acc.isActive()) {
-            return;
-        }
-        sleep(5000);
         while (!acc.auMoinsUnTour()) {
-            sleep(100);
+            sleep(500);
+            Log.i("lucas", "attente...");
         }
-
-
+        min = 0; max = numberOfValues/2;
+        tfd = new float[max-min];
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("lucas", "on est rentrés dans le thread du podometre");
+                for (int i = 0; i<10; i++) {
+                    computePacePeriod();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        });
+        thread.start();
     }
 
     @Override
@@ -69,7 +87,38 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         int debut = acc.getCurrentIndex();
         System.arraycopy(accValues[0], debut, values[0], 0, numberOfValues-debut);
         System.arraycopy(accValues[0], 0, values[0], numberOfValues-debut, debut);
-        boolean signe = true; //positif
-        ArrayList<Float> stepTimes = new ArrayList<Float>();
+        computeTFD(0);
+        Log.i("lucas", "on va calculer l'indice max");
+        int indice = min + indiceMaxi(tfd, max-min);
+        paceFrequency = indice/tempsReleves;
+        Log.i("lucas", "on a calcule une frequence de " + String.valueOf(paceFrequency));
+    }
+
+    private final void computeTFD(int index) { //index : 0 pour x, 1 pour y ou 2 pour z, a remplacer par une fft
+        float r = 0, i = 0, pi = 3.14159265359f;
+        for (int k = min; k<max; k++) {
+            r = 0; i = 0;
+            for (int n = 0; n<numberOfValues; n++) {
+                r += values[index][n]*Math.cos(2*pi*k*n/numberOfValues);
+                i -= values[index][n]*Math.sin(2*pi*k*n/numberOfValues);
+            }
+            tfd[k-min] = r*r+i*i;
+        }
+        Log.i("lucas", "on a calcule une tfd");
+        Log.i("lucas", "numberOfValues : " + String.valueOf(numberOfValues));
+    }
+
+    private final int indiceMaxi(float t[], int len) {
+        Log.i("lucas", "on calcule l'indice maxi");
+        int k = 0;
+        float m = -1;
+        for (int n = 0; n<len; n++) {
+            if (t[n] > m) {
+                m = t[n];
+                k = n;
+            }
+        }
+        Log.i("lucas", "max : " + String.valueOf(m));
+        return k;
     }
 }

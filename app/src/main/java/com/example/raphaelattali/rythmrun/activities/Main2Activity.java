@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
 import com.example.raphaelattali.rythmrun.sensors.Accelerometer;
+import com.example.raphaelattali.rythmrun.sensors.Podometer;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -34,7 +36,10 @@ import static android.os.Environment.DIRECTORY_DOCUMENTS;
 public class Main2Activity extends AppCompatActivity {
 
     Button test_button = null;
-    int k = 0;
+    TextView textview = null;
+    private Integer k = 0, fini = k;
+    private Float pacefreq = 1.0f;
+    Context mContext;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -55,7 +60,11 @@ public class Main2Activity extends AppCompatActivity {
             }
         });
 
-        final Context mContext = this;
+        textview = (TextView) findViewById(R.id.textview);
+        textview.setText("ma 2eme activite");
+        setPacefreq(42.0f);
+
+        mContext = this;
         Log.d("lucas", "on va verifier les permissions d ecriture");
         // Permission d'ecriture
         int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -78,12 +87,12 @@ public class Main2Activity extends AppCompatActivity {
         Log.d("lucas", "on a les permissions d'écriture");
 
 
-        Thread thread = new Thread(new Runnable() {
+        Thread thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
 
                 Log.i("lucas", "on est rentrés dans le thread");
-                Accelerometer acc = new Accelerometer(0.1f, 10, mContext, false);
+                Accelerometer acc = new Accelerometer(0.1f, 10, mContext);
 
                     File file = new File("/storage/emulated/0/Download/donnees.csv");
                     Log.i("lucas", "on a créé le file");
@@ -119,7 +128,9 @@ public class Main2Activity extends AppCompatActivity {
                     }
             }
         });
-        thread.start();
+        //thread1.start();
+        Thread thread2 = new Thread(new monRunnable(this, mContext, fini));
+        thread2.start();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -150,6 +161,7 @@ public class Main2Activity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         AppIndex.AppIndexApi.start(client, getIndexApiAction());
+
     }
 
     @Override
@@ -161,4 +173,10 @@ public class Main2Activity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
+
+    public void setPacefreq(float freq) {
+        textview.setText(String.valueOf(freq));
+    }
+
 }
+
