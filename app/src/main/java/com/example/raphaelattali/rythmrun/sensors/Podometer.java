@@ -68,7 +68,7 @@ public class Podometer implements PodometerInterface, SensorEventListener {
 
     //Récupérer la fréquence de pas actuelle du coureur
     public float getRunningPaceFrequency() {
-        return 0.0f;
+        return paceFrequency;
     }
 
     public float lastStepTimeSinceBoot() {

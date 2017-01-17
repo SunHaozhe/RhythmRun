@@ -37,7 +37,7 @@ public class Main2Activity extends AppCompatActivity {
 
     Button test_button = null;
     TextView textview = null;
-    private Integer k = 0, fini = k;
+    private int k = 0;
     private Float pacefreq = 1.0f;
     Context mContext;
     /**
@@ -62,7 +62,7 @@ public class Main2Activity extends AppCompatActivity {
 
         textview = (TextView) findViewById(R.id.textview);
         textview.setText("ma 2eme activite");
-        setPacefreq(42.0f);
+        setTextViewToFreq(42.0f);
 
         mContext = this;
         Log.d("lucas", "on va verifier les permissions d ecriture");
@@ -129,7 +129,27 @@ public class Main2Activity extends AppCompatActivity {
             }
         });
         //thread1.start();
-        Thread thread2 = new Thread(new monRunnable(this, mContext, fini));
+        class monRunnable implements Runnable {
+            public monRunnable() {
+            }
+
+            public void run() {
+                Log.i("lucas", "on est rentrés dans le thread de main2activity");
+                final Podometer pod = new Podometer(mContext);
+
+                while (k == 0) {
+                    setTextViewToFreq(pod.getRunningPaceFrequency());
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+
+        Thread thread2 = new Thread(new monRunnable());
         thread2.start();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -174,8 +194,19 @@ public class Main2Activity extends AppCompatActivity {
         client.disconnect();
     }
 
-    public void setPacefreq(float freq) {
-        textview.setText(String.valueOf(freq));
+    private final void setTextViewToFreq(float freq) {
+        runOnUiThread(new RunnableForTextView(freq));
+    }
+
+    class RunnableForTextView implements Runnable {
+        private float freq;
+        public RunnableForTextView(float freq){
+            this.freq = freq;
+        }
+        @Override
+        public void run() {
+            textview.setText(String.valueOf(freq));
+        }
     }
 
 }
