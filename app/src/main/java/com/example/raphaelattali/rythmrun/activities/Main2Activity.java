@@ -39,7 +39,7 @@ public class Main2Activity extends AppCompatActivity {
     TextView textview = null;
     private int k = 0;
     private Float pacefreq = 1.0f;
-    Context mContext;
+    Context context;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -61,10 +61,8 @@ public class Main2Activity extends AppCompatActivity {
         });
 
         textview = (TextView) findViewById(R.id.textview);
-        textview.setText("ma 2eme activite");
-        setTextViewToFreq(42.0f);
 
-        mContext = this;
+        context = this;
         Log.d("lucas", "on va verifier les permissions d ecriture");
         // Permission d'ecriture
         int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -92,7 +90,7 @@ public class Main2Activity extends AppCompatActivity {
             public void run() {
 
                 Log.i("lucas", "on est rentrés dans le thread");
-                Accelerometer acc = new Accelerometer(0.1f, 10, mContext);
+                Accelerometer acc = new Accelerometer(0.1f, 10, context);
 
                     File file = new File("/storage/emulated/0/Download/donnees.csv");
                     Log.i("lucas", "on a créé le file");
@@ -135,7 +133,7 @@ public class Main2Activity extends AppCompatActivity {
 
             public void run() {
                 Log.i("lucas", "on est rentrés dans le thread de main2activity");
-                final Podometer pod = new Podometer(mContext);
+                final Podometer pod = new Podometer(context);
 
                 while (k == 0) {
                     setTextViewToFreq(pod.getRunningPaceFrequency());
@@ -145,6 +143,7 @@ public class Main2Activity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
+                pod.stop();
             }
         }
 

@@ -32,7 +32,7 @@ public class Accelerometer implements SensorEventListener {
     int k = 0;
 
     public boolean isActive() {
-        return active;
+        return active&&auMoinsUnTour;
     }
 
     public float getAx() {
@@ -84,6 +84,12 @@ public class Accelerometer implements SensorEventListener {
         this.nombre_echantillons = (int) (plage_echantillonage*frequence_echantillonage);
         valeurs = new float[3][nombre_echantillons];
         ax = 0; ay = 0; az = 0;
+        mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if (mSensor == null) {
+            Log.i("lucas", "pas d'accelerometre");
+        }
         active = false;
         //Log.d("lucas", "min delay : " + String.valueOf(mSensor.getMinDelay()));
         completeTab();
@@ -126,13 +132,9 @@ public class Accelerometer implements SensorEventListener {
             public void run() {
                 temps_debut = date.getTime();
                 while(finished == false) {
-                    //valeurs[0][k] = ax;
-                    valeurs[0][k] = (float)Math.sin(2*3.14159*k/10.0f); //3Hz environ
+                    valeurs[0][k] = ax;
                     valeurs[1][k] = ay;
                     valeurs[2][k] = az;
-                    if (valeurAbsolue(ax) > 1) {
-                        Log.i("lucas", "paf");
-                    }
                     if (k==nombre_echantillons-1) auMoinsUnTour = true;
                     k = (k+1)%nombre_echantillons;
                     try {

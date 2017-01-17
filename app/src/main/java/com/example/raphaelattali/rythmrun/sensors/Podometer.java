@@ -28,6 +28,7 @@ public class Podometer implements PodometerInterface, SensorEventListener {
     private float tempsReleves;
     private float periodeEchantillonage;
     private Accelerometer acc;
+    private boolean fini;
 
     public Podometer(Context context) {
         Log.i("lucas", "constructeur du podometre");
@@ -38,17 +39,18 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         numberOfValues = acc.getNombreEchantillons();
         values = new float[3][numberOfValues];
         accValues = acc.getArray();
-        while (!acc.auMoinsUnTour()) {
+        while (!acc.isActive()) {
             sleep(500);
             Log.i("lucas", "attente...");
         }
         min = 0; max = numberOfValues/2;
         tfd = new float[max-min];
+        fini = false;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 Log.i("lucas", "on est rentrés dans le thread du podometre");
-                for (int i = 0; i<10; i++) {
+                while (!fini) {
                     computePacePeriod();
                     try {
                         Thread.sleep(1000);
@@ -120,5 +122,10 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         }
         Log.i("lucas", "max : " + String.valueOf(m));
         return k;
+    }
+
+    public final void stop() {
+        fini = true;
+        acc.stop();
     }
 }
