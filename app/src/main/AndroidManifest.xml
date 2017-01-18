@@ -16,6 +16,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.Main2Activity"></activity>
+        <activity
+            android:name=".activities.BluetoothActivity">
+        </activity>
     </application>
 
 </manifest>
