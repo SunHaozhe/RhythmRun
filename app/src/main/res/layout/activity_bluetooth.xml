@@ -20,5 +20,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Detected devices"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/list_view_bluetooth_devices">
+    </ListView>
 
 </LinearLayout>
