@@ -8,5 +8,5 @@ public interface PodometerInterface {
     //Récupérer la fréquence de pas actuelle du coureur
     public float getRunningPaceFrequency();
     //Pour connaitre le temps ecoule depuis le dernier pas avec comme reference l'allumage du terminal -voir elapsedRealTime()
-    public float lastStepTimeSinceBoot();
+    public long lastStepTimeSinceBoot();
 }

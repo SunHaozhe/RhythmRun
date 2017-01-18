@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -24,13 +25,16 @@ public class Podometer implements PodometerInterface, SensorEventListener {
     private int numberOfValues;
     private float[][] values;
     private float[][] accValues;
-    private float tfd[];
+    private float tfd[][];
     private float tempsReleves;
     private float periodeEchantillonage;
     private Accelerometer acc;
     private boolean fini;
+    private final float pi = 3.14159265359f;
+    private long oneStepTime;
 
     public Podometer(Context context) {
+        oneStepTime = 0;
         Log.i("lucas", "constructeur du podometre");
         this.context = context;
         tempsReleves = 5.0f;
@@ -43,8 +47,9 @@ public class Podometer implements PodometerInterface, SensorEventListener {
             sleep(500);
             Log.i("lucas", "attente...");
         }
-        min = 0; max = numberOfValues/2;
-        tfd = new float[max-min];
+        min = 1; //pour eviter le fond continu de 1g
+        max = numberOfValues/2;
+        tfd = new float[max-min][2]; //2 pour les complexes
         fini = false;
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -73,8 +78,8 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         return paceFrequency;
     }
 
-    public float lastStepTimeSinceBoot() {
-        return 0.0f;
+    public long lastStepTimeSinceBoot() {
+        return oneStepTime;
     }
 
     private void sleep(long t) {
@@ -87,45 +92,78 @@ public class Podometer implements PodometerInterface, SensorEventListener {
 
     private final void computePacePeriod() {
         int debut = acc.getCurrentIndex();
+        long timeOfLastValue = SystemClock.elapsedRealtime();
         System.arraycopy(accValues[0], debut, values[0], 0, numberOfValues-debut);
         System.arraycopy(accValues[0], 0, values[0], numberOfValues-debut, debut);
         computeTFD(0);
-        Log.i("lucas", "on va calculer l'indice max");
-        int indice = min + indiceMaxi(tfd, max-min);
+        //Log.i("lucas", "on va calculer l'indice max");
+        int indiceDuMaxi = indiceMaxi(tfd, max-min);
+        int indice = min + indiceDuMaxi;
         paceFrequency = indice/tempsReleves;
-        Log.i("lucas", "on a calcule une frequence de " + String.valueOf(paceFrequency));
+        computeOneStepTime(indiceDuMaxi, timeOfLastValue);
+        //Log.i("lucas", "on a calcule une frequence de " + String.valueOf(paceFrequency));
     }
 
     private final void computeTFD(int index) { //index : 0 pour x, 1 pour y ou 2 pour z, a remplacer par une fft
-        float r = 0, i = 0, pi = 3.14159265359f;
+        float r = 0, i = 0;
         for (int k = min; k<max; k++) {
             r = 0; i = 0;
             for (int n = 0; n<numberOfValues; n++) {
                 r += values[index][n]*Math.cos(2*pi*k*n/numberOfValues);
                 i -= values[index][n]*Math.sin(2*pi*k*n/numberOfValues);
             }
-            tfd[k-min] = r*r+i*i;
+            tfd[k-min][0] = r;
+            tfd[k-min][1] = i;
         }
-        Log.i("lucas", "on a calcule une tfd");
-        Log.i("lucas", "numberOfValues : " + String.valueOf(numberOfValues));
+        //Log.i("lucas", "on a calcule une tfd");
+        //Log.i("lucas", "numberOfValues : " + String.valueOf(numberOfValues));
     }
 
-    private final int indiceMaxi(float t[], int len) {
-        Log.i("lucas", "on calcule l'indice maxi");
+    private final int indiceMaxi(float t[][], int len) {
+        //Log.i("lucas", "on calcule l'indice maxi");
         int k = 0;
         float m = -1;
+        float temp = 0;
         for (int n = 0; n<len; n++) {
-            if (t[n] > m) {
-                m = t[n];
+            temp = t[n][0]*t[n][0]+t[n][1]*t[n][1];
+            if (temp > m) {
+                m = temp;
                 k = n;
             }
         }
-        Log.i("lucas", "max : " + String.valueOf(m));
+        //Log.i("lucas", "max : " + String.valueOf(m));
         return k;
     }
 
     public final void stop() {
         fini = true;
         acc.stop();
+    }
+
+    private final float phase(float real, float imag) {
+        if (Math.abs(real) <= 0.0001) {
+            if (imag >= 0) {
+                return pi/2;
+            }
+            return 3*pi/2;
+        }
+        float phase = (float)Math.atan((double)(imag/real));
+        if (real>=0&&imag>=0) return phase;
+        if (real>=0&&imag<0) return phase+2*pi;
+        return phase+pi;
+    }
+
+    private final void computeOneStepTime(int indiceDuMaxiDansLaTFD, long timeOfLastValue) {
+        float maPhase = phase(tfd[indiceDuMaxiDansLaTFD][0], tfd[indiceDuMaxiDansLaTFD][1]);
+        int n = (int)(numberOfValues*maPhase/(2*pi*(indiceDuMaxiDansLaTFD+min)));
+        /*if (n<0) {
+            n = 0;
+            Log.i("lucas", "probleme de steptime trop grand"+String.valueOf(n-numberOfValues) + " phase : " + String.valueOf(maPhase) + " indicedumaxi : " + String.valueOf(indiceDuMaxiDansLaTFD));
+           }
+        if (n>=numberOfValues) {
+            Log.i("lucas", "probleme de steptime trop grand"+String.valueOf(n-numberOfValues) + " phase : " + String.valueOf(maPhase) + " indicedumaxi : " + String.valueOf(indiceDuMaxiDansLaTFD));
+            n = numberOfValues-1;
+        }*/
+        oneStepTime = timeOfLastValue-(long)(periodeEchantillonage*(numberOfValues-n));
     }
 }
