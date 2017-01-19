@@ -134,7 +134,14 @@ public class Main2Activity extends AppCompatActivity {
             public void run() {
                 Log.i("lucas", "on est rentrés dans le thread de main2activity");
                 final Podometer pod = new Podometer(context);
-
+                for (int i = 0; i<10 && !pod.isActive(); i++)
+                {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 while (k == 0) {
                     setTextViewToFreq(pod.getRunningPaceFrequency());
                     try {

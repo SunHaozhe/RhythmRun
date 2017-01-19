@@ -67,6 +67,10 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         thread.start();
     }
 
+    public boolean isActive() {
+        return acc.isActive();
+    }
+
     @Override
     public void onAccuracyChanged(Sensor arg0, int arg1) { //osef
     }
@@ -92,9 +96,11 @@ public class Podometer implements PodometerInterface, SensorEventListener {
 
     private final void computePacePeriod() {
         int debut = acc.getCurrentIndex();
-        long timeOfLastValue = SystemClock.elapsedRealtime();
-        System.arraycopy(accValues[0], debut, values[0], 0, numberOfValues-debut);
-        System.arraycopy(accValues[0], 0, values[0], numberOfValues-debut, debut);
+        long timeOfLastValue = acc.getLastTime();
+        synchronized (accValues) {
+            System.arraycopy(accValues[0], debut, values[0], 0, numberOfValues-debut);
+            System.arraycopy(accValues[0], 0, values[0], numberOfValues-debut, debut);
+        }
         computeTFD(0);
         //Log.i("lucas", "on va calculer l'indice max");
         int indiceDuMaxi = indiceMaxi(tfd, max-min);
