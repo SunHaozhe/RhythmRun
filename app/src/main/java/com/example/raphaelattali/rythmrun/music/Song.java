@@ -103,7 +103,7 @@ public class Song {
         duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
 
         if(duration != null)
-            duration = Pace.fancyPace(Double.parseDouble(duration)/60);
+            duration = Pace.fancyPace(Double.parseDouble(duration)/60000);
 
         InputStream inputStream;
         if (mmr.getEmbeddedPicture() != null) {

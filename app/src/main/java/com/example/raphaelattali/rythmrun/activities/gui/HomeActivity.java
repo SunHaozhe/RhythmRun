@@ -1,5 +1,6 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -65,8 +66,8 @@ public class HomeActivity extends AppCompatActivity
         Pace pace = getPace();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String unit = sharedPreferences.getString("unit_list","km");
-        String paceMode = sharedPreferences.getString("pace","p");
+        final String unit = sharedPreferences.getString("unit_list","km");
+        final String paceMode = sharedPreferences.getString("pace","p");
 
         tvDistance.setText(distance.toStr(unit));
         tvDistanceUnit.setText(unit);
@@ -79,6 +80,33 @@ public class HomeActivity extends AppCompatActivity
             tvPace.setText(pace.toStrSpeed(unit));
             tvPaceUnit.setText(getString(R.string.unit_speed,unit));
             tvAveragePace.setText(R.string.home_average_speed);
+        }
+
+        startCountAnimation(tvDistance, Double.valueOf(getDistance().getValue() * 10).intValue(), new Callable() {
+            @Override
+            public String call(int value) {
+                double dValue = (double) value/10;
+                return Double.toString(dValue);
+            }
+        });
+
+        if(paceMode.equals("p")){
+            startCountAnimation(tvPace, Double.valueOf(getPace().getValue() * 60).intValue(), new Callable() {
+                @Override
+                public String call(int value) {
+                    double dValue = (double) value/60;
+                    return new Pace(dValue).toStr(unit,paceMode,false);
+                }
+            });
+        }
+        else{
+            startCountAnimation(tvPace, Double.valueOf(600/getPace().getValue()).intValue(), new Callable() {
+                @Override
+                public String call(int value) {
+                    double dValue = (double) value/10;
+                    return Double.toString(dValue);
+                }
+            });
         }
     }
 
@@ -126,6 +154,23 @@ public class HomeActivity extends AppCompatActivity
 
     public Pace getPace(){
         return new Pace(5.6);
+    }
+
+    public interface Callable{
+        String call(int value);
+    }
+
+    private void startCountAnimation(final TextView tv, int value, final Callable format){
+        ValueAnimator animator = new ValueAnimator();
+        animator.setIntValues(0, value);
+        animator.setDuration(1000);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                tv.setText(format.call((int) valueAnimator.getAnimatedValue()));
+            }
+        });
+        animator.start();
     }
 
 }
