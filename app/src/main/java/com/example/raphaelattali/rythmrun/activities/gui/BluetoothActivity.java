@@ -31,7 +31,10 @@ public class BluetoothActivity extends AppCompatActivity {
 
     private BluetoothAdapter bluetoothAdapter = null;
     private Set<BluetoothDevice> bondedBluetoothDevices = null;
-    private BroadcastReceiver broadcastReceiver = null;
+    private ArrayList<String> devices;
+    private ArrayAdapter<String> arrayAdapter;
+    private ListView listViewBluetoothDevices;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,28 +58,28 @@ public class BluetoothActivity extends AppCompatActivity {
         }
 
         //searches all bonded devices and adds them to the list
-        ArrayList<String> devices = new ArrayList<String>();
+        devices = new ArrayList<String>();
         bondedBluetoothDevices = bluetoothAdapter.getBondedDevices();
         for (BluetoothDevice device : bondedBluetoothDevices) {
             devices.add(device.getName() + "-" + device.getAddress());
         }
+        //searches devices who have not yet been bonded
+        bluetoothAdapter.startDiscovery();
 
-
-        //sets up the DETECT DEVICES button
+        //sets up the DETECT/REFRESH DEVICES button
         Button button_detect_bluetooth = (Button)findViewById(R.id.button_detect_bluetooth_devices);
         button_detect_bluetooth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO click on DETECT DEVICES
                 //searches devices who have not yet been bonded
                 bluetoothAdapter.startDiscovery();
             }
         });
 
         //sets up the listView of Bluetooth devices
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(BluetoothActivity.this, android.R.layout.simple_list_item_1, devices);
-        ListView listViewBluetoothDevices = (ListView) findViewById(R.id.list_view_bluetooth_devices);
-        listViewBluetoothDevices.setAdapter(adapter);
+        arrayAdapter = new ArrayAdapter<String>(BluetoothActivity.this, android.R.layout.simple_list_item_1, devices);
+        listViewBluetoothDevices = (ListView) findViewById(R.id.list_view_bluetooth_devices);
+        listViewBluetoothDevices.setAdapter(arrayAdapter);
         listViewBluetoothDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -99,16 +102,22 @@ public class BluetoothActivity extends AppCompatActivity {
                     BluetoothDevice newBluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     // Add the name and address to an array adapter to show in a ListView
                     bondedBluetoothDevices.add(newBluetoothDevice);
-
+                    String theNewDevice = newBluetoothDevice.getName() + "-" + newBluetoothDevice.getAddress();
+                    devices.add(theNewDevice);
+                    arrayAdapter.add(theNewDevice);
+                    arrayAdapter.notifyDataSetChanged();
                 }
-
             }
         };
         // Register the BroadcastReceiver
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(broadcastReceiver, filter);
+        IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(broadcastReceiver, intentFilter);
+    }
 
-
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
     }
 
 }
