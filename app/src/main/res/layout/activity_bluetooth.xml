@@ -11,20 +11,34 @@
         android:text="Please connect your belt"
         android:textSize="24sp"/>
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_detect_bluetooth_devices"
-        android:text="Detect Bluetooth devices" />
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Detected devices"/>
-    <ListView
+        android:id="@+id/button_detect_bluetooth_devices"
+        android:text="Detect/Refresh Bluetooth devices"
+        android:textSize="14sp"
+        android:padding="20dp"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/list_view_bluetooth_devices">
-    </ListView>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_margin="30dp"
+        android:background="@drawable/border">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Detected devices : "
+            android:textSize="30sp"
+            android:background="@drawable/border"/>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/list_view_bluetooth_devices">
+        </ListView>
+    </LinearLayout>
 
 </LinearLayout>
