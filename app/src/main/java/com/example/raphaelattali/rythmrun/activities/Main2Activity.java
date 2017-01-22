@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
+import com.example.raphaelattali.rythmrun.music.tempo.Tempo;
 import com.example.raphaelattali.rythmrun.sensors.Accelerometer;
 import com.example.raphaelattali.rythmrun.sensors.Podometer;
 import com.google.android.gms.appindexing.Action;
@@ -50,6 +51,8 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        int optionsDeDebug = 2; //0 : accelerometre, 1 : tester podo, 3 : tempo musique
 
         test_button = (Button) findViewById(R.id.test_button);
         test_button.setText("L'accelerometre s'allume...");
@@ -126,7 +129,6 @@ public class Main2Activity extends AppCompatActivity {
                     }
             }
         });
-        //thread1.start();
         class monRunnable implements Runnable {
             public monRunnable() {
             }
@@ -156,7 +158,16 @@ public class Main2Activity extends AppCompatActivity {
 
 
         Thread thread2 = new Thread(new monRunnable());
-        thread2.start();
+        if (optionsDeDebug == 0) {
+            thread1.start();
+        }
+        if (optionsDeDebug == 1) {
+            thread2.start();
+        }
+        if (optionsDeDebug == 2) {
+            double tempo = Tempo.findTempoHz("/storage/emulated/0/Download/guitare_mono_66bpm.wav");
+            textview.setText("Bpm : " + String.valueOf(60*tempo));
+        }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
