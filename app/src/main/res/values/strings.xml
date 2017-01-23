@@ -87,5 +87,6 @@
     </string>
     <string name="title_activity_login_final">LoginFinalActivity</string>
     <string name="title_activity_login2">Login2</string>
+    <string name="title_activity_chronometer">ChronometerActivity</string>
 
 </resources>

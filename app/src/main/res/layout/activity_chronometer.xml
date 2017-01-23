@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.raphaelattali.rythmrun.ChronometerActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#1e88e5"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:titleTextAppearance="@android:style/TextAppearance.DeviceDefault.DialogWindowTitle"
+            app:title="           RUN" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <Button
+        android:text="Play"
+        android:layout_width="144dp"
+        android:layout_height="72dp"
+        android:id="@+id/play"
+        android:layout_marginTop="180dp"
+        android:layout_marginLeft="20dp" />
+
+    <Button
+        android:text="STOP"
+        android:layout_width="144dp"
+        android:layout_height="68dp"
+        android:id="@+id/stop"
+        android:layout_marginTop="250dp"
+        android:layout_marginLeft="20dp" />
+
+    <Button
+        android:text="RESET"
+        android:layout_width="146dp"
+        android:layout_height="66dp"
+        android:id="@+id/reset"
+        android:layout_marginTop="320dp"
+        android:layout_marginLeft="20dp" />
+
+    <Chronometer
+        android:layout_width="126dp"
+        android:layout_height="100dp"
+        android:id="@+id/chronometer2"
+        android:layout_marginTop="120dp"
+        android:layout_marginLeft="40dp"
+        android:width="50dp"
+        android:scrollbarSize="@dimen/nav_header_height"
+        android:backgroundTint="@color/colorAccent"
+        android:background="@color/common_google_signin_btn_text_dark_disabled"
+        android:textSize="36sp" />
+
+    <ImageButton
+        android:layout_width="62dp"
+        android:layout_height="80dp"
+        app:srcCompat="?android:attr/homeAsUpIndicator"
+        android:id="@+id/imageButton"
+        android:background="#1e88e5"
+        android:elevation="21dp" />
+
+</android.support.design.widget.CoordinatorLayout>
