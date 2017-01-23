@@ -29,7 +29,8 @@
         android:layout_height="72dp"
         android:id="@+id/play"
         android:layout_marginTop="180dp"
-        android:layout_marginLeft="20dp" />
+        android:layout_marginLeft="20dp"
+        android:textSize="18sp" />
 
     <Button
         android:text="STOP"
@@ -37,15 +38,8 @@
         android:layout_height="68dp"
         android:id="@+id/stop"
         android:layout_marginTop="250dp"
-        android:layout_marginLeft="20dp" />
-
-    <Button
-        android:text="RESET"
-        android:layout_width="wrap_content"
-        android:layout_height="66dp"
-        android:id="@+id/reset"
-        android:layout_marginTop="320dp"
-        android:layout_marginLeft="20dp" />
+        android:layout_marginLeft="20dp"
+        android:textSize="18sp" />
 
     <Chronometer
         android:layout_width="126dp"
@@ -66,5 +60,24 @@
         android:id="@+id/imageButton"
         android:background="#1e88e5"
         android:elevation="21dp" />
+
+    <Button
+        android:text="RESET"
+        android:layout_width="wrap_content"
+        android:layout_height="66dp"
+        android:id="@+id/reset"
+        android:layout_marginTop="320dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="?android:attr/actionMenuTextColor"
+        android:background="?android:attr/textColorSecondaryNoDisable"
+        android:textSize="18sp"
+        android:backgroundTint="@color/common_plus_signin_btn_text_light_disabled" />
+
+    <com.google.android.gms.maps.MapView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mapView"
+        android:layout_marginTop="500dp"
+        android:layout_marginLeft="50dp" />
 
 </android.support.design.widget.CoordinatorLayout>
