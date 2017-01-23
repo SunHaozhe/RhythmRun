@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.raphaelattali.rythmrun.Login2">
+    <?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="Login "
+                android:textStyle="bold|italic"
+                android:textColor="#FF0000"
+                android:gravity="center"
+                android:layout_marginTop="100dp"
+                tools:textColor="@android:color/holo_blue_dark"
+                android:textSize="18sp"
+                android:layout_marginLeft="5dp" />
+            <EditText
+                android:id="@+id/poids"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Login New Run"
+                android:inputType="numberDecimal"
+                android:layout_weight="1"
+                android:layout_marginTop="100dp"
+                android:layout_marginLeft="80dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password"
+                android:textStyle="bold|italic"
+                android:textColor="@android:color/holo_blue_dark"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:layout_marginLeft="5dp" />
+            <EditText
+                android:id="@+id/taille"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password "
+                android:inputType="numberDecimal"
+                android:layout_weight="1"
+                android:layout_marginLeft="50dp" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/mega"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remember me !"
+            android:layout_marginTop="30dp"
+            android:textSize="14sp" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp">
+            <Button
+                android:id="@+id/calcul"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Log in"
+                android:layout_weight="1"
+                android:layout_marginLeft="25dip"
+                android:layout_marginRight="25dip"
+                android:layout_marginTop="0dp" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="When you sign in, you can check your previous records and save your current run."
+            android:layout_marginLeft="10dp" />
+    </LinearLayout>
+
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#1e88e5"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="                              LOG IN " />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_login2" />
+
+    <CheckedTextView
+        android:text="Forgot password ?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkedTextView"
+        android:layout_marginTop="300dp"
+        android:layout_marginLeft="10dp" />
+
+</android.support.design.widget.CoordinatorLayout>
