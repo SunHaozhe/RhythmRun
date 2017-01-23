@@ -25,7 +25,7 @@
 
     <Button
         android:text="Play"
-        android:layout_width="144dp"
+        android:layout_width="wrap_content"
         android:layout_height="72dp"
         android:id="@+id/play"
         android:layout_marginTop="180dp"
@@ -33,7 +33,7 @@
 
     <Button
         android:text="STOP"
-        android:layout_width="144dp"
+        android:layout_width="wrap_content"
         android:layout_height="68dp"
         android:id="@+id/stop"
         android:layout_marginTop="250dp"
@@ -41,7 +41,7 @@
 
     <Button
         android:text="RESET"
-        android:layout_width="146dp"
+        android:layout_width="wrap_content"
         android:layout_height="66dp"
         android:id="@+id/reset"
         android:layout_marginTop="320dp"
