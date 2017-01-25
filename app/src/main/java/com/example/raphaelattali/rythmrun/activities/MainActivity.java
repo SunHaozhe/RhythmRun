@@ -56,5 +56,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // FIN test
+
+        Button testBeatButton = (Button)findViewById(R.id.test_beat_synchronized_with_paces_button);
+        testBeatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,TestBeatActivity.class));
+            }
+        });
     }
 }
