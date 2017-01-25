@@ -11,9 +11,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
+import com.example.raphaelattali.rythmrun.music.tempo.Tempo;
 import com.example.raphaelattali.rythmrun.sensors.Accelerometer;
+import com.example.raphaelattali.rythmrun.sensors.Podometer;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -34,7 +37,10 @@ import static android.os.Environment.DIRECTORY_DOCUMENTS;
 public class Main2Activity extends AppCompatActivity {
 
     Button test_button = null;
-    int k = 0;
+    TextView textview = null;
+    private int k = 0;
+    private Float pacefreq = 1.0f;
+    Context context;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -46,16 +52,20 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        int optionsDeDebug = 2; //0 : accelerometre, 1 : tester podo, 3 : tempo musique
+
         test_button = (Button) findViewById(R.id.test_button);
+        test_button.setText("L'accelerometre s'allume...");
         test_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                test_button.setText("hop");
                 k = 1;
             }
         });
 
-        final Context mContext = this;
+        textview = (TextView) findViewById(R.id.textview);
+
+        context = this;
         Log.d("lucas", "on va verifier les permissions d ecriture");
         // Permission d'ecriture
         int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -78,43 +88,40 @@ public class Main2Activity extends AppCompatActivity {
         Log.d("lucas", "on a les permissions d'écriture");
 
 
-        Thread thread = new Thread(new Runnable() {
+        Thread thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
 
                 Log.i("lucas", "on est rentrés dans le thread");
-                Accelerometer acc = new Accelerometer(0.1f, 10, mContext);
+                Accelerometer acc = new Accelerometer(0.1f, 10, context);
 
                     File file = new File("/storage/emulated/0/Download/donnees.csv");
                     Log.i("lucas", "on a créé le file");
                     try {
-                        FileOutputStream fOS = new FileOutputStream(file);
+                        //FileOutputStream fOS = new FileOutputStream(file);
+                        //Log.i("lucas", "on a ouvert le fileoutputstream");
+                        //OutputStreamWriter oSW = new OutputStreamWriter(fOS);
+                        PrintWriter pw = new PrintWriter(file);
                         Log.i("lucas", "on a ouvert le fileoutputstream");
-                        OutputStreamWriter oSW = new OutputStreamWriter(fOS);
-
-                        Log.i("lucas", "on a ouvert l'outputstreamwriter");
-                        int c = 0;
-                        int m = 0;
                         String x, y, z;
-
-                        while (k == 0&&c<1000&&m<300000) {
+                        while (k == 0) {
                             if (acc.isActive()) {
-                                c++;
                                 x = String.valueOf(acc.getAx());
                                 y = String.valueOf(acc.getAy());
                                 z = String.valueOf(acc.getAz());
-                                oSW.append(x + "," + y + "," + z + "\n");
+                                //oSW.append(x + "," + y + "," + z + "\n");
+                                pw.write(x + "," + y + "," + z + "\n");
                             }
-                            m++;
                             try {
                                 Thread.sleep(30);
                             } catch (InterruptedException e) {
                             }
                         }
                         Log.i("lucas", "on est sortis du while");
-                        oSW.flush();
-                        oSW.close();
-                        fOS.close();
+                        //oSW.flush();
+                        //oSW.close();
+                        //fOS.close();
+                        pw.close();
                         } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -122,7 +129,45 @@ public class Main2Activity extends AppCompatActivity {
                     }
             }
         });
-        thread.start();
+        class monRunnable implements Runnable {
+            public monRunnable() {
+            }
+
+            public void run() {
+                Log.i("lucas", "on est rentrés dans le thread de main2activity");
+                final Podometer pod = new Podometer(context);
+                for (int i = 0; i<10 && !pod.isActive(); i++)
+                {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                while (k == 0) {
+                    setTextViewToFreq(pod.getRunningPaceFrequency());
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                pod.stop();
+            }
+        }
+
+
+        Thread thread2 = new Thread(new monRunnable());
+        if (optionsDeDebug == 0) {
+            thread1.start();
+        }
+        if (optionsDeDebug == 1) {
+            thread2.start();
+        }
+        if (optionsDeDebug == 2) {
+            double tempo = Tempo.findTempoHz("/storage/emulated/0/Download/guitare_mono_66bpm.wav");
+            textview.setText("Bpm : " + String.valueOf(60*tempo));
+        }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -153,6 +198,7 @@ public class Main2Activity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         AppIndex.AppIndexApi.start(client, getIndexApiAction());
+
     }
 
     @Override
@@ -164,4 +210,21 @@ public class Main2Activity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
+
+    private final void setTextViewToFreq(float freq) {
+        runOnUiThread(new RunnableForTextView(freq));
+    }
+
+    class RunnableForTextView implements Runnable {
+        private float freq;
+        public RunnableForTextView(float freq){
+            this.freq = freq;
+        }
+        @Override
+        public void run() {
+            textview.setText(String.valueOf(freq));
+        }
+    }
+
 }
+

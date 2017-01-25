@@ -5,9 +5,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lucas on 12/12/16.
@@ -17,18 +22,24 @@ import java.util.Date;
  *
  */
 public class Accelerometer implements SensorEventListener {
-    private float frequence_echantillonage;
-    private int nombre_echantillons;
-    private float plage_echantillonage; //temps pendant lequel on garde les donnees
-    private float periode;
-    private float[][] valeurs;
+    private final float frequenceEchantillonage;
+    private final int nombreEchantillons;
+    private final float plageEchantillonage; //temps pendant lequel on garde les donnees, en secondes
+    private final float periode;
+    private final float[][] valeurs;
     float ax, ay, az;
-    private SensorManager mSensorManager;
-    private Sensor mSensor;
+    private final SensorManager sensorManager;
+    private final Sensor sensor;
     private boolean active;
+    private boolean auMoinsUnTour = false;
+    private int k = 0;
+    private final ScheduledExecutorService scheduler;
+    private final ScheduledFuture<?> scheduledTabCompleter;
+    private Long tempsDebut;
+    private Long dernierTemps;
 
     public boolean isActive() {
-        return active;
+        return active&&auMoinsUnTour;
     }
 
     public float getAx() {
@@ -43,27 +54,32 @@ public class Accelerometer implements SensorEventListener {
         return az;
     }
 
+    public long getLastTime() {
+        return dernierTemps;
+    }
+
     /**
      *
-     * @param periode
-     * @param nombre_echantillons
+     * @param periode inverse de la frequence d'echantillonage, en secondes
+     * @param nombre_echantillons taille du tableau de valeurs
      */
     public Accelerometer(float periode, int nombre_echantillons, Context context) {
-        this.periode = periode;
-        frequence_echantillonage = 1/periode;
-        this.nombre_echantillons = nombre_echantillons;
-        this.plage_echantillonage = nombre_echantillons/frequence_echantillonage;
-        valeurs = new float[3][nombre_echantillons];
-        ax = 21f; ay = 21f; az = 21f;
-        mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        if (mSensor == null) {
-            ax = 42.0f;
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if (sensor == null) {
+            Log.i("lucas", "pas d'accelerometre");
         }
+        Log.d("lucas", "min delay : " + String.valueOf(sensor.getMinDelay()));
         active = false;
-        Log.d("lucas", "min delay : " + String.valueOf(mSensor.getMinDelay()));
-        //completeTab(periode);
+        this.periode = periode;
+        frequenceEchantillonage = 1/periode;
+        this.nombreEchantillons = nombre_echantillons;
+        this.plageEchantillonage = nombre_echantillons/frequenceEchantillonage;
+        valeurs = new float[3][nombre_echantillons];
+        scheduler = Executors.newScheduledThreadPool(1);
+        tempsDebut = (long)0;
+        scheduledTabCompleter = scheduler.scheduleAtFixedRate(new tabCompleter(tempsDebut), 10L, (long) (1000*periode), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -71,17 +87,10 @@ public class Accelerometer implements SensorEventListener {
      * @param periode
      * @param plage_echantillonage
      */
-    public Accelerometer(float periode, float plage_echantillonage) {
-        this.periode = periode;
-        frequence_echantillonage = 1/periode;
-        this.plage_echantillonage = plage_echantillonage;
-        this.nombre_echantillons = (int) (plage_echantillonage*frequence_echantillonage);
-        valeurs = new float[3][nombre_echantillons];
-        ax = 0; ay = 0; az = 0;
-        active = false;
-        Log.d("lucas", "min delay : " + String.valueOf(mSensor.getMinDelay()));
-        //completeTab(periode);
+    public Accelerometer(float periode, float plage_echantillonage, Context context) {
+        this(periode, (int)(plage_echantillonage/periode), context);
     }
+
 
     /**
      *
@@ -89,7 +98,8 @@ public class Accelerometer implements SensorEventListener {
      * @param arg1
      */
     @Override
-    public void onAccuracyChanged(Sensor arg0, int arg1) { //osef
+    public void onAccuracyChanged(Sensor arg0, int arg1) {
+        Log.i("lucas", "accuracy changed");
     }
 
     /**
@@ -107,27 +117,62 @@ public class Accelerometer implements SensorEventListener {
     }
 
     /**
-     * Renseigne le tableau de valeurs a intervalle de temps reguliere
+     * Renseigne le tableau de valeurs a intervalle de temps reguliers
      *
-     * @param delaySec
-     *      Delai d'actualisation
      */
-    public void completeTab(float delaySec)
+    private void completeTab()
     {
-        Thread thread = new Thread(new Runnable() {
-            Date date = new Date();
-            long temps_debut;
-            @Override
-            public void run() {
-                temps_debut = date.getTime();
-                valeurs[0][0] = (float)0.0;
-            }
-        });
-        thread.start();
+
     }
 
+    public final void stop() {
+        scheduledTabCompleter.cancel(true);
+    }
 
+    public final float[][] getArray() {
+        return valeurs;
+    }
 
+    private final float valeurAbsolue(float x) {
+        if (x>0) {
+            return x;
+        }
+        return -x;
+    }
 
+    public final boolean auMoinsUnTour() {
+        return auMoinsUnTour;
+    }
 
+    public final int getNombreEchantillons() {
+        return nombreEchantillons;
+    }
+
+    public final int getCurrentIndex() {
+        return k;
+    }
+
+    class tabCompleter implements Runnable {
+        boolean firstRun = true;
+        long tempsDebut;
+        tabCompleter(Long tempsDebut) {
+            this.tempsDebut = tempsDebut;
+        }
+        @Override
+        public void run() {
+            dernierTemps = SystemClock.elapsedRealtime();
+            if (firstRun) {
+                tempsDebut = dernierTemps;
+                firstRun = false;
+            }
+            synchronized (valeurs) {
+                valeurs[0][k] = ax;
+                valeurs[1][k] = ay;
+                valeurs[2][k] = az;
+            }
+            if (k==nombreEchantillons-1) auMoinsUnTour = true;
+            k = (k+1)%nombreEchantillons;
+        }
+
+    }
 }
