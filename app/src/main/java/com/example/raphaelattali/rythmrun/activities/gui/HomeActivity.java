@@ -1,11 +1,14 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,6 +26,8 @@ import com.example.raphaelattali.rythmrun.R;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public static final int PERMISSION_ACCESS_FINE_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,14 @@ public class HomeActivity extends AppCompatActivity
                 view.setBackground(getResources().getDrawable(R.drawable.round_shape_btn));
             }
         });
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_ACCESS_FINE_LOCATION);
+        }
+
     }
 
     @Override

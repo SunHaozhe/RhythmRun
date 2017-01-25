@@ -45,38 +45,30 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
         Criteria criteria = new Criteria();
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         provider = locationManager.getBestProvider(criteria, false);
-        if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return rootView;
+        if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            locationManager.requestLocationUpdates(provider, UPDATE_IDLE, 2, new LocationListener() {
+
+                @Override
+                public void onLocationChanged(Location location) {
+                    //TODO: log positions
+                }
+
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+                }
+
+                @Override
+                public void onProviderEnabled(String s) {
+                }
+
+                @Override
+                public void onProviderDisabled(String s) {
+                }
+
+            });
         }
-
-        locationManager.requestLocationUpdates(provider, UPDATE_IDLE, 2, new LocationListener() {
-
-            @Override
-            public void onLocationChanged(Location location) {
-                //TODO: log positions
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-            }
-
-        });
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume(); //needed to get the map to display immediately
