@@ -23,4 +23,18 @@
         android:layout_height="wrap_content"
         android:text="Courir"
         />
+
+    <Button
+        android:id="@+id/test_phase_vocod_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button"
+        android:text="TEST _ Phase Vocoder"/>
+
+    <Button
+        android:id="@+id/test_beat_synchronized_with_paces_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/test_phase_vocod_button"
+        android:text="TEST _ Beat synchronized with paces"/>
 </RelativeLayout>
