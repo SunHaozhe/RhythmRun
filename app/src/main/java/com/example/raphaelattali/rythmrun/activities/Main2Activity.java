@@ -165,7 +165,7 @@ public class Main2Activity extends AppCompatActivity {
             thread2.start();
         }
         if (optionsDeDebug == 2) {
-            double tempo = Tempo.findTempoHz("/storage/emulated/0/Download/guitare_mono_66bpm.wav");
+            double tempo = Tempo.findTempoHzFast("/storage/emulated/0/Download/guitare_mono_66bpm.wav");
             textview.setText("Bpm : " + String.valueOf(60*tempo));
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.

@@ -12,50 +12,72 @@ import java.io.IOException;
  * Created by lucas on 22/01/17.
  */
 
-public class Tempo {
-    public final static double findTempoHz(String waveFilePath) {//resultat negatif si le morceau ne convient pas
-        Log.i("lucas", "on est rentrés dans findTempoHz");
+public class Tempo { //faire le tri entre les int et les long
+
+    private final static double findTempoHzBetweenFrames(WavFile waveFile, long firstFrame, long lastFrame) {
+        Log.i("lucas", "on est rentrés dans findTempoHzBetweenFrames");
         double tempo = -1;
+        int numberOfFramesToRead = (int)(lastFrame - firstFrame);
+        long bufferSize = numberOfFramesToRead*waveFile.getNumChannels();
+        double[] buffer = new double[(int)bufferSize];
+        long sampleRate = waveFile.getSampleRate();
+
         try {
-            Log.i("lucas", "on est rentrés dans le try");
-            WavFile waveFile = WavFile.openWavFile(new File(waveFilePath)); //on suppose le fichier a 44100Hz
-
-            int numberOfChannels = waveFile.getNumChannels();
-            long numberOfFrames = waveFile.getNumFrames();
-            long sampleRate = waveFile.getSampleRate();
-            //int numberOfSecondsToProceed = 5; // on n'analyse pas tout le morceau pour gagner du temps
-            int numberOfFramesToRead = (int)numberOfFrames;//(int) (numberOfSecondsToProceed*sampleRate);
-            double[] buffer = new double[numberOfFramesToRead*numberOfChannels];
-
-            /*if (numberOfFrames/sampleRate < numberOfSecondsToProceed) {
-                Log.i("lucas", "on veut traiter trop de secondes");
-                Log.i("lucas", "numberOfFrames : " + String.valueOf(numberOfFrames));
-                Log.i("lucas", "sampleRate : " + String.valueOf(sampleRate));
-                Log.i("lucas", "numberOfSecondsToProceed : " + String.valueOf(numberOfSecondsToProceed));
-                return -1f;
-            }*/
+            long framesRemainingToBeRead = firstFrame; //on doit lire les frames avant firstFrame
+            while (framesRemainingToBeRead > 0) {
+                waveFile.readFrames(buffer, (int)min(bufferSize, framesRemainingToBeRead));
+                framesRemainingToBeRead -= bufferSize;
+            }
 
             waveFile.readFrames(buffer, numberOfFramesToRead);
-            if (numberOfChannels == 2) { //on convertit en mono si necessaire
+
+            if (waveFile.getNumChannels() == 2) { //on convertit en mono si necessaire
                 double[] tempBuffer = new double[numberOfFramesToRead];
                 for (int i = 0; i<numberOfFramesToRead; i++) {
                     tempBuffer[i] = buffer[2*i] + buffer[2*i+1]; //on additionne gauche et droite
                 }
                 buffer = tempBuffer;
-            }
 
-            double m = 0;
-            for (double x : buffer) {
-                if (x>m||(-x)>m) {
-                    m = x;
-                    if (x<0) {
-                        m = -x;
-                    }
-                }
             }
-            Log.i("lucas", "max du buffer : " + String.valueOf(m));
-
             tempo = findTempo(buffer, numberOfFramesToRead, sampleRate);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WavFileException e) {
+            e.printStackTrace();
+        }
+
+        return tempo;
+    }
+
+    public final static double findTempoHz(String waveFilePath) {//resultat negatif si le morceau ne convient pas
+        Log.i("lucas", "on est rentrés dans findTempoHz");
+        double tempo = -1;
+        try {
+            WavFile waveFile = WavFile.openWavFile(new File(waveFilePath)); //on suppose le fichier a 44100Hz
+
+            tempo = findTempoHzBetweenFrames(waveFile, 0, waveFile.getNumFrames());
+
+            waveFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WavFileException e) {
+            e.printStackTrace();
+        }
+        return tempo;
+    }
+
+    public final static double findTempoHzFast(String waveFilePath) {
+        double tempo = -1;
+        try {
+            Log.i("lucas", "on est rentrés dans le try");
+            WavFile waveFile = WavFile.openWavFile(new File(waveFilePath)); //on suppose le fichier a 44100Hz
+
+            long numberOfFrames = waveFile.getNumFrames();
+            long sampleRate = waveFile.getSampleRate();
+            int numberOfSecondsToProceed = 10; // on n'analyse pas tout le morceau pour gagner du temps mais quelques secondes au milieu
+            long numberOfFramesToRead = numberOfSecondsToProceed*sampleRate;
+
+            tempo = findTempoHzBetweenFrames(waveFile, max((numberOfFrames-numberOfFramesToRead)/2, 0), min((numberOfFrames+numberOfFramesToRead)/2, numberOfFrames));
 
             waveFile.close();
         } catch (IOException e) {
@@ -67,8 +89,9 @@ public class Tempo {
     }
 
     private final static double findTempo(double buffer[], int numberOfFrames, long sampleRate) {
+        Log.i("lucas", "on est rentrés dans findTempo");
         double a = 0.9998;
-        int N = 8;
+        int N = 8; //parametre calcule pour fech = 44100kHz, a generaliser
 
         double[] energie = new double[numberOfFrames];
         energie[0] = carre(buffer[0]);
@@ -124,11 +147,11 @@ public class Tempo {
         int m;
         for (int k = 0; k<dim; k++) {
             x = 0;
-            m = min(k+1, N);
+            m = (int)min(k+1, N);
             for (int i = 0; i<m; i++) {
                 x += in[k-i];
             }
-            m = min(k+1, N+N);
+            m = (int)min(k+1, N+N);
             for (int i = N; i<m; i++) {
                 x -= in[k-i];
             }
@@ -136,8 +159,15 @@ public class Tempo {
         }
     }
 
-    private final static int min(int a, int b) {
+    private final static long min(long a, long b) {
         if (a>b) {
+            return b;
+        }
+        return a;
+    }
+
+    private final static long max(long a, long b) {
+        if (a<b) {
             return b;
         }
         return a;
