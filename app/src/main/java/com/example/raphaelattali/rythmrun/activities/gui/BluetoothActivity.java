@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -46,6 +47,7 @@ public class BluetoothActivity extends AppCompatActivity {
         if (bluetoothAdapter == null) {
             // Device does not support Bluetooth
             Toast.makeText(BluetoothActivity.this,"This device does not support Bluetooth",Toast.LENGTH_LONG).show();
+            Log.d("BluetoothActivity","This device does not support Bluetooth.");
             return;
         }
 
@@ -54,16 +56,21 @@ public class BluetoothActivity extends AppCompatActivity {
         if (!bluetoothAdapter.isEnabled()) {
             Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(intent, REQUEST_CODE_BLUETOOTH);
+            Log.d("BluetoothActivity","Bluetooth has been actived successfully.");
             //Toast.makeText(BluetoothActivity.this,"Bluetooth has been actived",Toast.LENGTH_SHORT).show();
+        }else{
+            Log.d("BluetoothActivity","Bluetooth is already active.");
         }
 
         //searches all bonded devices and adds them to the list
+        Log.d("BluetoothActivity","We begin to search all bonded devices and add them to a list.");
         devices = new ArrayList<String>();
         bondedBluetoothDevices = bluetoothAdapter.getBondedDevices();
         for (BluetoothDevice device : bondedBluetoothDevices) {
             devices.add(device.getName() + "-" + device.getAddress());
         }
         //searches devices who have not yet been bonded
+        Log.d("BluetoothActivity","We lance the method bluetoothAdapter.startDiscovery().");
         bluetoothAdapter.startDiscovery();
 
         //sets up the DETECT/REFRESH DEVICES button
@@ -72,6 +79,7 @@ public class BluetoothActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //searches devices who have not yet been bonded
+                Log.d("BluetoothActivity","You have clicked on the button DETECT/REFRESH and startDiscovery() has been lanced");
                 bluetoothAdapter.startDiscovery();
             }
         });
@@ -85,6 +93,7 @@ public class BluetoothActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //TODO click on items of ViewList
                 Toast.makeText(BluetoothActivity.this,"You clicked on this item",Toast.LENGTH_SHORT).show();
+                Log.d("BluetoothActivity","You have clicked on the one item of listView");
 
                 //Intent intent = new Intent(BluetoothActivity.this, /* TODO the next activity */);
                 //startActivity(intent);
@@ -99,8 +108,10 @@ public class BluetoothActivity extends AppCompatActivity {
                 //when discovery finds a device
                 if(BluetoothDevice.ACTION_FOUND.equals(action)){
                     //gets the BluetoothDevice object from the intent
+                    Log.d("BluetoothActivity","We discover a new Bluetooth device.");
                     BluetoothDevice newBluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     // Add the name and address to an array adapter to show in a ListView
+                    Log.d("BluetoothActivity","We add this new Bluetooth device to an array adapter.");
                     bondedBluetoothDevices.add(newBluetoothDevice);
                     String theNewDevice = newBluetoothDevice.getName() + "-" + newBluetoothDevice.getAddress();
                     devices.add(theNewDevice);
@@ -112,12 +123,14 @@ public class BluetoothActivity extends AppCompatActivity {
         // Register the BroadcastReceiver
         IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(broadcastReceiver, intentFilter);
+        Log.d("BluetoothActivity","We register a broadcastReceiver.");
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
+        Log.d("BluetoothActivity","We destroy BluetoothActivity and unregister broadcastReceiver.");
     }
 
 }
