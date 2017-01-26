@@ -52,7 +52,9 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
 
                 @Override
                 public void onLocationChanged(Location location) {
-                    //TODO: log positions
+                    LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude());
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
+                    googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
                 }
 
                 @Override
@@ -108,9 +110,11 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setMyLocationEnabled(true);
 
         Location location = locationManager.getLastKnownLocation(provider);
-        LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude());
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+        if(location != null){
+            LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+        }
     }
 
     @Override

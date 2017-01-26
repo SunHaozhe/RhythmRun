@@ -28,6 +28,7 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final int PERMISSION_ACCESS_FINE_LOCATION = 1;
+    public static final int PERMISSION_READ_EXTERNAL_STORAGE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,12 @@ public class HomeActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_ACCESS_FINE_LOCATION);
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSION_READ_EXTERNAL_STORAGE);
         }
 
     }
