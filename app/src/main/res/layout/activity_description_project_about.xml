@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.raphaelattali.rythmrun.DescriptionProjectActivityAbout">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="24dp">
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_description_project_activity_about" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1e88e5"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        android:clickable="true"
+        android:textDirection="firstStrongRtl"
+        app:title="About"
+        app:titleMargin="1dp"
+        app:titleTextColor="@color/common_google_signin_btn_text_dark_default" />
+
+    <TextView
+        android:text="     Are you interested in listening to music while running? Would you like to hear a music adapted to your own rhythm ?  This application is created for you. You can choose the kind of music you’d prefer in the application’s library, add songs you’re keen on, choose an itinerary, eventually a rhythm if you want to and decide to begin a new run.  The application will save all of your records and grant you music that follows your own rhythm."
+        android:layout_height="408dp"
+        android:id="@+id/textView3"
+        android:height="150dp"
+        android:layout_gravity="left|right|center_vertical"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:layout_width="wrap_content"
+        android:translationX="0dp"
+        android:textColor="@color/common_google_signin_btn_text_light_default"
+        android:textSize="20sp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="50dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_light_disabled"
+        android:id="@+id/fab" />
+
+</android.support.design.widget.CoordinatorLayout>

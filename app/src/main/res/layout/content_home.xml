@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.raphaelattali.rythmrun.activities.gui.HomeActivity"
+    tools:showIn="@layout/app_bar_home" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp">
+
+        <TextView
+            android:id="@+id/tvHomeDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorBold"
+            android:textSize="60sp"/>
+
+        <TextView
+            android:id="@+id/tvHomeDistanceUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tvHomeDistance"
+            android:layout_alignBaseline="@id/tvHomeDistance"
+            android:textColor="@color/colorBold"
+            android:textSize="30sp"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/home_distance_this_week"/>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp">
+
+        <TextView
+            android:id="@+id/tvHomePace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorBold"
+            android:textSize="60sp" />
+
+        <TextView
+            android:id="@+id/tvHomePaceUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tvHomePace"
+            android:layout_alignBaseline="@id/tvHomePace"
+            android:textColor="@color/colorBold"
+            android:textSize="30sp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvHomeAveragePace"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/home_average_pace"/>
+
+    <Button
+        android:id="@+id/buttonHomeNewRun"
+        android:layout_marginTop="50dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/round_shape_btn"
+        android:textColor="#FFFFFF"
+        android:text="@string/home_new_run"/>
+
+</LinearLayout>
