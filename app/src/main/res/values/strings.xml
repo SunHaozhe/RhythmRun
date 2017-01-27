@@ -44,6 +44,8 @@
         slowing down a bit!</string>
 
     <string name="title_activity_run">Run</string>
+    <string name="run_play">Play</string>
+    <string name="run_pause">Pause</string>
 
     <string name="title_activity_library">Library</string>
     <string name="menu_library_refresh">Refresh</string>
@@ -81,5 +83,8 @@
         that follows your own rhythm.</string>
 
     <string name="title_activity_login">Sign in</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

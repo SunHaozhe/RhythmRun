@@ -39,6 +39,8 @@ import java.util.List;
 
 public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
+    public static PolylineOptions itinerary;
+
     public interface OnMarkerChangeListener {
        void onMarkerChange();
     }
@@ -312,12 +314,12 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
             ArrayList<LatLng> points;
-            PolylineOptions lineOptions = null;
+            itinerary = null;
 
             // Traversing through all the routes
             for (int i = 0; i < result.size(); i++) {
                 points = new ArrayList<>();
-                lineOptions = new PolylineOptions();
+                itinerary = new PolylineOptions();
 
                 // Fetching i-th route
                 List<HashMap<String, String>> path = result.get(i);
@@ -334,18 +336,18 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                 }
 
                 // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(10);
-                lineOptions.color(Color.RED);
+                itinerary.addAll(points);
+                itinerary.width(10);
+                itinerary.color(Color.RED);
 
                 Log.d("onPostExecute","onPostExecute line options decoded");
 
             }
 
             // Drawing polyline in the Google Map for the i-th route
-            if(lineOptions != null) {
-                polyline = googleMap.addPolyline(lineOptions);
-                distance = distanceOfPolyline(lineOptions);
+            if(itinerary != null) {
+                polyline = googleMap.addPolyline(itinerary);
+                distance = distanceOfPolyline(itinerary);
             }
             else {
                 Log.d("onPostExecute","without Poly lines drawn");

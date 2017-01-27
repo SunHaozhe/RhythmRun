@@ -1,5 +1,6 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
+import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,39 +14,40 @@ import com.example.raphaelattali.rythmrun.R;
 public class RunActivity extends AppCompatActivity {
 
     private long timeAtStop;
+    private boolean isRunning=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
 
-        Button btn_start = (Button) findViewById(R.id.buttonRunPlay);
-        Button btn_stop = (Button) findViewById(R.id.buttonRunStop);
-        Button btn_reset = (Button) findViewById(R.id.buttonRunReset);
+        final Button btn_start = (Button) findViewById(R.id.buttonRunPlay);
         final Chronometer chronometer = (Chronometer) findViewById(R.id.chronometer);
 
         btn_start.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                chronometer.setBase(SystemClock.elapsedRealtime()+timeAtStop);
-                chronometer.start();
+                if(isRunning){
+                    timeAtStop = chronometer.getBase()-SystemClock.elapsedRealtime();
+                    chronometer.stop();
+                    btn_start.setText(R.string.run_play);
+                } else {
+                    chronometer.setBase(SystemClock.elapsedRealtime()+timeAtStop);
+                    chronometer.start();
+                    btn_start.setText(R.string.run_pause);
+                }
+                isRunning = !isRunning;
             }
         });
 
-        btn_stop.setOnClickListener(new OnClickListener() {
+        btn_start.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                timeAtStop = chronometer.getBase()-SystemClock.elapsedRealtime();
-                chronometer.stop();
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(view.getContext(),HomeActivity.class);
+                startActivity(intent);
+                return true;
             }
         });
 
-        btn_reset.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chronometer.setBase(SystemClock.elapsedRealtime());
-                timeAtStop=0;
-            }
-        });
     }
 }
