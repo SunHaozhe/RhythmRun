@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PACT.iml" filepath="$PROJECT_DIR$/PACT.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rattali-rhythm_run.iml" filepath="$PROJECT_DIR$/rattali-rhythm_run.iml" />
     </modules>
   </component>
 </project>
