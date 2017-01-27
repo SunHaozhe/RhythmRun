@@ -39,8 +39,9 @@
     <string name="recap_selected_distance">Selected distance:</string>
     <string name="recap_selected_music">Selected music:</string>
     <string name="recap_free">Free</string>
-    <string name="recap_warning">Warning: this might be too hard for you! Consider slowing down a bit!</string>
     <string name="recap_button_go">GO</string>
+    <string name="recap_warning">Warning: this might be too hard for you! Consider
+        slowing down a bit!</string>
 
     <string name="title_activity_run">Run</string>
 
@@ -72,21 +73,13 @@
     </string-array>
 
     <string name="title_activity_about">About</string>
-    <string name="about_description">     Are you interested in listening to music while running? Would you like to hear a music adapted to your own rhythm ?  This application is created for you. You can choose the kind of music you’d prefer in the application’s library, add songs you’re keen on, choose an itinerary, eventually a rhythm if you want to and decide to begin a new run.  The application will save all of your records and grant you music that follows your own rhythm.</string>
+    <string name="about_description">Are you interested in listening to music while running?
+        Would you like to hear a music adapted to your own rhythm ?  This application is created
+        for you. You can choose the kind of music you’d prefer in the application’s library, add
+        songs you’re keen on, choose an itinerary, eventually a rhythm if you want to and decide
+        to begin a new run.  The application will save all of your records and grant you music
+        that follows your own rhythm.</string>
 
     <string name="title_activity_login">Sign in</string>
-
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
 
 </resources>
