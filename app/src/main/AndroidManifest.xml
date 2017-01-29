@@ -24,9 +24,10 @@
             android:value="AIzaSyBvlvwvqg0aBDjY5zhpI0to6UNDLy3sLRs" />
 
         <activity android:name=".activities.MainActivity" />
-        <activity android:name=".activities.Main2Activity" />
+        <activity android:name=".activities.gui.HomeActivity" />
         <activity
-            android:name=".activities.gui.HomeActivity"
+            android:name=".activities.Main2Activity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

@@ -3,8 +3,10 @@ package com.example.raphaelattali.rythmrun.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -52,7 +54,11 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        int optionsDeDebug = 2; //0 : accelerometre, 1 : tester podo, 3 : tempo musique
+        int optionsDeDebug = 3;
+        //0 : ecrit les releves de l'accelerometre dans Downloads/donnees.csv
+        //1 : affiche la frequence de pas calculee par le podometre
+        //2 : calcule le tempo de la musique specifiee dans le thread
+        //3 : joue beep sur les pas
 
         test_button = (Button) findViewById(R.id.test_button);
         test_button.setText("L'accelerometre s'allume...");
@@ -167,6 +173,77 @@ public class Main2Activity extends AppCompatActivity {
         if (optionsDeDebug == 2) {
             double tempo = Tempo.findTempoHzFast("/storage/emulated/0/Download/guitare_mono_66bpm.wav");
             textview.setText("Bpm : " + String.valueOf(60*tempo));
+        }
+        if (optionsDeDebug == 3) {
+            Thread thread3 = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.tut3);
+                    MediaPlayer mediaPlayer2 = MediaPlayer.create(context, R.raw.tutoctave);
+                    mediaPlayer.start();
+                    Podometer pod = new Podometer(context);
+                    long beginning, step;
+                    float periode;
+                    boolean playing;
+                    long timeToWaitBeforeSyncAgainMs = 10000;
+                    while (!pod.isActive()) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Log.i("lucas", "pod actif");
+                    beginning = SystemClock.elapsedRealtime();
+                    playing = false;
+                    periode = 1/pod.getRunningPaceFrequency();
+                    setTextViewToFreq(1-periode);
+                    step = pod.lastStepTimeSinceBoot();
+                    while (k == 0) {
+                        if (SystemClock.elapsedRealtime() > beginning + timeToWaitBeforeSyncAgainMs) {
+                            mediaPlayer2.seekTo(0);
+                            mediaPlayer2.start();
+                            beginning = SystemClock.elapsedRealtime();
+                            periode = 1/pod.getRunningPaceFrequency();
+                            setTextViewToFreq(1/periode);
+                            step = pod.lastStepTimeSinceBoot();
+                            playing = false;
+                        }
+                            if (playing) {
+                                try {
+                                    Thread.sleep((long)(periode*1000));
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                mediaPlayer.seekTo(0);
+                                mediaPlayer.start();
+                            }
+                            else {
+                                while (abs(SystemClock.elapsedRealtime()-step-(long)periode*1000/2)%(1000*periode) > 30) {
+                                    Log.i("lucas", "on attend");
+                                    try {
+                                        Thread.sleep(10);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                playing = true;
+                                mediaPlayer.seekTo(0);
+                                mediaPlayer.start();
+                            }
+                    }
+                    mediaPlayer.release();
+                    pod.stop();
+                }
+
+                private final long abs(long x) {
+                    if (x<0) {
+                        return -x;
+                    }
+                    return x;
+                }
+            });
+            thread3.start();
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class Podometer implements PodometerInterface, SensorEventListener {
 
     Context context;
-    float paceFrequency = 1.0f;
+    float paceFrequency = -1.0f;
     private int min, max; //on restreint le domaine de la tfd car on a un ODG des frequences cherchees
     private final float alpha = 0.25f;
     private boolean[] pas;
@@ -68,7 +68,7 @@ public class Podometer implements PodometerInterface, SensorEventListener {
     }
 
     public boolean isActive() {
-        return acc.isActive();
+        return acc.isActive()&&(paceFrequency>=0);
     }
 
     @Override
@@ -170,6 +170,8 @@ public class Podometer implements PodometerInterface, SensorEventListener {
             Log.i("lucas", "probleme de steptime trop grand"+String.valueOf(n-numberOfValues) + " phase : " + String.valueOf(maPhase) + " indicedumaxi : " + String.valueOf(indiceDuMaxiDansLaTFD));
             n = numberOfValues-1;
         }*/
-        oneStepTime = timeOfLastValue-(long)(periodeEchantillonage*(numberOfValues-n));
+        oneStepTime = timeOfLastValue-(long)(periodeEchantillonage*(numberOfValues-n))-(long)(1000/(2*paceFrequency));
+        //la demi periode traduit le fait que la pas ne se produit pas lors du maximum d'acceleration mais
+        //une demi periode plus tard (courir sur place avec un telephone dans la main pour s'en convaincre)
     }
 }
