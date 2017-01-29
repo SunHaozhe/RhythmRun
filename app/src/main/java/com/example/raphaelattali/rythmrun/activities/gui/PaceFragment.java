@@ -46,6 +46,7 @@ public class PaceFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("PaceFragment","created PaceFragment");
         View rootView = inflater.inflate(R.layout.fragment_pace, container, false);
 
         tvPace = (TextView) rootView.findViewById(R.id.tvNewRunPace);
@@ -83,6 +84,8 @@ public class PaceFragment extends Fragment {
 
         Log.d("I","This is the onResume() of the pace fragment");
         Log.d("unit","unit in pace fragment: "+unit);
+        Log.d("PaceFragment","This is the onResume() of the pace fragment");
+        Log.d("PaceFragment","unit in pace fragment: "+unit);
 
         //Displays information at start
         update(seekBarUpdater.getProgress());

@@ -3,6 +3,7 @@ package com.example.raphaelattali.rythmrun.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     //Methode appelée au lancement de l'activité
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("MainActivity","created MainActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

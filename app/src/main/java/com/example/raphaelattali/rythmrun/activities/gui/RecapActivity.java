@@ -26,6 +26,7 @@ public class RecapActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("RecapActivity","created RecapActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recap);
 
@@ -75,21 +76,25 @@ public class RecapActivity extends AppCompatActivity {
     public boolean toggleWarning(){
         shownWarning = !shownWarning;
         Log.i("toggle","Entering the toggle method");
+        Log.i("RecapActivity","Entering the toggle method");
         TranslateAnimation a;
 
         if(shownWarning){
             Log.i("toggle","Opening the menu");
+            Log.i("RecapActivity","Opening the menu");
             a = new TranslateAnimation(-linearLayout.getWidth(),0,0,0);
             a.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
                     linearLayout.setVisibility(View.VISIBLE);
                     Log.i("animation","Start of opening animation.");
+                    Log.i("RecapActivity","Start of opening animation.");
                 }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     Log.i("animation","End of opening animation");
+                    Log.i("RecapActivity","End of opening animation");
                 }
 
                 @Override
@@ -100,17 +105,20 @@ public class RecapActivity extends AppCompatActivity {
         }
         else{
             Log.i("toggle","Closing the menu");
+            Log.i("RecapActivity","Closing the menu");
             a = new TranslateAnimation(0,-linearLayout.getWidth(),0,0);
             a.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
                     Log.i("animation","Start of closing animation");
+                    Log.i("RecapActivity","Start of closing animation");
                 }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     linearLayout.setVisibility(View.GONE);
                     Log.i("animation","End of closing animation");
+                    Log.i("RecapActivity","End of closing animation");
                 }
 
                 @Override
