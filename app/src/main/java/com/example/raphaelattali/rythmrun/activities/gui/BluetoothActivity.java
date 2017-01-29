@@ -24,9 +24,6 @@ import java.util.*;
 import static android.R.attr.data;
 import static android.bluetooth.BluetoothDevice.ACTION_FOUND;
 
-/**
- * Created by sun-haozhe on 18/01/2017.
- */
 
 public class BluetoothActivity extends AppCompatActivity {
 

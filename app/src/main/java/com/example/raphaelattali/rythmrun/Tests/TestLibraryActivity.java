@@ -5,14 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.raphaelattali.rythmrun.activities.gui.BluetoothActivity;
+import com.example.raphaelattali.rythmrun.activities.gui.LibraryActivity;
 
 
-
-public final class TestBluetoothActivity extends AppCompatActivity {
+public class TestLibraryActivity extends AppCompatActivity {
     //TODO
     public final void test(){
-        Log.d("TestBluetoothActivity","starts TestBluetoothActivity");
-        Intent intent = new Intent(TestBluetoothActivity.this, BluetoothActivity.class);
+        Log.d("TestLibraryActivity","starts TestLibraryActivity");
+        Intent intent = new Intent(TestLibraryActivity.this, LibraryActivity.class);
         startActivity(intent);
     }
 }
