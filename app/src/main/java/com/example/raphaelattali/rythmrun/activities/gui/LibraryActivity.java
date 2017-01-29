@@ -37,8 +37,10 @@ public class LibraryActivity extends AppCompatActivity {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state) ||
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            Log.d("Files", "external storage is readable");
             Log.d("LibraryActivity", "external storage is readable");
         } else {
+            Log.d("Files", "external storage is NOT readable");
             Log.d("LibraryActivity", "external storage is NOT readable");
         }
 

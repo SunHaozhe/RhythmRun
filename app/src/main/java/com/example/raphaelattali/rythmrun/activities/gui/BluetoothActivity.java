@@ -48,9 +48,10 @@ public class BluetoothActivity extends AppCompatActivity {
         if (bluetoothAdapter == null) {
             // Device does not support Bluetooth
             Toast.makeText(BluetoothActivity.this,"This device does not support Bluetooth",Toast.LENGTH_LONG).show();
+            Log.d("BluetoothActivity","This device does not support Bluetooth");
             return;
         }
-        Log.d("BluetoothActivity","This device does not support Bluetooth");
+
 
         //tests if Bluetooth is actived, if not, starts/actives the Bluetooth
         int REQUEST_CODE_BLUETOOTH = 1;
