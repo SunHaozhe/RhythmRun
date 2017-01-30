@@ -43,7 +43,7 @@ public class RunActivity extends AppCompatActivity {
         btn_start.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Intent intent = new Intent(view.getContext(),HomeActivity.class);
+                Intent intent = new Intent(view.getContext(),SumUpActivity.class);
                 startActivity(intent);
                 return true;
             }

@@ -66,11 +66,11 @@
             android:name=".activities.gui.LoginActivity"
             android:label="@string/title_activity_login" />
 		<activity
-            android:name=".HistoriqueActivity"
+            android:name=".activities.gui.HistoriqueActivity"
             android:label="@string/title_activity_historique"
             android:parentActivityName=".activities.gui.HomeActivity" />
         <activity
-        	android:name=".SumUpActivity"
+        	android:name=".activities.gui.SumUpActivity"
             android:parentActivityName=".activities.gui.RunActivity"/>
     </application>
 

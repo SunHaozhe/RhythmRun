@@ -1,7 +1,9 @@
-package com.example.raphaelattali.rythmrun;
+package com.example.raphaelattali.rythmrun.activities.gui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.raphaelattali.rythmrun.R;
 
 public class SumUpActivity extends AppCompatActivity {
 

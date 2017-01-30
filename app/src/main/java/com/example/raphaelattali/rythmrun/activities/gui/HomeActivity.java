@@ -21,7 +21,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.Distance;
-import com.example.raphaelattali.rythmrun.HistoriqueActivity;
 import com.example.raphaelattali.rythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
 import com.example.raphaelattali.rythmrun.music.Song;
