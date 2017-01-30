@@ -56,7 +56,8 @@
             android:name=".activities.gui.SongActivity"
             android:label="@string/title_activity_library"
             android:parentActivityName=".activities.gui.LibraryActivity" />
-        <activity android:name=".activities.gui.BluetoothActivity" />
+        <activity
+        	android:name=".activities.gui.BluetoothActivity" />
         <activity
             android:name=".activities.gui.AboutActivity"
             android:label="@string/title_activity_about"
@@ -64,6 +65,13 @@
         <activity
             android:name=".activities.gui.LoginActivity"
             android:label="@string/title_activity_login" />
+		<activity
+            android:name=".HistoriqueActivity"
+            android:label="@string/title_activity_historique"
+            android:parentActivityName=".activities.gui.HomeActivity" />
+        <activity
+        	android:name=".SumUpActivity"
+            android:parentActivityName=".activities.gui.RunActivity"/>
     </application>
 
 </manifest>
