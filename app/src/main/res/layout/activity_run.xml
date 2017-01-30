@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:name="com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment"
-        android:id="@+id/fragmentRun" />
+        android:id="@+id/fragmentRun"
+        tools:layout="@layout/fragment_simple_map" />
 
 </RelativeLayout>

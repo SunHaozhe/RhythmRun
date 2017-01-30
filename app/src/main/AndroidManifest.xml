@@ -77,8 +77,10 @@
         <activity android:name=".activities.gui.BluetoothActivity" />
         <activity
             android:name=".HistoriqueActivity"
-            android:parentActivityName=".activities.gui.HomeActivity"
-            android:label="@string/title_activity_historique" />
+            android:label="@string/title_activity_historique"
+            android:parentActivityName=".activities.gui.HomeActivity" />
+        <activity android:name=".SumUpActivity"
+            android:parentActivityName=".activities.gui.RunActivity"/>
     </application>
 
 </manifest>
