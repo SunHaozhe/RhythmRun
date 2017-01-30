@@ -66,6 +66,7 @@ public class RecapActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),RunActivity.class);
+                //Intent intent = new Intent(view.getContext(),BluetoothActivity.class);
                 startActivity(intent);
             }
         });
