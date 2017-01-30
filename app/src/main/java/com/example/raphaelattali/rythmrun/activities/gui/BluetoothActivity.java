@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,9 +24,6 @@ import java.util.*;
 import static android.R.attr.data;
 import static android.bluetooth.BluetoothDevice.ACTION_FOUND;
 
-/**
- * Created by sun-haozhe on 18/01/2017.
- */
 
 public class BluetoothActivity extends AppCompatActivity {
 
@@ -40,14 +38,17 @@ public class BluetoothActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
+        Log.d("BluetoothActivity","created BluetoothActivity");
 
         //sees if this device supports Bluetooth
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             // Device does not support Bluetooth
             Toast.makeText(BluetoothActivity.this,"This device does not support Bluetooth",Toast.LENGTH_LONG).show();
+            Log.d("BluetoothActivity","This device does not support Bluetooth");
             return;
         }
+
 
         //tests if Bluetooth is actived, if not, starts/actives the Bluetooth
         int REQUEST_CODE_BLUETOOTH = 1;
@@ -55,15 +56,20 @@ public class BluetoothActivity extends AppCompatActivity {
             Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(intent, REQUEST_CODE_BLUETOOTH);
             //Toast.makeText(BluetoothActivity.this,"Bluetooth has been actived",Toast.LENGTH_SHORT).show();
+            Log.d("BluetoothActivity","Bluetooth has been actived");
+        }else{
+            Log.d("BluetoothActivity","Bluetooth is already actived");
         }
 
         //searches all bonded devices and adds them to the list
         devices = new ArrayList<String>();
         bondedBluetoothDevices = bluetoothAdapter.getBondedDevices();
+        Log.d("BluetoothActivity","Searching all bonded devices to add them to a list");
         for (BluetoothDevice device : bondedBluetoothDevices) {
             devices.add(device.getName() + "-" + device.getAddress());
         }
         //searches devices who have not yet been bonded
+        Log.d("BluetoothActivity","Begins to discover bluetooth devices who have not yet been bonded");
         bluetoothAdapter.startDiscovery();
 
         //sets up the DETECT/REFRESH DEVICES button
@@ -100,8 +106,10 @@ public class BluetoothActivity extends AppCompatActivity {
                 if(BluetoothDevice.ACTION_FOUND.equals(action)){
                     //gets the BluetoothDevice object from the intent
                     BluetoothDevice newBluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    Log.d("BluetoothActivity","We discovered a new BluetoothDevice");
                     // Add the name and address to an array adapter to show in a ListView
                     bondedBluetoothDevices.add(newBluetoothDevice);
+                    Log.d("BluetoothActivity","This new BluetoothDevice has been added to the set bondedBluetoothDevices");
                     String theNewDevice = newBluetoothDevice.getName() + "-" + newBluetoothDevice.getAddress();
                     devices.add(theNewDevice);
                     arrayAdapter.add(theNewDevice);
@@ -112,12 +120,14 @@ public class BluetoothActivity extends AppCompatActivity {
         // Register the BroadcastReceiver
         IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(broadcastReceiver, intentFilter);
+        Log.d("BluetoothActivity","We registered the BroadcastReceiver to detect Bluetooth devices");
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
+        Log.d("BluetoothActivity","We unregistered the BroadcastReceiver to detect Bluetooth devices");
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.raphaelattali.rythmrun.activities.gui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class MusicFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("MusicFragment", "created MusicFragment");
         View rootView = inflater.inflate(R.layout.fragment_music, container, false);
 
         tvFoundSongs = (TextView) rootView.findViewById(R.id.tvNewRunFoundFiles);
@@ -56,6 +58,7 @@ public class MusicFragment extends Fragment {
 
         //Forced update at start
         updateFoundSongs();
+        Log.d("MusicFragment", "We force update in the beginning");
 
         return rootView;
     }

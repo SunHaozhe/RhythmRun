@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun;
+package com.example.raphaelattali.rythmrun.activities.gui;
 
 /**
  * Created by asus on 29/01/2017.

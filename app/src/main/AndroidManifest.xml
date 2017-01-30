@@ -8,11 +8,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon"
@@ -46,7 +41,9 @@
         <activity
             android:name=".activities.gui.RunActivity"
             android:label="@string/title_activity_run"
-            android:parentActivityName=".activities.gui.HomeActivity" />
+            android:parentActivityName=".activities.gui.HomeActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name=".activities.gui.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -59,27 +56,21 @@
             android:name=".activities.gui.SongActivity"
             android:label="@string/title_activity_library"
             android:parentActivityName=".activities.gui.LibraryActivity" />
-        <!--
- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
-        -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
         <activity
-            android:name=".DescriptionProjectActivityAbout"
-            android:label="@string/title_activity_description_project_about"
-            android:theme="@style/AppTheme.NoActionBar" />
+        	android:name=".activities.gui.BluetoothActivity" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.gui.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".activities.gui.HomeActivity" />
+        <activity
+            android:name=".activities.gui.LoginActivity"
             android:label="@string/title_activity_login" />
-        <activity android:name=".activities.gui.BluetoothActivity" />
-        <activity
-            android:name=".HistoriqueActivity"
+		<activity
+            android:name=".activities.gui.HistoriqueActivity"
             android:label="@string/title_activity_historique"
             android:parentActivityName=".activities.gui.HomeActivity" />
-        <activity android:name=".SumUpActivity"
+        <activity
+        	android:name=".activities.gui.SumUpActivity"
             android:parentActivityName=".activities.gui.RunActivity"/>
     </application>
 

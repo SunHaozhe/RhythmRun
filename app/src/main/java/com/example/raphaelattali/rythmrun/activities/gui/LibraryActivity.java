@@ -29,6 +29,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("LibraryActivity", "created LibraryActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
 
@@ -37,8 +38,10 @@ public class LibraryActivity extends AppCompatActivity {
         if (Environment.MEDIA_MOUNTED.equals(state) ||
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
             Log.d("Files", "external storage is readable");
+            Log.d("LibraryActivity", "external storage is readable");
         } else {
             Log.d("Files", "external storage is NOT readable");
+            Log.d("LibraryActivity", "external storage is NOT readable");
         }
 
         if(Song.songs==null)
@@ -115,6 +118,7 @@ public class LibraryActivity extends AppCompatActivity {
                     if (song != null) {
                         intent.putExtra(EXTRA_SONG, Song.songs.indexOf(song));
                     }
+                    Log.d("LibraryActivity", "We lances the intent which contains the song selected");
                     startActivity(intent);
                 }
             });

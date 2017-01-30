@@ -21,9 +21,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.Distance;
-import com.example.raphaelattali.rythmrun.HistoriqueActivity;
 import com.example.raphaelattali.rythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
+import com.example.raphaelattali.rythmrun.music.Song;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -69,6 +69,16 @@ public class HomeActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     PERMISSION_READ_EXTERNAL_STORAGE);
+        }
+
+        if (Song.songs == null){
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Song.loadSongs();
+                }
+            });
+            thread.start();
         }
 
     }
@@ -159,6 +169,9 @@ public class HomeActivity extends AppCompatActivity
                 break;
             case R.id.nav_library:
                 startActivityFromClass(LibraryActivity.class);
+                break;
+            case R.id.nav_about:
+                startActivityFromClass(AboutActivity.class);
                 break;
         }
 

@@ -3,6 +3,7 @@ package com.example.raphaelattali.rythmrun.activities.gui;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ public class SongActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("SongActivity","created SongActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song);
 

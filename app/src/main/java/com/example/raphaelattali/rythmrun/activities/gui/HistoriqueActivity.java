@@ -1,14 +1,11 @@
-package com.example.raphaelattali.rythmrun;
+package com.example.raphaelattali.rythmrun.activities.gui;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.raphaelattali.rythmrun.activities.gui.LibraryActivity;
-import com.example.raphaelattali.rythmrun.music.Song;
+import com.example.raphaelattali.rythmrun.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +39,7 @@ public class HistoriqueActivity extends AppCompatActivity
 
     private List<HistoricItem> genererHistorics()
     {
-        List<HistoricItem> tweets = new ArrayList<HistoricItem>();
+        List<HistoricItem> tweets = new ArrayList<>();
         tweets.add(new HistoricItem(Color.BLACK, "01-01-2017", "24km"));
         tweets.add(new HistoricItem(Color.BLUE,"01-02-2017", "50km"));
         tweets.add(new HistoricItem(Color.BLUE,"30-01-2015", "10km"));

@@ -31,6 +31,7 @@ public class NewRunActivity extends AppCompatActivity implements ItineraryFragme
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("NewRunActivity", "created NewRunActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_run);
 
@@ -68,6 +69,7 @@ public class NewRunActivity extends AppCompatActivity implements ItineraryFragme
                     }
                     catch (NullPointerException e){
                         Log.d("I","Itinerary fragment is null ?");
+                        Log.d("NewRunActivity","Itinerary fragment is null ?");
                     }
                 }
                 else{
