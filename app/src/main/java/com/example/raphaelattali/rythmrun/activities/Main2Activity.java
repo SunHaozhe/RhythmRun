@@ -168,7 +168,7 @@ public class Main2Activity extends AppCompatActivity {
         }
 
     }
-    
+
     private final void setTextViewToFreq(float freq) {
         runOnUiThread(new RunnableForTextView(freq));
     }

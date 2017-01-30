@@ -41,7 +41,9 @@
         <activity
             android:name=".activities.gui.RunActivity"
             android:label="@string/title_activity_run"
-            android:parentActivityName=".activities.gui.HomeActivity" />
+            android:parentActivityName=".activities.gui.HomeActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name=".activities.gui.SettingsActivity"
             android:label="@string/title_activity_settings"

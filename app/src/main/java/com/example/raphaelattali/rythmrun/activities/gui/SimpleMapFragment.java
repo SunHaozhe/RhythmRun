@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
 
-    public static final int UPDATE_IDLE = 10000; //ms
+    public static final int UPDATE_IDLE = 1000; //ms
 
     protected MapView mapView;
     protected GoogleMap googleMap;
@@ -48,28 +48,7 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
         if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            locationManager.requestLocationUpdates(provider, UPDATE_IDLE, 2, new LocationListener() {
-
-                @Override
-                public void onLocationChanged(Location location) {
-                    LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude());
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
-                    googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
-                }
-
-                @Override
-                public void onStatusChanged(String s, int i, Bundle bundle) {
-                }
-
-                @Override
-                public void onProviderEnabled(String s) {
-                }
-
-                @Override
-                public void onProviderDisabled(String s) {
-                }
-
-            });
+            locationManager.requestLocationUpdates(provider, UPDATE_IDLE, 2, getCustomLocationListener());
         }
 
         mapView.onCreate(savedInstanceState);
@@ -115,6 +94,32 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
             googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
         }
+    }
+
+    public LocationListener getCustomLocationListener(){
+        return new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude());
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
+                googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
     }
 
     @Override
