@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.Distance;
+import com.example.raphaelattali.rythmrun.HistoriqueActivity;
 import com.example.raphaelattali.rythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
 
@@ -149,6 +150,9 @@ public class HomeActivity extends AppCompatActivity
         switch (id){
             case R.id.nav_run:
                 startActivityFromClass(RunActivity.class);
+                break;
+            case R.id.nav_activity:
+                startActivityFromClass(HistoriqueActivity.class);
                 break;
             case R.id.nav_Settings:
                 startActivityFromClass(SettingsActivity.class);
