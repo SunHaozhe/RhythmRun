@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.example.raphaelattali.rythmrun.Distance;
 import com.example.raphaelattali.rythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
+import com.example.raphaelattali.rythmrun.music.Song;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -62,6 +63,15 @@ public class HomeActivity extends AppCompatActivity
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_ACCESS_FINE_LOCATION);
         }
+
+        Thread thread1 = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                Song.loadSongs();
+            }
+        });
+        thread1.start();
 
     }
 
