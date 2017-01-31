@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.raphaelattali.rythmrun.R;
+import com.example.raphaelattali.rythmrun.activities.gui.HomeActivity;
 import com.example.raphaelattali.rythmrun.app_config.AppConfig;
 import com.example.raphaelattali.rythmrun.login.AppModified;
 import com.example.raphaelattali.rythmrun.login.SQLLiteUser;
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 //Charger la session déjà existante et sauter l'étape de connexion si déjà connecté
         session = new SessionConfiguration(getApplicationContext());
         if (session.isLoggedIn()){
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             finish();
         }
 
@@ -133,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 // Lancement de l'activité principale !
                                 dismissProgressing();
-                                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
                                 startActivity(intent);
                                 finish();
                             } else {
