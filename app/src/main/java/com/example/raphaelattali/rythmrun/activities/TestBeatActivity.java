@@ -3,6 +3,7 @@ package com.example.raphaelattali.rythmrun.activities;
 import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.example.raphaelattali.rythmrun.R;
@@ -14,6 +15,7 @@ public class TestBeatActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("TestBeatActivity","created TestBeatActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_beat);
 

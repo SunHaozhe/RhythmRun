@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_run"
+            android:title="Run" />
+        <item
+            android:id="@+id/nav_activity"
+            android:title="Activity" />
+        <item
+            android:id="@+id/nav_library"
+            android:title="Library" />
+    </group>
+
+    <item android:title="Manage">
+        <menu>
+            <item
+                android:id="@+id/nav_about"
+                android:title="About"
+                android:icon="@android:drawable/ic_menu_info_details" />
+            <item
+                android:id="@+id/nav_Settings"
+                android:title="Settings"
+                android:icon="@android:drawable/ic_menu_manage" />
+        </menu>
+    </item>
+
+</menu>

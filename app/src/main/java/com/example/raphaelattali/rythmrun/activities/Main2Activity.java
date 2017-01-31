@@ -17,9 +17,7 @@ import com.example.raphaelattali.rythmrun.R;
 import com.example.raphaelattali.rythmrun.music.tempo.Tempo;
 import com.example.raphaelattali.rythmrun.sensors.Accelerometer;
 import com.example.raphaelattali.rythmrun.sensors.Podometer;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.File;
@@ -165,50 +163,10 @@ public class Main2Activity extends AppCompatActivity {
             thread2.start();
         }
         if (optionsDeDebug == 2) {
-            double tempo = Tempo.findTempoHz("/storage/emulated/0/Download/guitare_mono_66bpm.wav");
+            double tempo = Tempo.findTempoHzFast("/storage/emulated/0/Download/guitare_mono_66bpm.wav");
             textview.setText("Bpm : " + String.valueOf(60*tempo));
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
 
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Main2 Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
     }
 
     private final void setTextViewToFreq(float freq) {
