@@ -71,7 +71,7 @@
             android:layout_marginTop="40dp">
 
             <Button
-                android:id="@+id/calcul"
+                android:id="@+id/connect_button__login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Log in"
@@ -92,13 +92,14 @@
     </LinearLayout>
 
     <Button
-        android:text="Forgot password ?"
-        android:layout_width="wrap_content"
+        android:text="Register now !"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/main_linear_layout__login"
-        android:id="@+id/forgot_password_button"
+        android:id="@+id/register_button__login"
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_marginLeft="10dp" />
 
 </RelativeLayout>

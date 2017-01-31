@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.raphaelattali.rythmrun">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -42,10 +42,10 @@
             android:parentActivityName=".activities.gui.NewRunActivity" />
         <activity
             android:name=".activities.gui.RunActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_run"
             android:parentActivityName=".activities.gui.HomeActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.gui.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -58,8 +58,7 @@
             android:name=".activities.gui.SongActivity"
             android:label="@string/title_activity_library"
             android:parentActivityName=".activities.gui.LibraryActivity" />
-        <activity
-        	android:name=".activities.gui.BluetoothActivity" />
+        <activity android:name=".activities.gui.BluetoothActivity" />
         <activity
             android:name=".activities.gui.AboutActivity"
             android:label="@string/title_activity_about"
@@ -67,13 +66,14 @@
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login" />
-		<activity
+        <activity
             android:name=".activities.gui.HistoriqueActivity"
             android:label="@string/title_activity_historique"
             android:parentActivityName=".activities.gui.HomeActivity" />
         <activity
-        	android:name=".activities.gui.SumUpActivity"
-            android:parentActivityName=".activities.gui.RunActivity"/>
+            android:name=".activities.gui.SumUpActivity"
+            android:parentActivityName=".activities.gui.RunActivity" />
+        <activity android:name=".activities.RegisterActivity"></activity>
     </application>
 
 </manifest>
