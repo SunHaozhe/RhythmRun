@@ -59,8 +59,7 @@
             android:label="@string/title_activity_about"
             android:parentActivityName=".activities.gui.HomeActivity" />
         <activity
-            android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login">
+            android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
