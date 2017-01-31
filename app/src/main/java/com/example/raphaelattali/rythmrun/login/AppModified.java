@@ -9,8 +9,12 @@ package com.example.raphaelattali.rythmrun.login;
 import android.app.Application;
 import android.text.TextUtils;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
 /**
- * Classe dérivée de MultiDexApplication : elle fait passer des requêtes grâce à "volley"
+ * Classe dérivée de Application : elle fait passer des requêtes grâce à "volley"
  * Tous les objets nécessaires au fonctionnement de volley sont créés au démarrage de l'application
  */
 public class AppModified extends Application {
