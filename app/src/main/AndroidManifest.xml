@@ -26,11 +26,6 @@
             android:name=".activities.gui.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activities.gui.NewRunActivity"
@@ -65,7 +60,13 @@
             android:parentActivityName=".activities.gui.HomeActivity" />
         <activity
             android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".activities.gui.HistoriqueActivity"
             android:label="@string/title_activity_historique"

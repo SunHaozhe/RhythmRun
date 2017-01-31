@@ -15,7 +15,7 @@ public final class AppConfig {
      * Url où se situe la page PHP de login
      * TODO : Indiquer la vraie adresse pour le login
      */
-    public static String URL_LOGIN = "https://rhythmrun.000webhostapp.com/PHP/rhythmrunlogin.php";
+    public static String URL_LOGIN = "https://rhythmrun.000webhostapp.com/rhythmrunlogin.php";
 
     /**
      * SERVEUR LOCAL WAMP
@@ -26,7 +26,7 @@ public final class AppConfig {
      * Url où se situe la page PHP d'inscription
      * TODO : Indiquer la vraie adresse pour l'inscription
      */
-    public static String URL_REGISTER = "rhythmruntest.000webhostapp.com/PHP/rhythmrun_register.php";
+    public static String URL_REGISTER = "rhythmruntest.000webhostapp.com/PHP/rhythmrunregister.php";
 
     /**
      * public static String URL_REGISTER = "http://192.168.0.45/rhythmrun_register.php";
