@@ -4,6 +4,8 @@ package com.example.raphaelattali.rythmrun.music.phase_vocoder;
  * Created by Raphael Attali on 07/12/2016.
  */
 
+import android.util.Log;
+
 import java.util.List;
 
 /**
@@ -18,6 +20,8 @@ import java.util.List;
 
 public class FourierAnalysis {
 
+    private final static String TAG = "Analyse de Fourier";
+
     /**
      * <b>Permet de décomposer une onde périodique en une somme d'ondes sinusoidales</b>
      *
@@ -27,6 +31,7 @@ public class FourierAnalysis {
      */
     public static List<SinusWave> decompose(PeriodicWave rawWave){
 
+        Log.i(TAG,"Fonction \"decompose\" appelée : Début de la procédure");
         // Ne fonctionne pas encore
         return null;
     }
