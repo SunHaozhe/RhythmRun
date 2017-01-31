@@ -19,10 +19,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.raphaelattali.rythmrun.Distance;
 import com.example.raphaelattali.rythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
+import com.example.raphaelattali.rythmrun.activities.LoginActivity;
+import com.example.raphaelattali.rythmrun.login.SessionConfiguration;
 import com.example.raphaelattali.rythmrun.music.Song;
 
 public class HomeActivity extends AppCompatActivity
@@ -172,6 +175,12 @@ public class HomeActivity extends AppCompatActivity
                 break;
             case R.id.nav_about:
                 startActivityFromClass(AboutActivity.class);
+                break;
+            case R.id.nav_logout:
+                (new SessionConfiguration(getApplicationContext())).setLogin(false);
+                Toast.makeText(this, "Vous avez été déconnecté avec succés !", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+                finish();
                 break;
         }
 

@@ -134,6 +134,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 // Lancement de l'activité principale !
                                 dismissProgressing();
+                                Toast.makeText(LoginActivity.this, name+", vous êtes à présent connecté !", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
                                 startActivity(intent);
                                 finish();
