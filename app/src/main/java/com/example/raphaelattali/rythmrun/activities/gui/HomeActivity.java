@@ -51,10 +51,10 @@ public class HomeActivity extends AppCompatActivity
         buttonNewRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.setBackground(getResources().getDrawable(R.drawable.round_shape_btn_pressed));
+                //view.setBackground(getResources().getDrawable(R.drawable.round_shape_btn_pressed));
                 Intent intent = new Intent(view.getContext(),NewRunActivity.class);
                 startActivity(intent);
-                view.setBackground(getResources().getDrawable(R.drawable.round_shape_btn));
+                //view.setBackground(getResources().getDrawable(R.drawable.round_shape_btn));
             }
         });
 
@@ -162,7 +162,7 @@ public class HomeActivity extends AppCompatActivity
                 startActivityFromClass(RunActivity.class);
                 break;
             case R.id.nav_activity:
-                startActivityFromClass(HistoriqueActivity.class);
+                startActivityFromClass(HistoryActivity.class);
                 break;
             case R.id.nav_Settings:
                 startActivityFromClass(SettingsActivity.class);

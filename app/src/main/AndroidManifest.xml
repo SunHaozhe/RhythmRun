@@ -40,10 +40,10 @@
             android:parentActivityName=".activities.gui.NewRunActivity" />
         <activity
             android:name=".activities.gui.RunActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_run"
             android:parentActivityName=".activities.gui.HomeActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.gui.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -56,8 +56,7 @@
             android:name=".activities.gui.SongActivity"
             android:label="@string/title_activity_library"
             android:parentActivityName=".activities.gui.LibraryActivity" />
-        <activity
-        	android:name=".activities.gui.BluetoothActivity" />
+        <activity android:name=".activities.gui.BluetoothActivity" />
         <activity
             android:name=".activities.gui.AboutActivity"
             android:label="@string/title_activity_about"
@@ -65,13 +64,17 @@
         <activity
             android:name=".activities.gui.LoginActivity"
             android:label="@string/title_activity_login" />
-		<activity
-            android:name=".activities.gui.HistoriqueActivity"
+        <activity
+            android:name=".activities.gui.HistoryActivity"
             android:label="@string/title_activity_historique"
             android:parentActivityName=".activities.gui.HomeActivity" />
         <activity
-        	android:name=".activities.gui.SumUpActivity"
-            android:parentActivityName=".activities.gui.RunActivity"/>
+            android:name=".activities.gui.SumUpActivity"
+            android:parentActivityName=".activities.gui.RunActivity" />
+        <activity
+            android:name=".activities.gui.NewRunActivity"
+            android:label="@string/title_activity_new_run"
+            android:parentActivityName=".activities.gui.HomeActivity"/>
     </application>
 
 </manifest>

@@ -20,17 +20,14 @@
 
     <string name="home_new_run">New Run</string>
     <string name="title_activity_new_run">New Run</string>
-
-    <string name="pace_your_speed">YOUR SPEED</string>
-    <string name="pace_your_pace">YOUR PACE</string>
-    <string name="pace_your_distance">YOUR DISTANCE</string>
-    <string name="pace_selected_itinerary">Selected itinerary</string>
-    <string name="pace_estimated_time">Estimated time</string>
-
-    <string name="music_choose_style">Choose your style:</string>
-    <string name="music_random">Random</string>
-    <string name="music_no_files_found">No song found.</string>
-    <string name="music_files_found">%1$d song(s) found.</string>
+    <string name="new_run_pace">Pace</string>
+    <string name="new_run_speed">Speed</string>
+    <string name="new_run_itinerary">Itinerary</string>
+    <string name="new_run_music">Music</string>
+    <string name="new_run_random">Random</string>
+    <string name="new_run_free">Free</string>
+    <string name="new_run_delete_marker">Delete marker</string>
+    <string name="new_run_direction">Direction</string>
 
     <string name="title_activity_recap">Recap</string>
     <string name="recap_of_your_run">RECAP OF YOUR RUN</string>

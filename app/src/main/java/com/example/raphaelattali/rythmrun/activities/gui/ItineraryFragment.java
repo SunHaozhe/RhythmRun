@@ -1,16 +1,23 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
-import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.example.raphaelattali.rythmrun.Distance;
 import com.example.raphaelattali.rythmrun.R;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -41,28 +48,14 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
     public static PolylineOptions itinerary;
 
-    public interface OnMarkerChangeListener {
-       void onMarkerChange();
-    }
-
-    private OnMarkerChangeListener markerChangeListener;
-
-    @Override
-    public void onAttach(Activity activity){
-        super.onAttach(activity);
-        try{
-            this.markerChangeListener = (OnMarkerChangeListener) activity;
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+    private OnTouchListener listener;
 
     private ArrayList<LatLng> markerPoints = new ArrayList<>();
     private ArrayList<Marker> markers = new ArrayList<>();
-    private FloatingActionButton floatingActionButton;
     private Polyline polyline;
     private float distance;
+
+    private TextView distanceTextView;
 
     public ItineraryFragment() {
         super();
@@ -72,14 +65,13 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeLastMarker();
-            }
-        });
-
+        TouchableWrapper frameLayout = new TouchableWrapper(getActivity());
+        frameLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        ((ViewGroup) rootView).addView(frameLayout,
+                new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                ));
         return rootView;
     }
 
@@ -87,8 +79,50 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     public View initView(LayoutInflater inflater, ViewGroup container){
         View rootView = inflater.inflate(R.layout.fragment_itinerary, container, false);
         mapView = (MapView) rootView.findViewById(R.id.itineraryMapView);
-        floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fabItinerary);
+
+        /*ImageButton buttonDelete = (ImageButton) rootView.findViewById(R.id.itineraryButtonDelete);
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeLastMarker();
+            }
+        });
+        ImageButton buttonRoute = (ImageButton) rootView.findViewById(R.id.itineraryButtonRoute);
+        buttonRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initiateDirection();
+            }
+        });*/
+
         return rootView;
+    }
+
+    public void setListener(OnTouchListener listener){
+        this.listener = listener;
+    }
+
+    public interface OnTouchListener{
+        public abstract void onTouch();
+    }
+
+    public class TouchableWrapper extends FrameLayout {
+        public TouchableWrapper(Context context){
+            super(context);
+        }
+
+        @Override
+        public boolean dispatchTouchEvent(MotionEvent event){
+            switch (event.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    listener.onTouch();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    listener.onTouch();
+                    break;
+            }
+            return super.dispatchTouchEvent(event);
+        }
     }
 
     @Override
@@ -124,8 +158,6 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                 // Add new marker to the Google Map
                 markers.add(googleMap.addMarker(options));
 
-                markerChangeListener.onMarkerChange();
-
             }
         });
         googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -143,6 +175,11 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                 markerPoints.set(markers.indexOf(marker), marker.getPosition());
             }
         });
+    }
+
+    public void initiateDirection(TextView textView){
+        distanceTextView = textView;
+        initiateDirection();
     }
 
     public void initiateDirection(){
@@ -169,7 +206,6 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
             markers.get(markers.size()-1).remove();
             markers.remove(markers.size()-1);
             markerPoints.remove(markerPoints.size()-1);
-            markerChangeListener.onMarkerChange();
         }
     }
 
@@ -348,6 +384,10 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
             if(itinerary != null) {
                 polyline = googleMap.addPolyline(itinerary);
                 distance = distanceOfPolyline(itinerary);
+
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                final String unit = sharedPreferences.getString("unit_list","km");
+                distanceTextView.setText(new Distance(distance/1000).toStr(unit,true));
             }
             else {
                 Log.d("onPostExecute","without Poly lines drawn");

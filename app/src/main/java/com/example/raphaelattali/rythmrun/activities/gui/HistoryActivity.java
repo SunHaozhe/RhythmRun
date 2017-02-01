@@ -28,28 +28,28 @@ public class HistoryActivity extends AppCompatActivity
     {
         ListView mListView;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_historique);
+        setContentView(R.layout.activity_history);
 
         mListView = (ListView) findViewById(R.id.listView);
-        List<HistoricItem> tweets = genererHistorics();
+        List<HistoryItem> tweets = genererHistorics();
 
         HistoricAdapter adapter = new HistoricAdapter(HistoryActivity.this, tweets);
         mListView.setAdapter(adapter);
     }
 
-    private List<HistoricItem> genererHistorics()
+    private List<HistoryItem> genererHistorics()
     {
-        List<HistoricItem> tweets = new ArrayList<>();
-        tweets.add(new HistoricItem(Color.BLACK, "01-01-2017", "24km"));
-        tweets.add(new HistoricItem(Color.BLUE,"01-02-2017", "50km"));
-        tweets.add(new HistoricItem(Color.BLUE,"30-01-2015", "10km"));
-        tweets.add(new HistoricItem(Color.RED,"30-05-2015", "12km"));
+        List<HistoryItem> tweets = new ArrayList<>();
+        tweets.add(new HistoryItem(Color.BLACK, "01-01-2017", "24km"));
+        tweets.add(new HistoryItem(Color.BLUE,"01-02-2017", "50km"));
+        tweets.add(new HistoryItem(Color.BLUE,"30-01-2015", "10km"));
+        tweets.add(new HistoryItem(Color.RED,"30-05-2015", "12km"));
         return tweets;
     }
 
-    public class HistoricAdapter extends ArrayAdapter<HistoricItem> {
+    public class HistoricAdapter extends ArrayAdapter<HistoryItem> {
 
-        HistoricAdapter(Context context, List<HistoricItem> historic) {
+        HistoricAdapter(Context context, List<HistoryItem> historic) {
             super(context, 0, historic);
         }
 
@@ -71,7 +71,7 @@ public class HistoryActivity extends AppCompatActivity
             }
 
             //getItem(position) va récupérer l'item [position] de la List<Tweet> tweets
-            HistoricItem historic = getItem(position);
+            HistoryItem historic = getItem(position);
 
             //il ne reste plus qu'à remplir notre vue
             viewHolder.date.setText(historic.getDate());
