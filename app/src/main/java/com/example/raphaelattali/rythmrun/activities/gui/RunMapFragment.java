@@ -92,4 +92,10 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
         }
     }
 
+    public double getDistance(){
+        if(journeyPolyline == null)
+            return 0;
+        return (double) ItineraryFragment.distanceOfPolyline(journeyPolylineOptions)/1000;
+    }
+
 }

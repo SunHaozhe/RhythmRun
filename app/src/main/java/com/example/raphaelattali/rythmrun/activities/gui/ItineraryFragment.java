@@ -12,9 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.Distance;
@@ -103,7 +101,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     }
 
     public interface OnTouchListener{
-        public abstract void onTouch();
+        void onTouch();
     }
 
     public class TouchableWrapper extends FrameLayout {
@@ -270,7 +268,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         return data;
     }
 
-    public float distanceOfPolyline(PolylineOptions polylineOptions){
+    public static float distanceOfPolyline(PolylineOptions polylineOptions){
         List<LatLng> table = polylineOptions.getPoints();
         int size = table.size() - 1;
         float[] results = new float[1];

@@ -43,6 +43,8 @@
     <string name="title_activity_run">Run</string>
     <string name="run_play">Play</string>
     <string name="run_pause">Pause</string>
+    <string name="run_heart_rate">%1$d Hz</string>
+    <string name="run_bpm">%1$d bpm</string>
 
     <string name="title_activity_library">Library</string>
     <string name="menu_library_refresh">Refresh</string>
