@@ -36,15 +36,20 @@ public class NewRunActivity extends AppCompatActivity {
     public static final String EXTRA_DISTANCE="distance";
     public static final String EXTRA_PACE="pace";
     public static final String EXTRA_MUSIC="music";
+    public static final String EXTRA_ITINERARY = "itinerary";
 
     private double distance;
     private double pace;
     private String music;
 
+    private ItineraryFragment itineraryFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_run);
+
+        itineraryFragment = (ItineraryFragment) getSupportFragmentManager().findFragmentById(R.id.newRunItineraryFragment);
 
         initExpandableMusic();
         initExpandableItinerary();
@@ -75,6 +80,7 @@ public class NewRunActivity extends AppCompatActivity {
                 intent.putExtra(EXTRA_DISTANCE, getDistance());
                 intent.putExtra(EXTRA_PACE, getPace());
                 intent.putExtra(EXTRA_MUSIC, getMusic());
+                intent.putExtra(EXTRA_ITINERARY, new PolylineOptionsParcelable(itineraryFragment.getItinerary()));
                 startActivity(intent);
                 return true;
             default:
@@ -137,7 +143,6 @@ public class NewRunActivity extends AppCompatActivity {
         });
 
         final ScrollView scrollView = (ScrollView) findViewById(R.id.newRunScrollView);
-        final ItineraryFragment itineraryFragment = (ItineraryFragment) getSupportFragmentManager().findFragmentById(R.id.newRunItineraryFragment);
         itineraryFragment.setListener(new ItineraryFragment.OnTouchListener() {
             @Override
             public void onTouch() {

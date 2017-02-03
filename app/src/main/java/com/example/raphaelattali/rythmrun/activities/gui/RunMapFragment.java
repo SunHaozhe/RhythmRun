@@ -44,9 +44,6 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap map) {
         super.onMapReady(map);
-        if(ItineraryFragment.itinerary != null){
-            map.addPolyline(ItineraryFragment.itinerary);
-        }
     }
 
     @Override

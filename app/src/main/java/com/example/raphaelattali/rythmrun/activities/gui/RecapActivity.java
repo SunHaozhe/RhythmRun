@@ -51,6 +51,9 @@ public class RecapActivity extends AppCompatActivity {
         Distance distance = new Distance(intent.getDoubleExtra(NewRunActivity.EXTRA_DISTANCE,0.0)/1000);
         Pace pace = new Pace(intent.getDoubleExtra(NewRunActivity.EXTRA_PACE,0.0));
         String music = intent.getStringExtra(NewRunActivity.EXTRA_MUSIC);
+        final PolylineOptionsParcelable itinerary = intent.getParcelableExtra(NewRunActivity.EXTRA_ITINERARY);
+        SimpleMapFragment mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.recapMapFragment);
+        mapFragment.drawnPolyline(itinerary.getPolylineOptions());
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String unit = sharedPreferences.getString("unit_list","km");
@@ -78,6 +81,7 @@ public class RecapActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),RunActivity.class);
+                intent.putExtra(NewRunActivity.EXTRA_ITINERARY,itinerary);
                 startActivity(intent);
             }
         });

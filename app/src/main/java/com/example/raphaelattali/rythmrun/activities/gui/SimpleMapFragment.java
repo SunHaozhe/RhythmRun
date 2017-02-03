@@ -22,6 +22,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -32,6 +33,8 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
 
     private LocationManager locationManager;
     private String provider;
+
+    private PolylineOptions polylineOptions;
 
     public SimpleMapFragment() {
         // Required empty public constructor
@@ -96,6 +99,11 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
             googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
         }
+
+        if(polylineOptions != null){
+            map.addPolyline(polylineOptions);
+            polylineOptions=null;
+        }
     }
 
     public LocationListener getCustomLocationListener(){
@@ -122,6 +130,14 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
 
             }
         };
+    }
+
+    public void drawnPolyline(PolylineOptions polylineOptions){
+        this.polylineOptions = polylineOptions;
+        if(polylineOptions != null && googleMap != null){
+            googleMap.addPolyline(polylineOptions);
+            this.polylineOptions = null;
+        }
     }
 
     @Override

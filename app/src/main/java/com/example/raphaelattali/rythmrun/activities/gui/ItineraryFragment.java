@@ -44,7 +44,7 @@ import java.util.List;
 
 public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
-    public static PolylineOptions itinerary;
+    private static PolylineOptions itinerary;
 
     private OnTouchListener listener;
 
@@ -58,6 +58,10 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     public ItineraryFragment() {
         super();
         // Required empty public constructor
+    }
+
+    public PolylineOptions getItinerary(){
+        return itinerary;
     }
 
     @Override

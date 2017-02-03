@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.example.raphaelattali.rythmrun.Distance;
 import com.example.raphaelattali.rythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -55,6 +56,13 @@ public class RunActivity extends AppCompatActivity {
         final Chronometer chronometer = (Chronometer) findViewById(R.id.chronometer);
         final FloatingActionButton buttonStart = (FloatingActionButton) findViewById(R.id.runPlay);
         final FloatingActionButton buttonStop = (FloatingActionButton) findViewById(R.id.runStop);
+
+        Intent intent = getIntent();
+        if(intent != null){
+            final PolylineOptionsParcelable itinerary = intent.getParcelableExtra(NewRunActivity.EXTRA_ITINERARY);
+            if(itinerary != null)
+                runMapFragment.drawnPolyline(itinerary.getPolylineOptions());
+        }
 
         buttonStart.setOnClickListener(new OnClickListener() {
             @Override
