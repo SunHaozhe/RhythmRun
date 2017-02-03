@@ -133,19 +133,46 @@ public class RunActivity extends AppCompatActivity {
             public void onClick(View view) {
                 isDrawerExpanded = !isDrawerExpanded;
                 if(isDrawerExpanded){
-                    ViewAnimationUtils.expand(dataView);
-                    imageButton.setImageDrawable(
-                            getResources().getDrawable(R.drawable.ic_down_arrow)
-                    );
-                    fragmentView.getLayoutParams().height=screenHeight-ViewAnimationUtils.dpToPx(ViewAnimationUtils.expandedHeight);
-                    fragmentView.requestLayout();
+                    Animation a = ViewAnimationUtils.expand(dataView);
+                    a.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            fragmentView.getLayoutParams().height=screenHeight-ViewAnimationUtils.dpToPx(ViewAnimationUtils.expandedHeight);
+                            fragmentView.requestLayout();
+                            imageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_down_arrow));
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                    dataView.startAnimation(a);
                 } else {
-                    ViewAnimationUtils.collapse(dataView);
-                    imageButton.setImageDrawable(
-                            getResources().getDrawable(R.drawable.ic_expand_less_black_24dp)
-                    );
-                    fragmentView.getLayoutParams().height=screenHeight;
-                    fragmentView.requestLayout();
+                    Animation a = ViewAnimationUtils.collapse(dataView);
+                    a.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            fragmentView.getLayoutParams().height=screenHeight;
+                            fragmentView.requestLayout();
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            imageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less_black_24dp));
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                    dataView.startAnimation(a);
                 }
             }
         });

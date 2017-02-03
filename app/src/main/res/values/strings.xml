@@ -30,11 +30,10 @@
     <string name="new_run_direction">Direction</string>
 
     <string name="title_activity_recap">Recap</string>
-    <string name="recap_of_your_run">RECAP OF YOUR RUN</string>
-    <string name="recap_selected_pace">Selected pace:</string>
-    <string name="recap_selected_speed">Selected speed:</string>
-    <string name="recap_selected_distance">Selected distance:</string>
-    <string name="recap_selected_music">Selected music:</string>
+    <string name="recap_selected_pace">Pace</string>
+    <string name="recap_selected_speed">Speed</string>
+    <string name="recap_selected_distance">Distance</string>
+    <string name="recap_selected_music">Music</string>
     <string name="recap_free">Free</string>
     <string name="recap_button_go">GO</string>
     <string name="recap_warning">Warning: this might be too hard for you! Consider

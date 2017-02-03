@@ -11,7 +11,7 @@ public class ViewAnimationUtils {
     public static final int expandedHeight=340;
     public static final int collapsedHeight=52;
 
-    public static void expand(final View v) {
+    public static Animation expand(final View v) {
         scale = v.getContext().getResources().getDisplayMetrics().density;
         v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -32,10 +32,10 @@ public class ViewAnimationUtils {
         };
 
         a.setDuration((int)(dpToPx(expandedHeight) / v.getContext().getResources().getDisplayMetrics().density));
-        v.startAnimation(a);
+        return a;
     }
 
-    public static void collapse(final View v) {
+    public static Animation collapse(final View v) {
         scale = v.getContext().getResources().getDisplayMetrics().density;
         Animation a = new Animation()
         {
@@ -57,7 +57,7 @@ public class ViewAnimationUtils {
         };
 
         a.setDuration((int)(dpToPx(expandedHeight) / v.getContext().getResources().getDisplayMetrics().density));
-        v.startAnimation(a);
+        return a;
     }
 
     public static int dpToPx(int dp){

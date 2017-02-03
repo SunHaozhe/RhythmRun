@@ -247,6 +247,9 @@ public class NewRunActivity extends AppCompatActivity {
         return distance;
     }
     public double getPace(){
+        CheckBox checkBoxFree = (CheckBox) findViewById(R.id.newRunPaceFree);
+        if(checkBoxFree.isChecked())
+            return -1;
         return pace;
     }
     public String getMusic(){

@@ -4,121 +4,162 @@
     android:id="@+id/activity_recap"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.raphaelattali.rythmrun.activities.gui.RecapActivity">
 
+    <fragment
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:name="com.example.raphaelattali.rythmrun.activities.gui.RecapMapFragment" />
+
     <RelativeLayout
-        android:id="@+id/recapLayout1"
+        android:id="@+id/recapBarDistance"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border"
-        android:layout_marginTop="15dp">
+        android:elevation="2dp"
+        android:layout_marginTop="20dp">
 
         <TextView
-            android:id="@+id/tvRecapLabel0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/colorBold"
-            android:layout_marginTop="20dp"
-            android:textSize="16sp"
-            android:text="@string/recap_of_your_run"/>
-
-        <TextView
-            android:id="@+id/tvRecapLabel1"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvRecapLabel0"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
-            android:textSize="15sp"
-            android:gravity="right"
+            android:id="@+id/tvRecapLabelDistance"
+            android:layout_width="200dp"
+            android:layout_height="34dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="20dp"
+            android:gravity="left"
+            android:background="@color/primary"
+            android:textColor="@color/textSecondary"
+            android:textSize="20sp"
             android:text="@string/recap_selected_distance"/>
 
         <TextView
+            android:id="@+id/recapSeparator1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tvRecapLabelDistance"
+            android:layout_alignRight="@id/tvRecapLabelDistance"
+            android:backgroundTint="@color/textSecondary"
+            android:background="@drawable/up_right_triangle"/>
+
+        <TextView
             android:id="@+id/tvRecapDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tvRecapLabel1"
-            android:layout_alignBaseline="@id/tvRecapLabel1"
-            android:textSize="15sp"
-            android:gravity="left"/>
-
-        <TextView
-            android:id="@+id/tvRecapLabel2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvRecapLabel1"
-            android:layout_alignRight="@id/tvRecapLabel1"
-            android:layout_marginBottom="20dp"
-            android:textSize="15sp"
+            android:layout_alignBottom="@id/tvRecapLabelDistance"
+            android:layout_width="fill_parent"
+            android:layout_height="34dp"
+            android:layout_alignParentRight="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="20dp"
             android:gravity="right"
-            android:text="@string/recap_selected_pace"/>
-
-        <TextView
-            android:id="@+id/tvRecapPace"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tvRecapDistance"
-            android:layout_alignBaseline="@id/tvRecapLabel2"
-            android:textSize="15sp"
-            android:gravity="left"/>
-
-        <TextView
-            android:id="@+id/tvRecapLabel3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvRecapLabel2"
-            android:layout_alignRight="@id/tvRecapLabel2"
-            android:layout_marginBottom="20dp"
-            android:textSize="15sp"
-            android:gravity="right"
-            android:text="@string/recap_selected_music"/>
-
-        <TextView
-            android:id="@+id/tvRecapMusic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tvRecapDistance"
-            android:layout_alignBaseline="@id/tvRecapLabel3"
-            android:textSize="15sp"
-            android:gravity="left"/>
+            android:background="@color/textSecondary"
+            android:textColor="@color/textPrimary"
+            android:textSize="20sp"/>
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/RecapToHide"
+    <RelativeLayout
+        android:id="@+id/recapBarPace"
         android:layout_width="fill_parent"
-        android:layout_below="@id/recapLayout1"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:visibility="invisible"
-        android:gravity="center_horizontal">
+        android:elevation="2dp"
+        android:layout_below="@id/recapBarDistance">
 
         <TextView
+            android:id="@+id/tvRecapLabelPace"
+            android:layout_width="200dp"
+            android:layout_height="34dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="20dp"
+            android:gravity="left"
+            android:background="@color/primary"
+            android:textColor="@color/textSecondary"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/recapSeparator2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
-            android:textSize="16sp"
-            android:text="@string/recap_warning"/>
+            android:layout_alignBottom="@id/tvRecapLabelPace"
+            android:layout_alignRight="@id/tvRecapLabelPace"
+            android:backgroundTint="@color/textSecondary"
+            android:background="@drawable/up_right_triangle"/>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tvRecapPace"
+            android:layout_alignBottom="@id/tvRecapLabelPace"
+            android:layout_width="fill_parent"
+            android:layout_height="34dp"
+            android:layout_alignParentRight="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="20dp"
+            android:gravity="right"
+            android:background="@color/textSecondary"
+            android:textColor="@color/textPrimary"
+            android:textSize="20sp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/recapBarMusic"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:elevation="2dp"
+        android:layout_below="@id/recapBarPace">
+
+        <TextView
+            android:id="@+id/tvRecapLabelMusic"
+            android:layout_width="200dp"
+            android:layout_height="34dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="20dp"
+            android:gravity="left"
+            android:background="@color/primary"
+            android:textColor="@color/textSecondary"
+            android:textSize="20sp"
+            android:text="@string/recap_selected_music"/>
+
+        <TextView
+            android:id="@+id/recapSeparator3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tvRecapLabelMusic"
+            android:layout_alignRight="@id/tvRecapLabelMusic"
+            android:backgroundTint="@color/textSecondary"
+            android:background="@drawable/up_right_triangle"/>
+
+        <TextView
+            android:id="@+id/tvRecapMusic"
+            android:layout_alignBottom="@id/tvRecapLabelMusic"
+            android:layout_width="fill_parent"
+            android:layout_height="34dp"
+            android:layout_alignParentRight="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="20dp"
+            android:gravity="right"
+            android:background="@color/textSecondary"
+            android:textColor="@color/textPrimary"
+            android:textSize="20sp"/>
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/buttonRecapGO"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@drawable/round_shape_btn"
-        android:layout_below="@id/recapLayout1"
-        android:layout_marginTop="100dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:background="@drawable/round_button"
         android:layout_centerHorizontal="true"
-        android:textColor="#FFFFFF"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:textColor="@color/textSecondary"
         android:textSize="30sp"
-        android:text="@string/recap_button_go"/>
+        android:text="@string/recap_button_go"
+        android:stateListAnimator="@anim/button_state_list_anim"
+        android:elevation="4dp"/>
+
 
 </RelativeLayout>

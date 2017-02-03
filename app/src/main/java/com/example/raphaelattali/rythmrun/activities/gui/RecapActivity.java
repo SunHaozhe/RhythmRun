@@ -7,11 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.Distance;
@@ -20,37 +20,48 @@ import com.example.raphaelattali.rythmrun.R;
 
 public class RecapActivity extends AppCompatActivity {
 
-    private boolean shownWarning = false;
+    private View recapBarDistance;
+    private View recapBarPace;
+    private View recapBarMusic;
+    private Button recapGOButton;
 
-    private LinearLayout linearLayout;
+    private TranslateAnimation a;
+    private TranslateAnimation b;
+    private TranslateAnimation c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("RecapActivity","created RecapActivity");
+        Log.d("RecapActivity", "created RecapActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recap);
+
+        findViewById(R.id.tvRecapLabelDistance).bringToFront();
+        findViewById(R.id.recapSeparator1).bringToFront();
+        findViewById(R.id.tvRecapLabelPace).bringToFront();
+        findViewById(R.id.recapSeparator2).bringToFront();
+        findViewById(R.id.tvRecapLabelMusic).bringToFront();
+        findViewById(R.id.recapSeparator3).bringToFront();
+
+        TextView paceLabel = (TextView) findViewById(R.id.tvRecapLabelPace);
+        TextView tvDistance = (TextView) findViewById(R.id.tvRecapDistance);
+        TextView tvPace = (TextView) findViewById(R.id.tvRecapPace);
+        TextView tvMusic = (TextView) findViewById(R.id.tvRecapMusic);
 
         Intent intent = getIntent();
         Distance distance = new Distance(intent.getDoubleExtra(NewRunActivity.EXTRA_DISTANCE,0.0)/1000);
         Pace pace = new Pace(intent.getDoubleExtra(NewRunActivity.EXTRA_PACE,0.0));
         String music = intent.getStringExtra(NewRunActivity.EXTRA_MUSIC);
 
-        linearLayout = (LinearLayout) findViewById(R.id.RecapToHide);
-        TextView tvDistance = (TextView) findViewById(R.id.tvRecapDistance);
-        TextView tvPace = (TextView) findViewById(R.id.tvRecapPace);
-        TextView tvMusic = (TextView) findViewById(R.id.tvRecapMusic);
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String unit = sharedPreferences.getString("unit_list","km");
         String paceMode = sharedPreferences.getString("pace","p");
 
         tvDistance.setText(distance.toStr(unit,true));
-        TextView tvRecapLabel2 = (TextView) findViewById(R.id.tvRecapLabel2);
         if(paceMode.equals("p")){
-            tvRecapLabel2.setText(R.string.recap_selected_pace);
+            paceLabel.setText(R.string.recap_selected_pace);
         }
         else{
-            tvRecapLabel2.setText(R.string.recap_selected_speed);
+            paceLabel.setText(R.string.recap_selected_speed);
         }
 
         if(pace.getValue() >= 0){
@@ -61,79 +72,102 @@ public class RecapActivity extends AppCompatActivity {
         }
         tvMusic.setText(music);
 
-        Button button = (Button) findViewById(R.id.buttonRecapGO);
-        button.setOnClickListener(new View.OnClickListener() {
+        recapGOButton = (Button) findViewById(R.id.buttonRecapGO);
+        recapGOButton.setVisibility(View.INVISIBLE);
+        recapGOButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),RunActivity.class);
-                //Intent intent = new Intent(view.getContext(),BluetoothActivity.class);
                 startActivity(intent);
             }
         });
 
-        toggleWarning();
+        recapBarDistance = findViewById(R.id.recapBarDistance);
+        recapBarPace = findViewById(R.id.recapBarPace);
+        recapBarMusic = findViewById(R.id.recapBarMusic);
+
+        recapBarDistance.setVisibility(View.GONE);
+        recapBarPace.setVisibility(View.GONE);
+        recapBarMusic.setVisibility(View.GONE);
+
+        a = getLoadBarAnimation(recapBarDistance,200);
+        b = getLoadBarAnimation(recapBarMusic,1000);
+        c = getLoadBarAnimation(recapBarPace,600);
+
     }
 
-    public boolean toggleWarning(){
-        shownWarning = !shownWarning;
-        Log.i("toggle","Entering the toggle method");
-        Log.i("RecapActivity","Entering the toggle method");
-        TranslateAnimation a;
-
-        if(shownWarning){
-            Log.i("toggle","Opening the menu");
-            Log.i("RecapActivity","Opening the menu");
-            a = new TranslateAnimation(-linearLayout.getWidth(),0,0,0);
-            a.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    linearLayout.setVisibility(View.VISIBLE);
-                    Log.i("animation","Start of opening animation.");
-                    Log.i("RecapActivity","Start of opening animation.");
+    @Override
+    public void onAttachedToWindow(){
+        super.onAttachedToWindow();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                    startLoadingAnimations();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+            }
+        }).start();
+    }
 
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    Log.i("animation","End of opening animation");
-                    Log.i("RecapActivity","End of opening animation");
+    private void startLoadingAnimations(){
+        RecapActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Animation animZoomIn = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.button_zoom_in);
+                final Animation animZoomOut = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.button_zoom_out);
+                animZoomIn.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        recapGOButton.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        recapGOButton.startAnimation(animZoomOut);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                animZoomIn.setInterpolator(new LinearInterpolator());
+                try {
+                    recapBarDistance.startAnimation(a);
+                    recapBarMusic.startAnimation(b);
+                    recapBarPace.startAnimation(c);
+                    recapGOButton.startAnimation(animZoomIn);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            }
+        });
+    }
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {
+    private TranslateAnimation getLoadBarAnimation(final View v, int h){
+        TranslateAnimation a = new TranslateAnimation(0,0,-h-v.getHeight(),0);
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                v.setVisibility(View.VISIBLE);
+            }
 
-                }
-            });
-        }
-        else{
-            Log.i("toggle","Closing the menu");
-            Log.i("RecapActivity","Closing the menu");
-            a = new TranslateAnimation(0,-linearLayout.getWidth(),0,0);
-            a.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    Log.i("animation","Start of closing animation");
-                    Log.i("RecapActivity","Start of closing animation");
-                }
+            @Override
+            public void onAnimationEnd(Animation animation) {
 
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    linearLayout.setVisibility(View.GONE);
-                    Log.i("animation","End of closing animation");
-                    Log.i("RecapActivity","End of closing animation");
-                }
+            }
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {
+            @Override
+            public void onAnimationRepeat(Animation animation) {
 
-                }
-            });
-        }
-
-        a.setDuration(300);
-        a.setInterpolator(new AccelerateInterpolator());
-        linearLayout.startAnimation(a);
-
-        return shownWarning;
+            }
+        });
+        Log.d("Anim",Integer.toString(h));
+        a.setDuration(500);
+        return a;
     }
 
 }
