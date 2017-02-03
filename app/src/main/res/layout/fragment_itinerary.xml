@@ -8,14 +8,35 @@
     <com.google.android.gms.maps.MapView
         android:id="@+id/itineraryMapView"
         android:layout_width="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_height="wrap_content" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabItinerary"
+    <!--
+    <LinearLayout
+        android:id="@+id/itineraryCommandPanel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:srcCompat="@drawable/ic_delete" />
+        android:orientation="vertical"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true">
+
+        <ImageButton
+            android:id="@+id/itineraryButtonDelete"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_button"
+            android:tint="@color/textSecondary"
+            android:src="@drawable/ic_delete" />
+
+        <ImageButton
+            android:id="@+id/itineraryButtonRoute"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_button"
+            android:tint="@color/textSecondary"
+            android:src="@drawable/ic_directions_black_24dp"/>
+
+    </LinearLayout>-->
 
 </RelativeLayout>

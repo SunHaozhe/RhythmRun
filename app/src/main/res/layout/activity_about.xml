@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_about"
     android:layout_width="match_parent"
@@ -8,21 +10,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.example.raphaelattali.rythmrun.activities.gui.AboutActivity">
 
     <TextView
+        android:id="@+id/aboutTextView"
         android:text="@string/about_description"
-        android:layout_height="408dp"
-        android:id="@+id/textView3"
-        android:height="150dp"
-        android:layout_gravity="left|right|center_vertical"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:layout_width="wrap_content"
-        android:translationX="0dp"
-        android:textColor="@color/common_google_signin_btn_text_light_default"
-        android:textSize="20sp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginTop="50dp" />
+        android:layout_width="fill_parent"
+        android:textColor="@color/textPrimary"
+        android:layout_height="fill_parent"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</ScrollView>

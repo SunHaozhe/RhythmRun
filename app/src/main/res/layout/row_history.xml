@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="0dp"
+        app:cardElevation="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/textPrimary"
+                android:text="01/01/2017 19h30" />
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/date"
+                android:textColor="@color/textPrimary"
+                android:text="12km" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/distance"
+                android:layout_toRightOf="@id/distance"
+                android:textColor="@color/textPrimary"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="45:17" />
+
+            <TextView
+                android:id="@+id/place"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textPrimary"
+                android:layout_alignBaseline="@id/distance"
+                android:layout_toRightOf="@id/time"
+                android:textStyle="italic"
+                android:text="-   Paris"/>
+
+            <!--<fragment
+                android:id="@+id/historyMap"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/place"
+                android:layout_marginTop="16dp"
+                android:name="com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment"/>-->
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="200dp"
+                android:layout_below="@id/place"
+                android:layout_marginTop="16dp"
+                android:background="@color/primary"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="@color/primary"
+                android:tint="@color/textSecondary"
+                android:src="@drawable/ic_share_black_24dp"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</FrameLayout>
