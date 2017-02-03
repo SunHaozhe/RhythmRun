@@ -1,24 +1,22 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
-/**
- * Created by asus on 29/01/2017.
- */
-
 public class HistoryItem {
-    private int color;
+    private CustomPolylineOptions route;
     private String date;
     private String distance;
+    private String place;
+    private String time;
 
-    public HistoryItem(int color, String date, String distance)
-    {
-        this.color= color;
-        this.date= date;
-        this.distance=distance;
-
+    public HistoryItem(String date, String place, String time, String distance, CustomPolylineOptions route) {
+        this.time = time;
+        this.route = route;
+        this.date = date;
+        this.distance = distance;
+        this.place = place;
     }
 
-    public int getColor() {
-        return color;
+    public CustomPolylineOptions getRoute() {
+        return route;
     }
 
     public String getDate() {
@@ -29,15 +27,11 @@ public class HistoryItem {
         return distance;
     }
 
-    public void setColor(int color) {
-        this.color = color;
+    public String getPlace() {
+        return place;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setDistance(String distance) {
-        this.distance = distance;
+    public String getTime() {
+        return time;
     }
 }

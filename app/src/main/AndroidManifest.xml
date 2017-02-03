@@ -87,7 +87,7 @@
         <activity
             android:name=".activities.gui.SumUpActivity"
             android:label="@string/title_activity_sum_up"
-            android:parentActivityName=".activities.gui.RunActivity"
+            android:parentActivityName=".activities.gui.HomeActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
     </application>

@@ -48,7 +48,9 @@ public class SumUpActivity extends AppCompatActivity {
 
         TextView tvDistance = (TextView) findViewById(R.id.sumUpDistance);
         TextView tvPace = (TextView) findViewById(R.id.sumUpPace);
+        TextView tvTime = (TextView) findViewById(R.id.sumUpTime);
 
+        tvTime.setText(new Pace(elapsedTime/1000).toStr("km","p",false));
         tvDistance.setText(distance.toStr(unit,true));
         tvPace.setText(pace.toStr(unit,paceMode,true));
 

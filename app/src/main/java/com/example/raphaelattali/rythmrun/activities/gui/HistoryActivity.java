@@ -26,31 +26,30 @@ public class HistoryActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        ListView mListView;
+        ListView listView;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-        mListView = (ListView) findViewById(R.id.listView);
-        List<HistoryItem> tweets = genererHistorics();
+        listView = (ListView) findViewById(R.id.listView);
+        List<HistoryItem> samples = generateSample();
 
-        HistoricAdapter adapter = new HistoricAdapter(HistoryActivity.this, tweets);
-        mListView.setAdapter(adapter);
+        HistoryAdapter adapter = new HistoryAdapter(HistoryActivity.this, samples);
+        listView.setAdapter(adapter);
     }
 
-    private List<HistoryItem> genererHistorics()
+    private List<HistoryItem> generateSample()
     {
-        List<HistoryItem> tweets = new ArrayList<>();
-        tweets.add(new HistoryItem(Color.BLACK, "01-01-2017", "24km"));
-        tweets.add(new HistoryItem(Color.BLUE,"01-02-2017", "50km"));
-        tweets.add(new HistoryItem(Color.BLUE,"30-01-2015", "10km"));
-        tweets.add(new HistoryItem(Color.RED,"30-05-2015", "12km"));
-        return tweets;
+        List<HistoryItem> samples = new ArrayList<>();
+        samples.add(new HistoryItem("01/02/2017 19h30","Paris","10 km","47:18",null));
+        samples.add(new HistoryItem("30/01/2017 07h44","Paris","9.5 km","43:56",null));
+        samples.add(new HistoryItem("27/01/2017 12h34","Paris","16.7 km","1:23:45",null));
+        return samples;
     }
 
-    public class HistoricAdapter extends ArrayAdapter<HistoryItem> {
+    public class HistoryAdapter extends ArrayAdapter<HistoryItem> {
 
-        HistoricAdapter(Context context, List<HistoryItem> historic) {
-            super(context, 0, historic);
+        HistoryAdapter(Context context, List<HistoryItem> history) {
+            super(context, 0, history);
         }
 
         @NonNull
@@ -58,7 +57,7 @@ public class HistoryActivity extends AppCompatActivity
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_historique, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_history, parent, false);
             }
 
             HistoricViewHolder viewHolder = (HistoricViewHolder) convertView.getTag();
@@ -66,19 +65,22 @@ public class HistoryActivity extends AppCompatActivity
                 viewHolder = new HistoricViewHolder();
                 viewHolder.date = (TextView) convertView.findViewById(R.id.date);
                 viewHolder.distance = (TextView) convertView.findViewById(R.id.distance);
-                viewHolder.image = (ImageView) convertView.findViewById(R.id.image);
+                viewHolder.place = (TextView) convertView.findViewById(R.id.place);
+                viewHolder.time = (TextView) convertView.findViewById(R.id.time);
+                //viewHolder.mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.historyMap);
                 convertView.setTag(viewHolder);
             }
 
-            //getItem(position) va récupérer l'item [position] de la List<Tweet> tweets
-            HistoryItem historic = getItem(position);
+            HistoryItem history = getItem(position);
 
-            //il ne reste plus qu'à remplir notre vue
-            viewHolder.date.setText(historic.getDate());
-            Log.d("historic","Date: "+historic.getDate());
-            viewHolder.distance.setText(historic.getDistance());
-            viewHolder.image.setImageDrawable(new ColorDrawable(historic.getColor()));
-
+            viewHolder.date.setText(history.getDate());
+            viewHolder.distance.setText(history.getDistance());
+            viewHolder.place.setText("- "+history.getPlace());
+            viewHolder.time.setText(history.getTime());
+            /*if(history.getRoute() != null){
+                viewHolder.mapFragment.drawnPolyline(history.getRoute().getPolylineOptions());
+                viewHolder.mapFragment.waitToAnimateCamera(history.getRoute().getBounds());
+            }*/
             return convertView;
 
         }
@@ -86,7 +88,9 @@ public class HistoryActivity extends AppCompatActivity
         private class HistoricViewHolder {
             public TextView date;
             public TextView distance;
-            public ImageView image;
+            public TextView place;
+            public TextView time;
+            public SimpleMapFragment mapFragment;
         }
     }
 }
