@@ -1,5 +1,7 @@
 package com.example.raphaelattali.rythmrun;
 
+import android.preference.PreferenceManager;
+
 public class Pace {
     private double value; //min/km
 

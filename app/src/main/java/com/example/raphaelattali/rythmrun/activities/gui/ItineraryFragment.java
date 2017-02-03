@@ -1,12 +1,15 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -177,6 +180,12 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                 markerPoints.set(markers.indexOf(marker), marker.getPosition());
             }
         });
+        zoomToCurrentLocation();
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+            googleMap.getUiSettings().setAllGesturesEnabled(true);
+        }
     }
 
     public void initiateDirection(TextView textView){

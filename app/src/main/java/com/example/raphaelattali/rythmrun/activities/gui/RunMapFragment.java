@@ -1,13 +1,18 @@
 package com.example.raphaelattali.rythmrun.activities.gui;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
@@ -30,6 +35,10 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
         // Required empty public constructor
     }
 
+    public PolylineOptions getJourneyPolylineOptions(){
+        return journeyPolylineOptions;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,17 +52,13 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap map) {
-        super.onMapReady(map);
-    }
-
-    @Override
-    public LocationListener getCustomLocationListener(){
-        return new LocationListener() {
+        locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 LatLng coordinates = new LatLng(location.getLatitude(), location.getLongitude());
                 journey.add(coordinates);
                 if(googleMap != null){
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(coordinates));
                     journeyPolylineOptions.add(coordinates);
                     drawPolyline();
                 }
@@ -74,6 +79,20 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
 
             }
         };
+
+        super.onMapReady(map);
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Location location = locationManager.getLastKnownLocation(provider);
+            if(location != null)
+                journey.add(new LatLng(location.getLatitude(), location.getLongitude()));
+        }
+        googleMap.getUiSettings().setAllGesturesEnabled(true);
+
+        zoomToCurrentLocation();
+        startContinuousLocation();
+
     }
 
     private void drawPolyline(){

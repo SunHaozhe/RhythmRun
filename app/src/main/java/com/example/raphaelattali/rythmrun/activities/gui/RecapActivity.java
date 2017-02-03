@@ -3,6 +3,7 @@ package com.example.raphaelattali.rythmrun.activities.gui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,7 @@ public class RecapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recap);
 
+        //Used for correct display of diagonal bars
         findViewById(R.id.tvRecapLabelDistance).bringToFront();
         findViewById(R.id.recapSeparator1).bringToFront();
         findViewById(R.id.tvRecapLabelPace).bringToFront();
@@ -51,9 +53,13 @@ public class RecapActivity extends AppCompatActivity {
         Distance distance = new Distance(intent.getDoubleExtra(NewRunActivity.EXTRA_DISTANCE,0.0)/1000);
         Pace pace = new Pace(intent.getDoubleExtra(NewRunActivity.EXTRA_PACE,0.0));
         String music = intent.getStringExtra(NewRunActivity.EXTRA_MUSIC);
-        final PolylineOptionsParcelable itinerary = intent.getParcelableExtra(NewRunActivity.EXTRA_ITINERARY);
-        SimpleMapFragment mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.recapMapFragment);
-        mapFragment.drawnPolyline(itinerary.getPolylineOptions());
+        final CustomPolylineOptions itinerary = intent.getParcelableExtra(NewRunActivity.EXTRA_ITINERARY);
+        if(itinerary != null){
+            SimpleMapFragment mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.recapMapFragment);
+            mapFragment.drawnPolyline(itinerary.getPolylineOptions());
+            if(itinerary.getPolylineOptions() != null)
+                mapFragment.waitToAnimateCamera(itinerary.getBounds());
+        }
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String unit = sharedPreferences.getString("unit_list","km");

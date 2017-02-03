@@ -80,7 +80,7 @@ public class NewRunActivity extends AppCompatActivity {
                 intent.putExtra(EXTRA_DISTANCE, getDistance());
                 intent.putExtra(EXTRA_PACE, getPace());
                 intent.putExtra(EXTRA_MUSIC, getMusic());
-                intent.putExtra(EXTRA_ITINERARY, new PolylineOptionsParcelable(itineraryFragment.getItinerary()));
+                intent.putExtra(EXTRA_ITINERARY, new CustomPolylineOptions(itineraryFragment.getItinerary()));
                 startActivity(intent);
                 return true;
             default:

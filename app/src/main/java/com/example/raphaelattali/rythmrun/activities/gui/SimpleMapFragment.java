@@ -10,18 +10,21 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.raphaelattali.rythmrun.R;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
@@ -31,10 +34,31 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
     protected MapView mapView;
     protected GoogleMap googleMap;
 
-    private LocationManager locationManager;
-    private String provider;
+    protected static LocationManager locationManager;
+    protected static String provider;
 
     private PolylineOptions polylineOptions;
+    protected LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
 
     public SimpleMapFragment() {
         // Required empty public constructor
@@ -49,11 +73,6 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
         Criteria criteria = new Criteria();
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         provider = locationManager.getBestProvider(criteria, false);
-        if (ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(rootView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            locationManager.requestLocationUpdates(provider, UPDATE_IDLE, 2, getCustomLocationListener());
-        }
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume(); //needed to get the map to display immediately
@@ -67,6 +86,78 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
         mapView.getMapAsync(this);
 
         return rootView;
+    }
+
+    public void zoomToCurrentLocation(){
+        if(googleMap != null){
+            final LocationListener tempLocationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+
+                }
+
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String s) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String s) {
+
+                }
+            };
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationManager.requestLocationUpdates(provider,2,2,tempLocationListener);
+                waitForLocation();
+                locationManager.removeUpdates(tempLocationListener);
+            }
+        }
+    }
+
+    private void waitForLocation(){
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Location location = locationManager.getLastKnownLocation(provider);
+            if(location == null){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        waitForLocation();
+                    }
+                }).start();
+            } else {
+                zoomToLocation(location);
+            }
+        }
+    }
+
+    private void zoomToLocation(final Location location){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude());
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 15));
+            }
+        });
+    }
+
+    public void startContinuousLocation(){
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(provider, UPDATE_IDLE, 2, locationListener);
+        }
+        googleMap.setMyLocationEnabled(true);
     }
 
     public View initView(LayoutInflater inflater, ViewGroup container){
@@ -90,15 +181,9 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        googleMap.setMyLocationEnabled(true);
-        googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-        Location location = locationManager.getLastKnownLocation(provider);
-        if(location != null){
-            LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude());
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
-        }
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
 
         if(polylineOptions != null){
             map.addPolyline(polylineOptions);
@@ -106,37 +191,53 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public LocationListener getCustomLocationListener(){
-        return new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                LatLng coordinate = new LatLng(location.getLatitude(), location.getLongitude());
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
-                googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-
-            }
-        };
-    }
-
     public void drawnPolyline(PolylineOptions polylineOptions){
         this.polylineOptions = polylineOptions;
         if(polylineOptions != null && googleMap != null){
             googleMap.addPolyline(polylineOptions);
             this.polylineOptions = null;
+        }
+    }
+
+    public void waitToAnimateCamera(final LatLngBounds bounds){
+        if(bounds==null)
+            return ;
+        if(canAnimateCamera()){
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    actuallyAnimateCamera(bounds);
+                }
+            });
+        } else {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    waitToAnimateCamera(bounds);
+                }
+            }).start();
+        }
+    }
+
+    private void actuallyAnimateCamera(LatLngBounds bounds){
+        int padding=mapView.getWidth()/10;
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        googleMap.animateCamera(cu);
+    }
+
+    private boolean canAnimateCamera(){
+        return googleMap != null && mapView.getWidth() > 0 && mapView.getHeight() > 0;
+    }
+
+    public void stopLocationUpdates(){
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.removeUpdates(locationListener);
         }
     }
 

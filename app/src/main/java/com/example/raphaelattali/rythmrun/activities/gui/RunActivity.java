@@ -29,6 +29,11 @@ public class RunActivity extends AppCompatActivity {
 
     public static final int UPDATE_IDLE = 1000; //ms
 
+    public static final String EXTRA_DISTANCE = "distance";
+    public static final String EXTRA_PACE = "pace";
+    public static final String EXTRA_ROUTE = "route";
+    public static final String EXTRA_TIME = "time";
+
     private long timeAtStop;
     private boolean isRunning=false;
     private boolean isDrawerExpanded=false;
@@ -39,6 +44,11 @@ public class RunActivity extends AppCompatActivity {
     private TextView tvHeartRate;
     private TextView tvBPM;
     private TextView tvCurrentSong;
+
+    private double distance;
+    private double pace;
+    private double heartRate;
+    private double elapsedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +69,7 @@ public class RunActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent != null){
-            final PolylineOptionsParcelable itinerary = intent.getParcelableExtra(NewRunActivity.EXTRA_ITINERARY);
+            final CustomPolylineOptions itinerary = intent.getParcelableExtra(NewRunActivity.EXTRA_ITINERARY);
             if(itinerary != null)
                 runMapFragment.drawnPolyline(itinerary.getPolylineOptions());
         }
@@ -126,6 +136,10 @@ public class RunActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), SumUpActivity.class);
+                intent.putExtra(EXTRA_DISTANCE,distance);
+                intent.putExtra(EXTRA_PACE,pace);
+                intent.putExtra(EXTRA_ROUTE,new CustomPolylineOptions(getRoute()));
+                intent.putExtra(EXTRA_TIME,elapsedTime);
                 startActivity(intent);
             }
         });
@@ -192,7 +206,7 @@ public class RunActivity extends AppCompatActivity {
                 RunActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        updateDisplay();
+                        update();
                     }
                 });
             }
@@ -200,16 +214,32 @@ public class RunActivity extends AppCompatActivity {
 
     }
 
+    public void update(){
+        distance = getDistance();
+        pace = getPace();
+        heartRate = getHeartRate();
+        Chronometer chronometer = (Chronometer) findViewById(R.id.chronometer);
+        elapsedTime = SystemClock.elapsedRealtime() - chronometer.getBase();
+
+        updateDisplay();
+    }
+
     public void updateDisplay(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         final String paceMode = sharedPreferences.getString("pace","p");
         final String unit = sharedPreferences.getString("unit","km");
 
-        tvDistance.setText(new Distance(getDistance()).toStr(unit,true));
-        tvPace.setText(new Pace(getPace()).toStr(unit,paceMode,true));
-        tvHeartRate.setText(String.format(getString(R.string.run_heart_rate),getHeartRate()));
+        tvDistance.setText(new Distance(distance).toStr(unit,true));
+        tvPace.setText(new Pace(pace).toStr(unit,paceMode,true));
+        tvHeartRate.setText(String.format(getString(R.string.run_heart_rate),heartRate));
         tvBPM.setText(String.format(getString(R.string.run_bpm),getBPM()));
         tvCurrentSong.setText(getCurrentSong());
+    }
+
+    @Override
+    public void onStop(){
+        runMapFragment.stopLocationUpdates();
+        super.onStop();
     }
 
     private double getDistance(){
@@ -230,6 +260,10 @@ public class RunActivity extends AppCompatActivity {
 
     private int getBPM(){
         return 68;
+    }
+
+    private PolylineOptions getRoute(){
+        return runMapFragment.getJourneyPolylineOptions();
     }
 
 }
