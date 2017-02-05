@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,7 +46,6 @@ public class SumUpActivity extends AppCompatActivity {
         String unit = sharedPreferences.getString("unit_list","km");
         String paceMode = sharedPreferences.getString("pace","p");
 
-
         TextView tvDistance = (TextView) findViewById(R.id.sumUpDistance);
         TextView tvPace = (TextView) findViewById(R.id.sumUpPace);
         TextView tvTime = (TextView) findViewById(R.id.sumUpTime);
@@ -53,6 +53,25 @@ public class SumUpActivity extends AppCompatActivity {
         tvTime.setText(new Pace(elapsedTime/1000).toStr("km","p",false));
         tvDistance.setText(distance.toStr(unit,true));
         tvPace.setText(pace.toStr(unit,paceMode,true));
+
+        Button discardButton = (Button) findViewById(R.id.sumUpDiscardButton);
+        Button saveButton = (Button) findViewById(R.id.sumUpSaveButton);
+
+        discardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 }
