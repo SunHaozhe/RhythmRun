@@ -18,8 +18,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBvlvwvqg0aBDjY5zhpI0to6UNDLy3sLRs" />
 
-        <activity android:name=".Android_activities.MainActivity" />
-        <activity android:name=".Android_activities.Main2Activity" />
+        <activity android:name=".music.MainActivity" />
+        <activity android:name=".music.Main2Activity" />
         <activity
             android:name=".Android_activities.HomeActivity"
             android:label="@string/title_activity_home"

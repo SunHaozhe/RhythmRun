@@ -23,9 +23,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.raphaelattali.rythmrun.sensors.Pace;
 import com.example.raphaelattali.rythmrun.R;
-import com.example.raphaelattali.rythmrun.music.Song;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 
 public class NewRunActivity extends AppCompatActivity {

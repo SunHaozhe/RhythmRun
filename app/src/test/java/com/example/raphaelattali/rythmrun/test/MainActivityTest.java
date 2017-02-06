@@ -1,6 +1,6 @@
 package com.example.raphaelattali.rythmrun.test;
 
-import com.example.raphaelattali.rythmrun.Android_activities.MainActivity;
+import com.example.raphaelattali.rythmrun.music.MainActivity;
 
 import org.junit.Before;
 

@@ -20,10 +20,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.raphaelattali.rythmrun.sensors.Distance;
-import com.example.raphaelattali.rythmrun.sensors.Pace;
 import com.example.raphaelattali.rythmrun.R;
-import com.example.raphaelattali.rythmrun.music.Song;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

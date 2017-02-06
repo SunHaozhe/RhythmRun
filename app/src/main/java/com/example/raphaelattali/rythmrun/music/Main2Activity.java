@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.Android_activities;
+package com.example.raphaelattali.rythmrun.music;
 
 import android.Manifest;
 import android.content.Context;

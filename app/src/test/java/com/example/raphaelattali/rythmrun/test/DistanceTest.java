@@ -1,6 +1,6 @@
 package com.example.raphaelattali.rythmrun.test;
 
-import com.example.raphaelattali.rythmrun.sensors.Distance;
+import com.example.raphaelattali.rythmrun.Android_activities.Distance;
 
 import org.junit.Before;
 

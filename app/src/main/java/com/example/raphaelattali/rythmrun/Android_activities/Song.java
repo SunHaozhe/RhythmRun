@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.music;
+package com.example.raphaelattali.rythmrun.Android_activities;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,8 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.util.Log;
-
-import com.example.raphaelattali.rythmrun.sensors.Pace;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

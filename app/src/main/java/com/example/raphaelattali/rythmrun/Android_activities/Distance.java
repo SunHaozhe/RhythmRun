@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.sensors;
+package com.example.raphaelattali.rythmrun.Android_activities;
 
 public class Distance {
     public final static double KM_TO_MI = 0.621371;

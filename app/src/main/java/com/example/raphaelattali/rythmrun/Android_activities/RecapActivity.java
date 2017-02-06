@@ -15,8 +15,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.raphaelattali.rythmrun.sensors.Distance;
-import com.example.raphaelattali.rythmrun.sensors.Pace;
 import com.example.raphaelattali.rythmrun.R;
 import com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment;
 

@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.sensors;
+package com.example.raphaelattali.rythmrun.Android_activities;
 
 public class Pace {
     private double value; //min/km

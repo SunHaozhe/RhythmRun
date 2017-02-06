@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.raphaelattali.rythmrun.sensors.Distance;
 import com.example.raphaelattali.rythmrun.R;
 
 import com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment;
