@@ -10,7 +10,7 @@
         android:id="@+id/recapMapFragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:name="com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment" />
+        android:name="com.example.raphaelattali.rythmrun.Android_activities.SimpleMapFragment" />
 
     <RelativeLayout
         android:id="@+id/recapBarDistance"

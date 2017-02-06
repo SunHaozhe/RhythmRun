@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
-import com.example.raphaelattali.rythmrun.Android_activities.SimpleMapFragment;
 
 public class RecapActivity extends AppCompatActivity {
 

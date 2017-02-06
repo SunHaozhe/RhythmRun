@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
-import com.example.raphaelattali.rythmrun.Android_activities.SimpleMapFragment;
 
 import java.util.ArrayList;
 import java.util.List;

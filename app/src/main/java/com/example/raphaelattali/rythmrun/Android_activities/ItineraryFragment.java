@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
 
-import com.example.raphaelattali.rythmrun.Android_activities.SimpleMapFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;

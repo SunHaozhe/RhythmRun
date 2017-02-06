@@ -104,7 +104,7 @@
                     android:layout_height="300dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:name="com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment"/>
+                    android:name="com.example.raphaelattali.rythmrun.Android_activities.SimpleMapFragment"/>
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
