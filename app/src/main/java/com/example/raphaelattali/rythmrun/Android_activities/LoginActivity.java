@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.activities.gui;
+package com.example.raphaelattali.rythmrun.Android_activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

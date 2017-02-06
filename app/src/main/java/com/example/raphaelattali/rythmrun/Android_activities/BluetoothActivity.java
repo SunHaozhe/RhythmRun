@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.activities.gui;
+package com.example.raphaelattali.rythmrun.Android_activities;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -17,12 +17,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.raphaelattali.rythmrun.R;
-import com.example.raphaelattali.rythmrun.activities.MainActivity;
 
 import java.util.*;
-
-import static android.R.attr.data;
-import static android.bluetooth.BluetoothDevice.ACTION_FOUND;
 
 
 public class BluetoothActivity extends AppCompatActivity {

@@ -1,10 +1,8 @@
 package com.example.raphaelattali.rythmrun.test;
 
-import com.example.raphaelattali.rythmrun.activities.gui.RunMapFragment;
+import com.example.raphaelattali.rythmrun.Android_activities.RunMapFragment;
 
 import org.junit.Before;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by sun-haozhe on 30/01/2017.

@@ -9,7 +9,7 @@ import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.util.Log;
 
-import com.example.raphaelattali.rythmrun.Pace;
+import com.example.raphaelattali.rythmrun.sensors.Pace;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

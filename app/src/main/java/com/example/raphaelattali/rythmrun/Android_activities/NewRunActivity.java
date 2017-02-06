@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.activities.gui;
+package com.example.raphaelattali.rythmrun.Android_activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,7 +23,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.raphaelattali.rythmrun.Pace;
+import com.example.raphaelattali.rythmrun.sensors.Pace;
 import com.example.raphaelattali.rythmrun.R;
 import com.example.raphaelattali.rythmrun.music.Song;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;

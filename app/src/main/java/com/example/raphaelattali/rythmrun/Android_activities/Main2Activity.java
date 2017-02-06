@@ -1,10 +1,8 @@
-package com.example.raphaelattali.rythmrun.activities;
+package com.example.raphaelattali.rythmrun.Android_activities;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,14 +20,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.Date;
-
-import static android.os.Environment.DIRECTORY_DOCUMENTS;
 
 
 public class Main2Activity extends AppCompatActivity {

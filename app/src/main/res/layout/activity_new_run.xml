@@ -5,7 +5,7 @@
     android:id="@+id/newRunScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.raphaelattali.rythmrun.activities.gui.NewRunActivity">
+    tools:context="com.example.raphaelattali.rythmrun.Android_activities.NewRunActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -265,7 +265,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="300dp"
                             android:layout_marginBottom="14dp"
-                            android:name="com.example.raphaelattali.rythmrun.activities.gui.ItineraryFragment"
+                            android:name="com.example.raphaelattali.rythmrun.Android_activities.ItineraryFragment"
                             android:id="@+id/newRunItineraryFragment" />
 
                         <Button

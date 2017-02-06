@@ -1,10 +1,8 @@
 package com.example.raphaelattali.rythmrun.test;
 
-import com.example.raphaelattali.rythmrun.activities.Main2Activity;
+import com.example.raphaelattali.rythmrun.Android_activities.Main2Activity;
 
 import org.junit.Before;
-
-import static org.junit.Assert.*;
 
 
 public class Main2ActivityTest {

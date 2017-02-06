@@ -1,10 +1,8 @@
 package com.example.raphaelattali.rythmrun.test;
 
-import com.example.raphaelattali.rythmrun.activities.gui.RecapActivity;
+import com.example.raphaelattali.rythmrun.Android_activities.RecapActivity;
 
 import org.junit.Before;
-
-import static org.junit.Assert.*;
 
 
 public class RecapActivityTest {

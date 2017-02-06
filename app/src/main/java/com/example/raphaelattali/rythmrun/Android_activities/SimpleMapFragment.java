@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.activities.gui;
+package com.example.raphaelattali.rythmrun.Android_activities;
 
 import android.Manifest;
 import android.content.Context;
@@ -10,11 +10,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.raphaelattali.rythmrun.R;
 import com.google.android.gms.maps.CameraUpdate;

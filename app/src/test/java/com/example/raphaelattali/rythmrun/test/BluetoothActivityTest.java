@@ -1,10 +1,8 @@
 package com.example.raphaelattali.rythmrun.test;
 
-import com.example.raphaelattali.rythmrun.activities.gui.BluetoothActivity;
+import com.example.raphaelattali.rythmrun.Android_activities.BluetoothActivity;
 
 import org.junit.Before;
-
-import static org.junit.Assert.*;
 
 
 public class BluetoothActivityTest {

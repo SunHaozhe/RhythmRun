@@ -1,6 +1,4 @@
-package com.example.raphaelattali.rythmrun;
-
-import android.preference.PreferenceManager;
+package com.example.raphaelattali.rythmrun.sensors;
 
 public class Pace {
     private double value; //min/km
@@ -43,7 +41,7 @@ public class Pace {
             case "km":
                 return fancyPace(value)+end;
             case "mi":
-                return fancyPace(value/Distance.KM_TO_MI)+end;
+                return fancyPace(value/ Distance.KM_TO_MI)+end;
         }
         return "";
     }

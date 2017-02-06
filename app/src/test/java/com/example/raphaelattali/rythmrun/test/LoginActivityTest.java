@@ -1,10 +1,8 @@
 package com.example.raphaelattali.rythmrun.test;
 
-import com.example.raphaelattali.rythmrun.activities.gui.LoginActivity;
+import com.example.raphaelattali.rythmrun.Android_activities.LoginActivity;
 
 import org.junit.Before;
-
-import static org.junit.Assert.*;
 
 
 public class LoginActivityTest {

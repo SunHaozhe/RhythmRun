@@ -4,7 +4,7 @@
     android:id="@+id/activity_recap"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.raphaelattali.rythmrun.activities.gui.RecapActivity">
+    tools:context="com.example.raphaelattali.rythmrun.Android_activities.RecapActivity">
 
     <fragment
         android:id="@+id/recapMapFragment"

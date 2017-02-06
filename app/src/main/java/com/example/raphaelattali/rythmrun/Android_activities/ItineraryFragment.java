@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.activities.gui;
+package com.example.raphaelattali.rythmrun.Android_activities;
 
 import android.Manifest;
 import android.content.Context;
@@ -18,9 +18,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.raphaelattali.rythmrun.Distance;
+import com.example.raphaelattali.rythmrun.sensors.Distance;
 import com.example.raphaelattali.rythmrun.R;
 
+import com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;

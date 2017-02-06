@@ -1,10 +1,8 @@
 package com.example.raphaelattali.rythmrun.test;
 
-import com.example.raphaelattali.rythmrun.Distance;
+import com.example.raphaelattali.rythmrun.sensors.Distance;
 
 import org.junit.Before;
-
-import static org.junit.Assert.*;
 
 
 public class DistanceTest {

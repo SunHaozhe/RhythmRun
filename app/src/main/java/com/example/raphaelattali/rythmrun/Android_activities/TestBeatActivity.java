@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.activities;
+package com.example.raphaelattali.rythmrun.Android_activities;
 
 import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;

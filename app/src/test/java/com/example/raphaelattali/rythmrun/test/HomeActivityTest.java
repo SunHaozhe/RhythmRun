@@ -1,10 +1,8 @@
 package com.example.raphaelattali.rythmrun.test;
 
-import com.example.raphaelattali.rythmrun.activities.gui.HomeActivity;
+import com.example.raphaelattali.rythmrun.Android_activities.HomeActivity;
 
 import org.junit.Before;
-
-import static org.junit.Assert.*;
 
 
 public class HomeActivityTest {

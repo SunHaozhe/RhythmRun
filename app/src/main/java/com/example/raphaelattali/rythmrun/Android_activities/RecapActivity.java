@@ -1,10 +1,8 @@
-package com.example.raphaelattali.rythmrun.activities.gui;
+package com.example.raphaelattali.rythmrun.Android_activities;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +15,10 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.raphaelattali.rythmrun.Distance;
-import com.example.raphaelattali.rythmrun.Pace;
+import com.example.raphaelattali.rythmrun.sensors.Distance;
+import com.example.raphaelattali.rythmrun.sensors.Pace;
 import com.example.raphaelattali.rythmrun.R;
+import com.example.raphaelattali.rythmrun.activities.gui.SimpleMapFragment;
 
 public class RecapActivity extends AppCompatActivity {
 
