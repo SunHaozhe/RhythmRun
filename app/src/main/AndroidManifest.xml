@@ -66,7 +66,7 @@
             android:name=".Android_activities.SongActivity"
             android:label="@string/title_activity_library"
             android:parentActivityName=".Android_activities.LibraryActivity" />
-        <activity android:name=".Android_activities.BluetoothActivity"
+        <activity android:name=".Client_serveur.BluetoothActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
         <activity
@@ -76,7 +76,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".Android_activities.LoginActivity"
+            android:name=".Client_serveur.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".Android_activities.HistoryActivity"

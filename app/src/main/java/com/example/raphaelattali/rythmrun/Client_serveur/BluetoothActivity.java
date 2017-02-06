@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.Android_activities;
+package com.example.raphaelattali.rythmrun.Client_serveur;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
