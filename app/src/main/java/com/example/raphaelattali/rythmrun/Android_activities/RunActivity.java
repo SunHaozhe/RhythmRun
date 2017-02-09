@@ -3,11 +3,15 @@ package com.example.raphaelattali.rythmrun.Android_activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -20,6 +24,7 @@ import android.widget.TextView;
 import com.example.raphaelattali.rythmrun.R;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -70,6 +75,7 @@ public class RunActivity extends AppCompatActivity {
             final CustomPolylineOptions itinerary = intent.getParcelableExtra(NewRunActivity.EXTRA_ITINERARY);
             if(itinerary != null)
                 runMapFragment.drawnPolyline(itinerary.getPolylineOptions());
+            MusicManager.playCurrentSong();
         }
 
         buttonStart.setOnClickListener(new OnClickListener() {
@@ -237,6 +243,7 @@ public class RunActivity extends AppCompatActivity {
     @Override
     public void onStop(){
         runMapFragment.stopLocationUpdates();
+        MusicManager.stopPlaying();
         super.onStop();
     }
 
@@ -253,7 +260,7 @@ public class RunActivity extends AppCompatActivity {
     }
 
     private String getCurrentSong(){
-        return "I'am A Believer - The Monkees";
+        return MusicManager.getCurrentSong().getString();
     }
 
     private int getBPM(){

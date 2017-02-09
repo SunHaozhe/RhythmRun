@@ -99,7 +99,7 @@ public class NewRunActivity extends AppCompatActivity {
 
         final TextView tvMusicSelection = (TextView) findViewById(R.id.newRunMusicSelection);
         final Spinner spinner = (Spinner) findViewById(R.id.newRunMusicSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.custom_spinner_item, Song.getAllGenres());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.custom_spinner_item, MusicManager.getAllGenres());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

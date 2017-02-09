@@ -50,7 +50,7 @@ public class RecapActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Distance distance = new Distance(intent.getDoubleExtra(NewRunActivity.EXTRA_DISTANCE,0.0)/1000);
         Pace pace = new Pace(intent.getDoubleExtra(NewRunActivity.EXTRA_PACE,0.0));
-        String music = intent.getStringExtra(NewRunActivity.EXTRA_MUSIC);
+        final String music = intent.getStringExtra(NewRunActivity.EXTRA_MUSIC);
         final CustomPolylineOptions itinerary = intent.getParcelableExtra(NewRunActivity.EXTRA_ITINERARY);
         if(itinerary != null){
             SimpleMapFragment mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.recapMapFragment);
