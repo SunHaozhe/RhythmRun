@@ -1,5 +1,6 @@
 package com.example.raphaelattali.rythmrun.Android_activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
@@ -20,6 +21,11 @@ import android.widget.TextView;
 import com.example.raphaelattali.rythmrun.R;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
