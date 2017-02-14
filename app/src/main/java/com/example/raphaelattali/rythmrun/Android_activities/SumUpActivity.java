@@ -63,7 +63,7 @@ public class SumUpActivity extends AppCompatActivity {
         TextView tvPace = (TextView) findViewById(R.id.sumUpPace);
         TextView tvTime = (TextView) findViewById(R.id.sumUpTime);
 
-        tvTime.setText(new Pace(elapsedTime/1000).toStr("km","p",false));
+        tvTime.setText(new Pace(elapsedTime/60000).toStr("km","p",false));
         tvDistance.setText(distanceToPrint.toStr(unit,true));
         tvPace.setText(paceToPrint.toStr(unit,paceMode,true));
 
@@ -100,7 +100,7 @@ public class SumUpActivity extends AppCompatActivity {
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-d-HH-mm-ss");
         String date = df.format(Calendar.getInstance().getTime());
-        String filename = "run"+date;
+        String filename = date+".run";
         FileOutputStream outputStream;
 
         try {
@@ -120,21 +120,21 @@ public class SumUpActivity extends AppCompatActivity {
     }
 
     private void printDate(PrintStream ps){
-        DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy");
+        DateFormat df = new SimpleDateFormat("EEEE d MMMM yyyy");
         String date = df.format(Calendar.getInstance().getTime());
-        ps.print(date);
+        ps.print(date+"\n");
     }
 
     private void printTime(PrintStream ps){
-        ps.print(elapsedTime);
+        ps.print(elapsedTime+"\n");
     }
 
     private void printDistance(PrintStream ps){
-        ps.print(distance);
+        ps.print(distance+"\n");
     }
 
     private void printPace(PrintStream ps){
-        ps.print(pace);
+        ps.print(pace+"\n");
     }
 
     private void printLocation(PrintStream ps){

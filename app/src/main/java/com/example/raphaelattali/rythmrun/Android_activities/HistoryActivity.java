@@ -1,8 +1,10 @@
 package com.example.raphaelattali.rythmrun.Android_activities;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -111,8 +113,10 @@ public class HistoryActivity extends AppCompatActivity
         if (files != null) {
             Log.d("Files", "Size: " + files.length);
             for (File file:files) {
+                if(file.getName().endsWith(".run")){
+                    fileNames.add(file.getName());
+                }
                 Log.d("File",file.getName());
-                fileNames.add(file.getName());
             }
         } else {
             Log.d("Files", "files is null: no files found ?");
@@ -134,8 +138,8 @@ public class HistoryActivity extends AppCompatActivity
         String result = null;
 
         String date=null;
-        String time=null;
-        String distance=null;
+        double time=0;
+        double distance=0;
         String pace=null;
         String location=null;
 
@@ -152,8 +156,8 @@ public class HistoryActivity extends AppCompatActivity
             String[] splitResult = result.split("\n");
             if(splitResult.length >= 5){
                 date = splitResult[0];
-                time = splitResult[1];
-                distance = splitResult[2];
+                time = Double.parseDouble(splitResult[1]);
+                distance = Double.parseDouble(splitResult[2]);
                 pace = splitResult[3];
                 location = splitResult[4];
             }
@@ -165,7 +169,12 @@ public class HistoryActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        return new HistoryItem(date,"",distance,time,null);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String unit = sharedPreferences.getString("unit_list","km");
+
+        return new HistoryItem(date,"",
+                new Distance(distance).toStr(unit,true),
+                new Pace(time/60000).toStr(unit,"p",false),null);
     }
 }
 
