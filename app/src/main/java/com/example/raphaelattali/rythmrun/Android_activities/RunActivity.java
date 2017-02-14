@@ -213,13 +213,15 @@ public class RunActivity extends AppCompatActivity {
     }
 
     public void update(){
-        distance = getDistance();
-        pace = getPace();
-        heartRate = getHeartRate();
-        Chronometer chronometer = (Chronometer) findViewById(R.id.chronometer);
-        elapsedTime = SystemClock.elapsedRealtime() - chronometer.getBase();
+        if(isRunning) {
+            distance = getDistance();
+            pace = getPace();
+            heartRate = getHeartRate();
+            Chronometer chronometer = (Chronometer) findViewById(R.id.chronometer);
+            elapsedTime = SystemClock.elapsedRealtime() - chronometer.getBase();
 
-        updateDisplay();
+            updateDisplay();
+        }
     }
 
     public void updateDisplay(){
