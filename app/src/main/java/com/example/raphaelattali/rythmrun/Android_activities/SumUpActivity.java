@@ -22,9 +22,9 @@ import java.util.Calendar;
 
 public class SumUpActivity extends AppCompatActivity {
 
-    double distance;
-    double elapsedTime;
-    double pace;
+    private double distance;
+    private double elapsedTime;
+    private double pace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,14 +82,14 @@ public class SumUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),HistoryActivity.class);
-                writeRunInfos();
+                writeRunInfo();
                 startActivity(intent);
             }
         });
 
     }
 
-    private void writeRunInfos(){
+    private void writeRunInfo(){
         /*   PRINT MODEL
         date
         time

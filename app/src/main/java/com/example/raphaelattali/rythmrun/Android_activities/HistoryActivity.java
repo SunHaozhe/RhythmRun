@@ -2,8 +2,10 @@ package com.example.raphaelattali.rythmrun.Android_activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,16 @@ import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity
@@ -27,7 +38,8 @@ public class HistoryActivity extends AppCompatActivity
         setContentView(R.layout.activity_history);
 
         listView = (ListView) findViewById(R.id.listView);
-        List<HistoryItem> samples = generateSample();
+        //List<HistoryItem> samples = generateSample();
+        List<HistoryItem> samples = getRuns();
 
         HistoryAdapter adapter = new HistoryAdapter(HistoryActivity.this, samples);
         listView.setAdapter(adapter);
@@ -88,6 +100,72 @@ public class HistoryActivity extends AppCompatActivity
             public TextView time;
             public SimpleMapFragment mapFragment;
         }
+    }
+
+    private List<String> getFileNames(){
+        ArrayList<String> fileNames = new ArrayList<>();
+
+        File directory = getFilesDir();
+        Log.d("Directory","Run files directory: "+directory.getPath());
+        File[] files = directory.listFiles();
+        if (files != null) {
+            Log.d("Files", "Size: " + files.length);
+            for (File file:files) {
+                Log.d("File",file.getName());
+                fileNames.add(file.getName());
+            }
+        } else {
+            Log.d("Files", "files is null: no files found ?");
+        }
+
+        return fileNames;
+    }
+
+    private List<HistoryItem> getRuns(){
+        ArrayList<HistoryItem> historyItems = new ArrayList<>();
+        for(String filename: getFileNames()){
+                historyItems.add(getRun(filename));
+        }
+        return historyItems;
+    }
+
+    private HistoryItem getRun(String filename){
+        StringBuilder stringBuilder = new StringBuilder();
+        String result = null;
+
+        String date=null;
+        String time=null;
+        String distance=null;
+        String pace=null;
+        String location=null;
+
+        try {
+            FileInputStream fileInputStream = openFileInput(filename);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+            String line=null;
+            while((line=reader.readLine()) != null){
+                stringBuilder.append(line).append("\n");
+            }
+            fileInputStream.close();
+            result = stringBuilder.toString();
+
+            String[] splitResult = result.split("\n");
+            if(splitResult.length >= 5){
+                date = splitResult[0];
+                time = splitResult[1];
+                distance = splitResult[2];
+                pace = splitResult[3];
+                location = splitResult[4];
+            }
+            else{
+                Log.d("Run reading","No enough lines found");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new HistoryItem(date,"",distance,time,null);
     }
 }
 
