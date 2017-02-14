@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -25,6 +27,7 @@ public class SumUpActivity extends AppCompatActivity {
     private double distance;
     private double elapsedTime;
     private double pace;
+    private CustomPolylineOptions route;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class SumUpActivity extends AppCompatActivity {
         Distance distanceToPrint = new Distance(distance/1000);
         Pace paceToPrint = new Pace(pace);
 
-        CustomPolylineOptions route = intent.getParcelableExtra(RunActivity.EXTRA_ROUTE);
+        route = intent.getParcelableExtra(RunActivity.EXTRA_ROUTE);
         if(route!=null){
             SimpleMapFragment simpleMapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.sumUpMapFragment);
             simpleMapFragment.drawnPolyline(route.getPolylineOptions());
@@ -138,6 +141,8 @@ public class SumUpActivity extends AppCompatActivity {
     }
 
     private void printLocation(PrintStream ps){
-        ps.print("hello");
+        for(LatLng pos : route.getPolylineOptions().getPoints()){
+            ps.print(pos.latitude+","+pos.longitude+";");
+        }
     }
 }

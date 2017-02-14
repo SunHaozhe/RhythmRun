@@ -3,7 +3,6 @@ package com.example.raphaelattali.rythmrun.Android_activities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,17 +15,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity
@@ -140,8 +136,8 @@ public class HistoryActivity extends AppCompatActivity
         String date=null;
         double time=0;
         double distance=0;
-        String pace=null;
-        String location=null;
+        double pace=0;
+        CustomPolylineOptions location=null;
 
         try {
             FileInputStream fileInputStream = openFileInput(filename);
@@ -158,8 +154,8 @@ public class HistoryActivity extends AppCompatActivity
                 date = splitResult[0];
                 time = Double.parseDouble(splitResult[1]);
                 distance = Double.parseDouble(splitResult[2]);
-                pace = splitResult[3];
-                location = splitResult[4];
+                pace = Double.parseDouble(splitResult[3]);
+                location = new CustomPolylineOptions(getPolylineFromString(splitResult[4]));
             }
             else{
                 Log.d("Run reading","No enough lines found");
@@ -174,7 +170,20 @@ public class HistoryActivity extends AppCompatActivity
 
         return new HistoryItem(date,"",
                 new Distance(distance).toStr(unit,true),
-                new Pace(time/60000).toStr(unit,"p",false),null);
+                new Pace(time/60000).toStr(unit,"p",false),
+                location);
+    }
+
+    public PolylineOptions getPolylineFromString(String string){
+        PolylineOptions polylineOptions = new PolylineOptions();
+        for(String latlng : string.split(";")){
+            if(latlng != ""){
+                double lat = Double.parseDouble(latlng.split(",")[0]);
+                double lng = Double.parseDouble(latlng.split(",")[1]);
+                polylineOptions.add(new LatLng(lat,lng));
+            }
+        }
+        return polylineOptions;
     }
 }
 
