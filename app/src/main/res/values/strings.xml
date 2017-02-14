@@ -86,4 +86,6 @@
 
     <string name="title_activity_sum_up">Last Run</string>
 
+    <string name="title_activity_history_run">Activity</string>
+
 </resources>

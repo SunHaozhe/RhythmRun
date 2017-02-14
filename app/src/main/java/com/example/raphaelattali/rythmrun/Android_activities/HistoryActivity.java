@@ -1,6 +1,7 @@
 package com.example.raphaelattali.rythmrun.Android_activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,6 +28,11 @@ import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity
 {
+    public static final String EXTRA_DISTANCE = "distance";
+    public static final String EXTRA_TIME = "time";
+    public static final String EXTRA_DATE = "date";
+    public static final String EXTRA_PACE = "pace";
+    public static final String EXTRA_ROUTE = "route";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,7 +83,7 @@ public class HistoryActivity extends AppCompatActivity
                 convertView.setTag(viewHolder);
             }
 
-            HistoryItem history = getItem(position);
+            final HistoryItem history = getItem(position);
 
             viewHolder.date.setText(history.getDate());
             viewHolder.distance.setText(history.getDistance());
@@ -87,6 +93,22 @@ public class HistoryActivity extends AppCompatActivity
                 viewHolder.mapFragment.drawnPolyline(history.getRoute().getPolylineOptions());
                 viewHolder.mapFragment.waitToAnimateCamera(history.getRoute().getBounds());
             }*/
+
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), HistoryRunActivity.class);
+                    intent.putExtra(EXTRA_DATE,history.getDate());
+                    intent.putExtra(EXTRA_DISTANCE,history.getDistance());
+                    intent.putExtra(EXTRA_PACE,history.getPlace());
+                    intent.putExtra(EXTRA_TIME,history.getTime());
+                    intent.putExtra(EXTRA_ROUTE,history.getRoute());
+                    startActivity(intent);
+                }
+            });
+
+
             return convertView;
 
         }

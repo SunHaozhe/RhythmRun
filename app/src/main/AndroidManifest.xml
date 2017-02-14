@@ -22,10 +22,10 @@
         <activity android:name=".music.Main2Activity" />
         <activity
             android:name=".Android_activities.HomeActivity"
-            android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,61 +34,68 @@
         </activity>
         <activity
             android:name=".Android_activities.NewRunActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_new_run"
             android:parentActivityName=".Android_activities.HomeActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Android_activities.RecapActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_recap"
             android:parentActivityName=".Android_activities.NewRunActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Android_activities.RunActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_run"
             android:parentActivityName=".Android_activities.HomeActivity"
-            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Android_activities.SettingsActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Android_activities.HomeActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Android_activities.LibraryActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_library"
             android:parentActivityName=".Android_activities.HomeActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Android_activities.SongActivity"
             android:label="@string/title_activity_library"
             android:parentActivityName=".Android_activities.LibraryActivity" />
-        <activity android:name=".Client_serveur.BluetoothActivity"
+        <activity
+            android:name=".Client_serveur.BluetoothActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Android_activities.AboutActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_about"
             android:parentActivityName=".Android_activities.HomeActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Client_serveur.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".Android_activities.HistoryActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_historique"
             android:parentActivityName=".Android_activities.HomeActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Android_activities.SumUpActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_sum_up"
             android:parentActivityName=".Android_activities.HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Android_activities.HistoryRunActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_activity_history_run"
+            android:parentActivityName=".Android_activities.HistoryActivity"
             android:screenOrientation="portrait"/>
     </application>
 
