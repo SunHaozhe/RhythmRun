@@ -46,7 +46,7 @@ public class RunActivity extends AppCompatActivity {
     private double distance;
     private double pace;
     private double heartRate;
-    private double elapsedTime;
+    private double elapsedTime; //s
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,7 +245,7 @@ public class RunActivity extends AppCompatActivity {
     }
 
     private double getPace(){
-        return 5.2;
+        return elapsedTime/(60*distance);
     }
 
     private int getHeartRate(){
