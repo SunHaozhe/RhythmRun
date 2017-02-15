@@ -27,7 +27,7 @@
     <string name="new_run_random">Random</string>
     <string name="new_run_free">Free</string>
     <string name="new_run_delete_marker">Delete marker</string>
-    <string name="new_run_direction">Direction</string>
+    <string name="new_run_route">Route</string>
 
     <string name="title_activity_recap">Recap</string>
     <string name="recap_selected_pace">Pace</string>

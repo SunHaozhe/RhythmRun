@@ -7,15 +7,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class CustomPolylineOptions implements Parcelable {
+class CustomPolylineOptions implements Parcelable {
 
     private PolylineOptions polylineOptions;
 
-    public CustomPolylineOptions(PolylineOptions polylineOptions){
+    CustomPolylineOptions(PolylineOptions polylineOptions){
         this.polylineOptions = polylineOptions;
     }
 
-    protected CustomPolylineOptions(Parcel in) {
+    private CustomPolylineOptions(Parcel in) {
         polylineOptions = in.readParcelable(PolylineOptions.class.getClassLoader());
     }
 
@@ -31,7 +31,7 @@ public class CustomPolylineOptions implements Parcelable {
         }
     };
 
-    public LatLngBounds getBounds(){
+    LatLngBounds getBounds(){
         if(polylineOptions.getPoints().size()>0){
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for(LatLng point : polylineOptions.getPoints()){
@@ -42,7 +42,7 @@ public class CustomPolylineOptions implements Parcelable {
         return null;
     }
 
-    public PolylineOptions getPolylineOptions(){
+    PolylineOptions getPolylineOptions(){
         return polylineOptions;
     }
 

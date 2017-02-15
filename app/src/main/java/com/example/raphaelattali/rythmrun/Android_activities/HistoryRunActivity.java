@@ -21,13 +21,13 @@ public class HistoryRunActivity extends AppCompatActivity {
         TextView tvTime = (TextView) findViewById(R.id.historyRunTime);
 
         Intent intent = getIntent();
-        tvDate.setText(intent.getStringExtra(HistoryActivity.EXTRA_DATE));
-        tvDistance.setText(intent.getStringExtra(HistoryActivity.EXTRA_DISTANCE));
-        tvPace.setText(intent.getStringExtra(HistoryActivity.EXTRA_PACE));
-        tvTime.setText(intent.getStringExtra(HistoryActivity.EXTRA_TIME));
+        tvDate.setText(intent.getStringExtra(Macros.EXTRA_DATE));
+        tvDistance.setText(intent.getStringExtra(Macros.EXTRA_DISTANCE));
+        tvPace.setText(intent.getStringExtra(Macros.EXTRA_PACE));
+        tvTime.setText(intent.getStringExtra(Macros.EXTRA_TIME));
 
         SimpleMapFragment mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.historyRunMap);
-        CustomPolylineOptions route = intent.getParcelableExtra(HistoryActivity.EXTRA_ROUTE);
+        CustomPolylineOptions route = intent.getParcelableExtra(Macros.EXTRA_ROUTE);
         if(route != null){
             mapFragment.drawnPolyline(route.getPolylineOptions());
             mapFragment.waitToAnimateCamera(route.getBounds());

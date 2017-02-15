@@ -28,23 +28,18 @@ import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity
 {
-    public static final String EXTRA_DISTANCE = "distance";
-    public static final String EXTRA_TIME = "time";
-    public static final String EXTRA_DATE = "date";
-    public static final String EXTRA_PACE = "pace";
-    public static final String EXTRA_ROUTE = "route";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        ListView listView;
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.i("History","Creating activity history.");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        //Initialization of the list view.
+        ListView listView;
         listView = (ListView) findViewById(R.id.listView);
-        List<HistoryItem> samples = getRuns();
-
-        HistoryAdapter adapter = new HistoryAdapter(HistoryActivity.this, samples);
+        HistoryAdapter adapter = new HistoryAdapter(HistoryActivity.this, getRuns());
         listView.setAdapter(adapter);
     }
 
@@ -56,12 +51,15 @@ public class HistoryActivity extends AppCompatActivity
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
+            Log.d("History","Creating of the history view at position "+position);
 
+            //Initialization of an history row layout.
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_history, parent, false);
             }
 
+            //Creation of the views holder.
             HistoricViewHolder viewHolder = (HistoricViewHolder) convertView.getTag();
             if (viewHolder == null) {
                 viewHolder = new HistoricViewHolder();
@@ -72,60 +70,74 @@ public class HistoryActivity extends AppCompatActivity
             }
 
             final HistoryItem history = getItem(position);
+            if(history!=null){
+                Log.v("History","Setting the view content of item "+position+".");
+                viewHolder.date.setText(history.getDate());
+                viewHolder.distance.setText(history.getDistance());
+                viewHolder.time.setText(history.getTime());
 
-            viewHolder.date.setText(history.getDate());
-            viewHolder.distance.setText(history.getDistance());
-            viewHolder.time.setText(history.getTime());
+                //Setting up the listener to display full information of a run.
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d("History","Creating intent to show all information of run "+position);
+                        Intent intent = new Intent(view.getContext(), HistoryRunActivity.class);
+                        intent.putExtra(Macros.EXTRA_DATE,history.getDate());
+                        intent.putExtra(Macros.EXTRA_DISTANCE,history.getDistance());
+                        intent.putExtra(Macros.EXTRA_PACE,history.getPace());
+                        intent.putExtra(Macros.EXTRA_TIME,history.getTime());
+                        intent.putExtra(Macros.EXTRA_ROUTE,history.getRoute());
+                        startActivity(intent);
+                    }
+                });
 
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), HistoryRunActivity.class);
-                    intent.putExtra(EXTRA_DATE,history.getDate());
-                    intent.putExtra(EXTRA_DISTANCE,history.getDistance());
-                    intent.putExtra(EXTRA_PACE,history.getPace());
-                    intent.putExtra(EXTRA_TIME,history.getTime());
-                    intent.putExtra(EXTRA_ROUTE,history.getRoute());
-                    startActivity(intent);
-                }
-            });
-
+            } else {
+                Log.e("History","History item "+position+" is null.");
+            }
 
             return convertView;
-
         }
 
         private class HistoricViewHolder {
-            public TextView date;
+            //A simple holder for an history row.
+            TextView date;
             public TextView distance;
-            public TextView place;
             public TextView time;
-            public SimpleMapFragment mapFragment;
         }
     }
 
     private List<String> getFileNames(){
+        /*
+            Returns the filenames of the .run files
+         */
         ArrayList<String> fileNames = new ArrayList<>();
+        Log.d("History","Exploring local data folder.");
 
         File directory = getFilesDir();
-        Log.d("Directory","Run files directory: "+directory.getPath());
+        Log.d("History","Run files directory: "+directory.getPath());
         File[] files = directory.listFiles();
+
         if (files != null) {
-            Log.d("Files", "Size: " + files.length);
+            Log.v("History", "Found "+files.length+" files.");
             for (File file:files) {
+                //Checks if it is a .run file
                 if(file.getName().endsWith(".run")){
+                    Log.v("History","Found file "+file.getName());
                     fileNames.add(file.getName());
                 }
-                Log.d("File",file.getName());
             }
+            Log.d("History","Found "+fileNames.size()+" run files.");
         } else {
-            Log.d("Files", "files is null: no files found ?");
+            Log.w("History", "No run files found.");
         }
-
         return fileNames;
     }
 
     private List<HistoryItem> getRuns(){
+        /*
+            Creating the list of history item from the .run files.
+         */
+        Log.i("History","creating the history list...");
         ArrayList<HistoryItem> historyItems = new ArrayList<>();
         for(String filename: getFileNames()){
                 historyItems.add(getRun(filename));
@@ -134,44 +146,66 @@ public class HistoryActivity extends AppCompatActivity
     }
 
     private HistoryItem getRun(String filename){
-        StringBuilder stringBuilder = new StringBuilder();
-        String result = null;
+        /*
+            Creating a run history item from a file reading.
+         */
 
+        Log.d("History","loading run from "+filename+"...");
+
+        //All those initializations are needed to be able to return something.
         String date=null;
         double time=0;
         Distance distance=null;
         Pace pace=null;
         CustomPolylineOptions location=null;
 
+        //A string builder to create the string that contains the file text.
+        StringBuilder stringBuilder = new StringBuilder();
+
         try {
+            //Opening a reader input stream to read the run file.
             FileInputStream fileInputStream = openFileInput(filename);
             BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
-            String line=null;
-            while((line=reader.readLine()) != null){
+            Log.v("History","Reading "+filename+" with input stream "+reader);
+
+            String line;
+            while((line=reader.readLine()) != null){ //While there is a line
                 stringBuilder.append(line).append("\n");
             }
             fileInputStream.close();
-            result = stringBuilder.toString();
+            Log.v("History","Closing the input stream.");
+
+            String result = stringBuilder.toString();
 
             String[] splitResult = result.split("\n");
-            if(splitResult.length >= 5){
+            if(splitResult.length >= 5){ //At least 5 lines for basic information (see writing in SumUp).
                 date = splitResult[0];
                 time = Double.parseDouble(splitResult[1]);
                 distance = new Distance(Double.parseDouble(splitResult[2]));
                 pace = new Pace(Double.parseDouble(splitResult[3]));
                 location = new CustomPolylineOptions(getPolylineFromString(splitResult[4]));
-            }
-            else{
-                Log.d("Run reading","No enough lines found");
+                Log.d("History","Successful load of the run file.");
+            } else {
+                Log.w("History","Error while loading file "+filename+". No enough lines.");
             }
 
         } catch (Exception e) {
+            Log.e("History","Failed to load the run file "+filename+".");
             e.printStackTrace();
         }
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String unit = sharedPreferences.getString("unit_list","km");
         String paceMode = sharedPreferences.getString("pace","p");
+
+        if(distance==null){
+            distance = new Distance(0);
+            Log.w("History","Distance of "+filename+" is null.");
+        }
+        if(pace==null){
+            pace = new Pace(0);
+            Log.w("History","Pace of "+filename+" is null.");
+        }
 
         return new HistoryItem(filename,
                 date,
@@ -182,11 +216,14 @@ public class HistoryActivity extends AppCompatActivity
     }
 
     public PolylineOptions getPolylineFromString(String string){
+        /*
+            Returns a polyline from a string representation.
+         */
         PolylineOptions polylineOptions = new PolylineOptions();
-        for(String latlng : string.split(";")){
-            if(latlng != "" && !latlng.equals(" ")){
-                double lat = Double.parseDouble(latlng.split(",")[0]);
-                double lng = Double.parseDouble(latlng.split(",")[1]);
+        for(String lat_lng : string.split(";")){
+            if(!lat_lng.equals("") && !lat_lng.equals(" ")){
+                double lat = Double.parseDouble(lat_lng.split(",")[0]);
+                double lng = Double.parseDouble(lat_lng.split(",")[1]);
                 polylineOptions.add(new LatLng(lat,lng));
             }
         }

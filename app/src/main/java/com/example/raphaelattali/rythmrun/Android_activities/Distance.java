@@ -4,9 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Distance implements Parcelable{
-    public final static double KM_TO_MI = 0.621371;
+    final static double KM_TO_MI = 0.621371;
 
-    double value; //always in kilometers
+    private double value; //km
 
     protected Distance(Parcel in) {
         value = in.readDouble();
@@ -24,11 +24,11 @@ public class Distance implements Parcelable{
         }
     };
 
-    public static String fancyDouble(double d){
+    private static String fancyDouble(double d){
         return fancyDouble(d,1);
     }
 
-    public static String fancyDouble(double d, int digits){
+    private static String fancyDouble(double d, int digits){
         String s = Double.toString(d);
         int dotIndex = s.indexOf('.');
         if (s.charAt(dotIndex + 1) == '0') {
@@ -46,11 +46,11 @@ public class Distance implements Parcelable{
         return value;
     }
 
-    public String toStr(String unit){
+    String toStr(String unit){
         return toStr(unit,false);
     }
 
-    public String toStr(String unit, boolean displayUnits){
+    String toStr(String unit, boolean displayUnits){
         String end="";
         if(displayUnits){
             end=" "+unit;

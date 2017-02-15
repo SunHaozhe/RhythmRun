@@ -30,11 +30,12 @@ public class RecapActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("RecapActivity", "created RecapActivity");
+        Log.i("Recap", "Creating Recap activity.");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recap);
 
-        //Used for correct display of diagonal bars
+        //Used for correct display of diagonal bars (depth issues)
         findViewById(R.id.tvRecapLabelDistance).bringToFront();
         findViewById(R.id.recapSeparator1).bringToFront();
         findViewById(R.id.tvRecapLabelPace).bringToFront();
@@ -47,18 +48,33 @@ public class RecapActivity extends AppCompatActivity {
         TextView tvPace = (TextView) findViewById(R.id.tvRecapPace);
         TextView tvMusic = (TextView) findViewById(R.id.tvRecapMusic);
 
+        //Getting information from NewRun.
         Intent intent = getIntent();
-        Distance distance = new Distance(intent.getDoubleExtra(NewRunActivity.EXTRA_DISTANCE,0.0)/1000);
-        Pace pace = new Pace(intent.getDoubleExtra(NewRunActivity.EXTRA_PACE,0.0));
-        String music = intent.getStringExtra(NewRunActivity.EXTRA_MUSIC);
-        final CustomPolylineOptions itinerary = intent.getParcelableExtra(NewRunActivity.EXTRA_ITINERARY);
+        Distance distance = intent.getParcelableExtra(Macros.EXTRA_DISTANCE);
+        Log.d("Recap","Recap distance: "+distance.getValue()+" km");
+        Pace pace = intent.getParcelableExtra(Macros.EXTRA_PACE);
+        Log.d("Recap","Recap pace: "+pace.getValue()+" min/km");
+        String music = intent.getStringExtra(Macros.EXTRA_MUSIC);
+        Log.d("Recap","Recap music: "+music);
+
+        final CustomPolylineOptions itinerary = intent.getParcelableExtra(Macros.EXTRA_ITINERARY);
         if(itinerary != null){
-            SimpleMapFragment mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.recapMapFragment);
-            mapFragment.drawnPolyline(itinerary.getPolylineOptions());
-            if(itinerary.getPolylineOptions() != null)
-                mapFragment.waitToAnimateCamera(itinerary.getBounds());
+            Log.v("Recap","Found a custom polyline options.");
+            if(itinerary.getPolylineOptions() != null){
+                Log.d("Recap","Found an itinerary of "+itinerary.getPolylineOptions().getPoints().size()+" points.");
+                SimpleMapFragment mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.recapMapFragment);
+                mapFragment.drawnPolyline(itinerary.getPolylineOptions()); //Drawing the itinerary
+                mapFragment.waitToAnimateCamera(itinerary.getBounds()); //Zooming on the itinerary
+            } else {
+                Log.d("Recap","No itinerary found.");
+                //TODO: Consider zooming on the last known location.
+            }
+        } else {
+            Log.d("Recap","No custom polyline options found.");
+            //TODO: Consider zooming on the last know location instead of Africa.
         }
 
+        //Setting up labels
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String unit = sharedPreferences.getString("unit_list","km");
         String paceMode = sharedPreferences.getString("pace","p");
@@ -71,6 +87,7 @@ public class RecapActivity extends AppCompatActivity {
             paceLabel.setText(R.string.recap_selected_speed);
         }
 
+        //Recall; pace is set to -1 in Free mode.
         if(pace.getValue() >= 0){
             tvPace.setText(pace.toStr(unit,paceMode,true));
         }
@@ -84,12 +101,14 @@ public class RecapActivity extends AppCompatActivity {
         recapGOButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("Recap","Creating intent for RunActivity");
                 Intent intent = new Intent(view.getContext(),RunActivity.class);
-                intent.putExtra(NewRunActivity.EXTRA_ITINERARY,itinerary);
+                intent.putExtra(Macros.EXTRA_ITINERARY,itinerary);
                 startActivity(intent);
             }
         });
 
+        //Animating the 3 displays bar.
         recapBarDistance = findViewById(R.id.recapBarDistance);
         recapBarPace = findViewById(R.id.recapBarPace);
         recapBarMusic = findViewById(R.id.recapBarMusic);
@@ -106,8 +125,12 @@ public class RecapActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+        /*
+            Finishes the activity to be able to modify the previous run settings.
+         */
         switch (item.getItemId()){
             case android.R.id.home:
+                Log.d("Recap","Recap activity has finished");
                 onBackPressed();
                 return true;
             default:
@@ -117,21 +140,36 @@ public class RecapActivity extends AppCompatActivity {
 
     @Override
     public void onAttachedToWindow(){
+        /*
+            Needed to start the translate animation of the bars as late as possible.
+            Otherwise, there are loading issues that messes up the timing.
+         */
         super.onAttachedToWindow();
+
+        //Starting a thread to wait 1s before animating the bars.
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.v("Recap","Starting the animation waiting thread.");
                 try {
                     Thread.sleep(1000);
-                    startLoadingAnimations();
+                    Log.v("Recap","Animation waiting thread is done waiting.");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    Log.d("Recap","Animation waiting thread has timed out before his wait finishes.");
                 }
+                startLoadingAnimations();
             }
         }).start();
     }
 
     private void startLoadingAnimations(){
+        /*
+            Starts the animations of the recap bars.
+         */
+
+        //To animate widgets, it is needed to be on the main UI thread.
+        //As this method is called in another thread, it needs to use runOnUiThread.
         RecapActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -167,6 +205,9 @@ public class RecapActivity extends AppCompatActivity {
     }
 
     private TranslateAnimation getLoadBarAnimation(final View v, int h){
+        /*
+            Returns a translate information for a display bar.
+         */
         TranslateAnimation a = new TranslateAnimation(0,0,-h-v.getHeight(),0);
         a.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -184,7 +225,6 @@ public class RecapActivity extends AppCompatActivity {
 
             }
         });
-        Log.d("Anim",Integer.toString(h));
         a.setDuration(500);
         return a;
     }

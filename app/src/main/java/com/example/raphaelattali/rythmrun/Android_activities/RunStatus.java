@@ -5,15 +5,15 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class RunStatus implements Parcelable {
+class RunStatus implements Parcelable {
 
     public final double time;
     public final LatLng location;
     public final Distance distance;
     public final Pace pace;
-    public final double heartRate;
+    final double heartRate;
 
-    public RunStatus(double time, LatLng location, Distance distance, double heartRate) {
+    RunStatus(double time, LatLng location, Distance distance, double heartRate) {
         this.time = time;
         this.location = location;
         this.distance = distance;
@@ -21,7 +21,7 @@ public class RunStatus implements Parcelable {
         this.pace = new Pace((time/60000)/distance.getValue());
     }
 
-    protected RunStatus(Parcel in) {
+    private RunStatus(Parcel in) {
         time = in.readDouble();
         location = in.readParcelable(LatLng.class.getClassLoader());
         distance = in.readParcelable(Distance.class.getClassLoader());

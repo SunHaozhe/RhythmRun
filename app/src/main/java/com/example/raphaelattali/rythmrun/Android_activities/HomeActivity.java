@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,14 +23,17 @@ import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
 
+//TODO: Correct the typo in the package and application name
+//TODO: Change the company name (not example)
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final int PERMISSION_ACCESS_FINE_LOCATION = 1;
-    public static final int PERMISSION_READ_EXTERNAL_STORAGE = 2;
-
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("Home","Creating activity Home.");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -48,27 +52,40 @@ public class HomeActivity extends AppCompatActivity
         buttonNewRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //view.setBackground(getResources().getDrawable(R.drawable.round_shape_btn_pressed));
                 Intent intent = new Intent(view.getContext(),NewRunActivity.class);
                 startActivity(intent);
-                //view.setBackground(getResources().getDrawable(R.drawable.round_shape_btn));
             }
         });
 
+        //Check if location is granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.i("Home","Requesting location permission.");
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSION_ACCESS_FINE_LOCATION);
+                    Macros.PERMISSION_ACCESS_FINE_LOCATION);
         }
 
+        //Check if external storage reading is granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            Log.i("Home","Requesting read external storage permission.");
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    PERMISSION_READ_EXTERNAL_STORAGE);
+                    Macros.PERMISSION_READ_EXTERNAL_STORAGE);
         }
 
+        //Check if external storage writing is granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            Log.i("Home","Requesting write external storage permission.");
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    Macros.PERMISSION_WRITE_EXTERNAL_STORAGE);
+        }
+
+
+        //Loading of the songs in the music folder
         if (Song.songs == null){
+            Log.i("Home","Starting thread for songs loading.");
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -82,6 +99,10 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onResume(){
+        /*
+            Display of run distance of the week and average pace, with a counting animation.
+         */
+
         super.onResume();
 
         TextView tvDistance = (TextView) findViewById(R.id.tvHomeDistance);
@@ -113,7 +134,7 @@ public class HomeActivity extends AppCompatActivity
         startCountAnimation(tvDistance, Double.valueOf(getDistance().getValue() * 10).intValue(), new Callable() {
             @Override
             public String call(int value) {
-                double dValue = (double) value/10;
+                double dValue = (double) value/10; //Increments every tenth of distance unit (km usually).
                 return Double.toString(dValue);
             }
         });
@@ -122,7 +143,7 @@ public class HomeActivity extends AppCompatActivity
             startCountAnimation(tvPace, Double.valueOf(getPace().getValue() * 60).intValue(), new Callable() {
                 @Override
                 public String call(int value) {
-                    double dValue = (double) value/60;
+                    double dValue = (double) value/60; //Increments every second
                     return new Pace(dValue).toStr(unit,paceMode,false);
                 }
             });
@@ -131,7 +152,7 @@ public class HomeActivity extends AppCompatActivity
             startCountAnimation(tvPace, Double.valueOf(600/getPace().getValue()).intValue(), new Callable() {
                 @Override
                 public String call(int value) {
-                    double dValue = (double) value/10;
+                    double dValue = (double) value/10; //Increments every tenth of speed unit.
                     return Double.toString(dValue);
                 }
             });
@@ -140,6 +161,9 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        /*
+            Closes the drawer when back is pressed.
+         */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -151,9 +175,10 @@ public class HomeActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
+        /*
+            Handles the navigation menu in the drawer.
+         */
         int id = item.getItemId();
-
         switch (id){
             case R.id.nav_run:
                 startActivityFromClass(RunActivity.class);
@@ -172,29 +197,43 @@ public class HomeActivity extends AppCompatActivity
                 break;
         }
 
+        //Close the drawer after an item has been clicked.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     public void startActivityFromClass(Class _class){
+        Log.d("Home","Creating intent to "+_class);
         Intent intent = new Intent(this, _class);
         startActivity(intent);
     }
 
     public Distance getDistance(){
+        //TODO: calculate week distance
         return new Distance(42.1);
     }
 
     public Pace getPace(){
+        //TODO: calculate average pace
         return new Pace(5.6);
     }
 
     public interface Callable{
+        /*
+            This interface is used to represent a callable function object.
+            It is used for the dynamic method startCountAnimation.
+         */
         String call(int value);
     }
 
     private void startCountAnimation(final TextView tv, int value, final Callable format){
+        /*
+            Creates and starts a counting animation of a TextView.
+            value: final value to display
+            format: a function that returns the number to display based on the counting progress (from 0 to 100).
+         */
+        Log.d("Home","Creating counting animation for "+tv+" from 0 to"+value);
         ValueAnimator animator = new ValueAnimator();
         animator.setIntValues(0, value);
         animator.setDuration(1000);

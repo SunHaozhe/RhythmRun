@@ -5,14 +5,16 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
-public class ViewAnimationUtils {
+class ViewAnimationUtils {
 
     private static float scale;
-    public static final int expandedHeight=340;
-    public static final int collapsedHeight=52;
+    static final int expandedHeight=340;
+    private static final int collapsedHeight=52;
 
-    public static Animation expand(final View v) {
+    static Animation expand(final View v) {
+        //Saving scale to convert dp to px
         scale = v.getContext().getResources().getDisplayMetrics().density;
+
         v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         v.getLayoutParams().height = dpToPx(collapsedHeight);
@@ -35,19 +37,17 @@ public class ViewAnimationUtils {
         return a;
     }
 
-    public static Animation collapse(final View v) {
+    static Animation collapse(final View v) {
+        //Saving scale to convert dp to px
         scale = v.getContext().getResources().getDisplayMetrics().density;
+
         Animation a = new Animation()
         {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
-                if(interpolatedTime == 1){
-                    //v.setVisibility(View.GONE);
-                }else{
-                    v.getLayoutParams().height = dpToPx(expandedHeight)
-                            - (int)(dpToPx(expandedHeight-collapsedHeight) * interpolatedTime);
-                    v.requestLayout();
-                }
+                v.getLayoutParams().height = dpToPx(expandedHeight)
+                        - (int)(dpToPx(expandedHeight-collapsedHeight) * interpolatedTime);
+                v.requestLayout();
             }
 
             @Override
@@ -60,7 +60,7 @@ public class ViewAnimationUtils {
         return a;
     }
 
-    public static int dpToPx(int dp){
+    static int dpToPx(int dp){
         return (int) (dp * scale + 0.5f);
     }
 }

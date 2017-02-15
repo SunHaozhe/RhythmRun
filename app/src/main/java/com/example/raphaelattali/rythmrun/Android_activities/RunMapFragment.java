@@ -21,6 +21,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
+//TODO: Check if Location is enabled and ask if necessary
+
 public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
     private static ArrayList<LatLng> journey;
@@ -44,8 +46,12 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.i("Itinerary","Initialization of RunMapFragment.");
+
         journeyPolylineOptions = new PolylineOptions();
-        if(journey.size() > 0){
+        if(journey.size() > 0){ //If a run has already begun.
+            Log.d("RunMap","Redrawing pre-existing polyline.");
             journeyPolylineOptions.addAll(journey);
             drawPolyline();
         }
@@ -57,10 +63,11 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.d("Location","Location has changed.");
+                Log.d("RunMap","Location has changed to "+location+".");
                 lastLatLng = new LatLng(location.getLatitude(),location.getLongitude());
-                journey.add(lastLatLng);
+                journey.add(lastLatLng); //Adding the point to the list.
                 if(googleMap != null){
+                    Log.v("RunMap","Adding last location to the polyline.");
                     googleMap.animateCamera(CameraUpdateFactory.newLatLng(lastLatLng));
                     journeyPolylineOptions.add(lastLatLng);
                     drawPolyline();
@@ -89,9 +96,9 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Location location = locationManager.getLastKnownLocation(provider);
             if(location != null)
-                journey.add(new LatLng(location.getLatitude(), location.getLongitude()));
+                journey.add(new LatLng(location.getLatitude(), location.getLongitude())); //Adding of the first location.
         }
-        googleMap.getUiSettings().setAllGesturesEnabled(true);
+        googleMap.getUiSettings().setAllGesturesEnabled(true); //Enabling scrolling.
 
         zoomToCurrentLocation();
         startContinuousLocation();
@@ -114,7 +121,7 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
     public Distance getDistance(){
         if(journeyPolyline == null)
             return new Distance(0);
-        return new Distance((double) ItineraryFragment.distanceOfPolyline(journeyPolylineOptions)/1000);
+        return new Distance(ItineraryFragment.distanceOfPolyline(journeyPolylineOptions)/1000);
     }
 
     public LatLng getPosition(){
