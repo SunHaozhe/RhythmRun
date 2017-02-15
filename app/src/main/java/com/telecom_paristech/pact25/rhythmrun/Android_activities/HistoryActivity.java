@@ -82,11 +82,7 @@ public class HistoryActivity extends AppCompatActivity
                     public void onClick(View view) {
                         Log.d("History","Creating intent to show all information of run "+position);
                         Intent intent = new Intent(view.getContext(), HistoryRunActivity.class);
-                        intent.putExtra(Macros.EXTRA_DATE,history.getDate());
-                        intent.putExtra(Macros.EXTRA_DISTANCE,history.getDistance());
-                        intent.putExtra(Macros.EXTRA_PACE,history.getPace());
-                        intent.putExtra(Macros.EXTRA_TIME,history.getTime());
-                        intent.putExtra(Macros.EXTRA_ROUTE,history.getRoute());
+                        intent.putExtra(Macros.EXTRA_HISTORY_ITEM,history);
                         startActivity(intent);
                     }
                 });

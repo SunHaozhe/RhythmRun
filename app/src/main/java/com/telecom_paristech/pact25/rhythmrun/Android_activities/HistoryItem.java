@@ -1,6 +1,9 @@
 package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
-class HistoryItem {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+class HistoryItem implements Parcelable{
     private CustomPolylineOptions route;
     private String date;
     private String distance;
@@ -16,6 +19,27 @@ class HistoryItem {
         this.filename = filename;
         this.pace = pace;
     }
+
+    protected HistoryItem(Parcel in) {
+        route = in.readParcelable(CustomPolylineOptions.class.getClassLoader());
+        date = in.readString();
+        distance = in.readString();
+        filename = in.readString();
+        time = in.readString();
+        pace = in.readString();
+    }
+
+    public static final Creator<HistoryItem> CREATOR = new Creator<HistoryItem>() {
+        @Override
+        public HistoryItem createFromParcel(Parcel in) {
+            return new HistoryItem(in);
+        }
+
+        @Override
+        public HistoryItem[] newArray(int size) {
+            return new HistoryItem[size];
+        }
+    };
 
     CustomPolylineOptions getRoute() {
         return route;
@@ -38,4 +62,19 @@ class HistoryItem {
     }
 
     public String getPace() {return pace;}
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeParcelable(route, i);
+        parcel.writeString(date);
+        parcel.writeString(distance);
+        parcel.writeString(filename);
+        parcel.writeString(time);
+        parcel.writeString(pace);
+    }
 }

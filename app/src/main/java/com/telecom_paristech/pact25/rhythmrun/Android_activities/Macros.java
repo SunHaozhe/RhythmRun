@@ -10,6 +10,7 @@ public final class Macros {
     final static String EXTRA_SONG = "song";
     static final String EXTRA_MUSIC="music";
     static final String EXTRA_ITINERARY = "itinerary";
+    static final String EXTRA_HISTORY_ITEM = "history_item";
 
     static final double MAX_SPEED = 25; //km/h
     static final double MIN_SPEED = 1; //km/h
