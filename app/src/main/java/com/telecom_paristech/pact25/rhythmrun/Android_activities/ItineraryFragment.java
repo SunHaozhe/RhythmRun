@@ -45,7 +45,6 @@ import java.util.List;
 
 public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
-    //TODO: Force itinerary calculation if at least two markers are set.
     //TODO: Warn if more than 22 way points are selected and block.
 
     private static PolylineOptions itinerary;
@@ -56,6 +55,8 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     private ArrayList<Marker> markers = new ArrayList<>();
     private Polyline polyline;
     private Distance distance;
+
+    private OnRouteCalculatedListener onRouteCalculatedListener;
 
     private TextView distanceTextView;
 
@@ -234,10 +235,33 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         }
     }
 
+    public boolean isRouteCalculationAvailable(){
+        return markerPoints.size()>1 && polyline==null;
+    }
+
     public Distance getDistance(){
         /*
             Returns distance of selected polyline, in km.
          */
+        /*if(markerPoints.size()>1 && (polyline==null)){
+            //The user has set up markers without clicking on "route".
+            //distance=null;
+            initiateRoute();
+            Thread fetchDistanceThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while(distance==null){
+
+                    }
+                }
+            });
+            fetchDistanceThread.start();
+            try {
+                fetchDistanceThread.join(10000); //waits max 10sec for the thread to die
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }*/
         return distance;
     }
 
@@ -405,7 +429,13 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                 final String unit = sharedPreferences.getString("unit_list","km");
-                distanceTextView.setText(distance.toStr(unit,true));
+                if(distanceTextView!=null)
+                    distanceTextView.setText(distance.toStr(unit,true));
+
+                if(onRouteCalculatedListener!=null){
+                    onRouteCalculatedListener.onRouteCalculated();
+                    onRouteCalculatedListener=null;
+                }
             }
             else {
                 Log.d("onPostExecute","without Poly lines drawn");
@@ -496,6 +526,14 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
             return poly;
         }
+    }
+
+    public interface OnRouteCalculatedListener{
+        public void onRouteCalculated();
+    }
+
+    public void setOnRouteCalculatedListener(OnRouteCalculatedListener onRouteCalculatedListener){
+        this.onRouteCalculatedListener = onRouteCalculatedListener;
     }
 
 }

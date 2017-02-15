@@ -1,5 +1,6 @@
 package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -70,12 +71,30 @@ public class NewRunActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.newRunMenuValidate:
                 Log.d("NewRun","Creating intent for RecapActivity");
-                Intent intent = new Intent(this, RecapActivity.class);
-                intent.putExtra(Macros.EXTRA_DISTANCE, getDistance());
-                intent.putExtra(Macros.EXTRA_PACE, getPace());
-                intent.putExtra(Macros.EXTRA_MUSIC, getMusic());
-                intent.putExtra(Macros.EXTRA_ITINERARY, new CustomPolylineOptions(itineraryFragment.getItinerary()));
-                startActivity(intent);
+
+                if(itineraryFragment.isRouteCalculationAvailable()){
+                    final Context context = this;
+                    itineraryFragment.setOnRouteCalculatedListener(new ItineraryFragment.OnRouteCalculatedListener() {
+                        @Override
+                        public void onRouteCalculated() {
+                            Intent intent = new Intent(context, RecapActivity.class);
+                            intent.putExtra(Macros.EXTRA_DISTANCE, getDistance());
+                            intent.putExtra(Macros.EXTRA_PACE, getPace());
+                            intent.putExtra(Macros.EXTRA_MUSIC, getMusic());
+                            intent.putExtra(Macros.EXTRA_ITINERARY, new CustomPolylineOptions(itineraryFragment.getItinerary()));
+                            startActivity(intent);
+                        }
+                    });
+                    itineraryFragment.initiateRoute();
+                } else {
+                    Intent intent = new Intent(this, RecapActivity.class);
+                    intent.putExtra(Macros.EXTRA_DISTANCE, getDistance());
+                    intent.putExtra(Macros.EXTRA_PACE, getPace());
+                    intent.putExtra(Macros.EXTRA_MUSIC, getMusic());
+                    intent.putExtra(Macros.EXTRA_ITINERARY, new CustomPolylineOptions(itineraryFragment.getItinerary()));
+                    startActivity(intent);
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

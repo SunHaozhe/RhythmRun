@@ -23,8 +23,6 @@ import android.widget.TextView;
 
 import com.telecom_paristech.pact25.rhythmrun.R;
 
-//TODO: Change the company name (not example)
-
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
