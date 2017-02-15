@@ -21,8 +21,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
-//TODO: Check if Location is enabled and ask if necessary
-
 public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
     private static ArrayList<LatLng> journey;
