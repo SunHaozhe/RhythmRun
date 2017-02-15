@@ -42,20 +42,10 @@ public class HistoryActivity extends AppCompatActivity
         setContentView(R.layout.activity_history);
 
         listView = (ListView) findViewById(R.id.listView);
-        //List<HistoryItem> samples = generateSample();
         List<HistoryItem> samples = getRuns();
 
         HistoryAdapter adapter = new HistoryAdapter(HistoryActivity.this, samples);
         listView.setAdapter(adapter);
-    }
-
-    private List<HistoryItem> generateSample()
-    {
-        List<HistoryItem> samples = new ArrayList<>();
-        samples.add(new HistoryItem("01/02/2017 19h30","Paris","10 km","47:18",null));
-        samples.add(new HistoryItem("30/01/2017 07h44","Paris","9.5 km","43:56",null));
-        samples.add(new HistoryItem("27/01/2017 12h34","Paris","16.7 km","1:23:45",null));
-        return samples;
     }
 
     public class HistoryAdapter extends ArrayAdapter<HistoryItem> {
@@ -77,9 +67,7 @@ public class HistoryActivity extends AppCompatActivity
                 viewHolder = new HistoricViewHolder();
                 viewHolder.date = (TextView) convertView.findViewById(R.id.date);
                 viewHolder.distance = (TextView) convertView.findViewById(R.id.distance);
-                viewHolder.place = (TextView) convertView.findViewById(R.id.place);
                 viewHolder.time = (TextView) convertView.findViewById(R.id.time);
-                //viewHolder.mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.historyMap);
                 convertView.setTag(viewHolder);
             }
 
@@ -87,13 +75,7 @@ public class HistoryActivity extends AppCompatActivity
 
             viewHolder.date.setText(history.getDate());
             viewHolder.distance.setText(history.getDistance());
-            viewHolder.place.setText("- "+history.getPlace());
             viewHolder.time.setText(history.getTime());
-            /*if(history.getRoute() != null){
-                viewHolder.mapFragment.drawnPolyline(history.getRoute().getPolylineOptions());
-                viewHolder.mapFragment.waitToAnimateCamera(history.getRoute().getBounds());
-            }*/
-
 
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -101,7 +83,7 @@ public class HistoryActivity extends AppCompatActivity
                     Intent intent = new Intent(view.getContext(), HistoryRunActivity.class);
                     intent.putExtra(EXTRA_DATE,history.getDate());
                     intent.putExtra(EXTRA_DISTANCE,history.getDistance());
-                    intent.putExtra(EXTRA_PACE,history.getPlace());
+                    intent.putExtra(EXTRA_PACE,history.getPace());
                     intent.putExtra(EXTRA_TIME,history.getTime());
                     intent.putExtra(EXTRA_ROUTE,history.getRoute());
                     startActivity(intent);
@@ -157,8 +139,8 @@ public class HistoryActivity extends AppCompatActivity
 
         String date=null;
         double time=0;
-        double distance=0;
-        double pace=0;
+        Distance distance=null;
+        Pace pace=null;
         CustomPolylineOptions location=null;
 
         try {
@@ -175,8 +157,8 @@ public class HistoryActivity extends AppCompatActivity
             if(splitResult.length >= 5){
                 date = splitResult[0];
                 time = Double.parseDouble(splitResult[1]);
-                distance = Double.parseDouble(splitResult[2]);
-                pace = Double.parseDouble(splitResult[3]);
+                distance = new Distance(Double.parseDouble(splitResult[2]));
+                pace = new Pace(Double.parseDouble(splitResult[3]));
                 location = new CustomPolylineOptions(getPolylineFromString(splitResult[4]));
             }
             else{
@@ -189,17 +171,20 @@ public class HistoryActivity extends AppCompatActivity
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String unit = sharedPreferences.getString("unit_list","km");
+        String paceMode = sharedPreferences.getString("pace","p");
 
-        return new HistoryItem(date,"",
-                new Distance(distance).toStr(unit,true),
+        return new HistoryItem(filename,
+                date,
                 new Pace(time/60000).toStr(unit,"p",false),
+                distance.toStr(unit,true),
+                pace.toStr(unit,paceMode,true),
                 location);
     }
 
     public PolylineOptions getPolylineFromString(String string){
         PolylineOptions polylineOptions = new PolylineOptions();
         for(String latlng : string.split(";")){
-            if(latlng != ""){
+            if(latlng != "" && !latlng.equals(" ")){
                 double lat = Double.parseDouble(latlng.split(",")[0]);
                 double lng = Double.parseDouble(latlng.split(",")[1]);
                 polylineOptions.add(new LatLng(lat,lng));

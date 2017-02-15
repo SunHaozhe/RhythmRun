@@ -14,19 +14,20 @@ import android.widget.TextView;
 import com.example.raphaelattali.rythmrun.R;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class SumUpActivity extends AppCompatActivity {
 
-    private double distance;
+    private Distance distance;
     private double elapsedTime;
-    private double pace;
+    private Pace pace;
+    private ArrayList<RunStatus> runData;
     private CustomPolylineOptions route;
 
     @Override
@@ -44,12 +45,11 @@ public class SumUpActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        distance = intent.getDoubleExtra(RunActivity.EXTRA_DISTANCE,0);
-        pace = intent.getDoubleExtra(RunActivity.EXTRA_PACE,0);
-        elapsedTime = intent.getDoubleExtra(RunActivity.EXTRA_TIME,0);
-
-        Distance distanceToPrint = new Distance(distance/1000);
-        Pace paceToPrint = new Pace(pace);
+        runData = intent.getParcelableArrayListExtra(RunActivity.EXTRA_RUN_DATA);
+        RunStatus lastStatus = runData.get(runData.size()-1);
+        distance = lastStatus.distance;
+        pace = lastStatus.pace;
+        elapsedTime = lastStatus.time;
 
         route = intent.getParcelableExtra(RunActivity.EXTRA_ROUTE);
         if(route!=null){
@@ -67,8 +67,8 @@ public class SumUpActivity extends AppCompatActivity {
         TextView tvTime = (TextView) findViewById(R.id.sumUpTime);
 
         tvTime.setText(new Pace(elapsedTime/60000).toStr("km","p",false));
-        tvDistance.setText(distanceToPrint.toStr(unit,true));
-        tvPace.setText(paceToPrint.toStr(unit,paceMode,true));
+        tvDistance.setText(distance.toStr(unit,true));
+        tvPace.setText(pace.toStr(unit,paceMode,true));
 
         Button discardButton = (Button) findViewById(R.id.sumUpDiscardButton);
         Button saveButton = (Button) findViewById(R.id.sumUpSaveButton);
@@ -110,11 +110,23 @@ public class SumUpActivity extends AppCompatActivity {
             outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
             PrintStream printStream = new PrintStream(outputStream);
 
-            printDate(printStream);
-            printTime(printStream);
-            printDistance(printStream);
-            printPace(printStream);
+            DateFormat df2 = new SimpleDateFormat("EEEE d MMMM yyyy");
+            printStream.print(df2.format(Calendar.getInstance().getTime())+"\n");
+            printStream.print(elapsedTime+"\n");
+            printStream.print(distance.getValue()+"\n");
+            printStream.print(pace.getValue()+"\n");
             printLocation(printStream);
+
+            for(RunStatus status : runData){
+                printStream.print("\n"+
+                        status.time+";"+
+                        status.location.latitude+","+
+                        status.location.longitude+","+
+                        status.distance.getValue()+";"+
+                        status.pace.getValue()+";"+
+                        status.heartRate
+                );
+            }
 
             outputStream.close();
         } catch (Exception e) {
@@ -122,27 +134,12 @@ public class SumUpActivity extends AppCompatActivity {
         }
     }
 
-    private void printDate(PrintStream ps){
-        DateFormat df = new SimpleDateFormat("EEEE d MMMM yyyy");
-        String date = df.format(Calendar.getInstance().getTime());
-        ps.print(date+"\n");
-    }
-
-    private void printTime(PrintStream ps){
-        ps.print(elapsedTime+"\n");
-    }
-
-    private void printDistance(PrintStream ps){
-        ps.print(distance+"\n");
-    }
-
-    private void printPace(PrintStream ps){
-        ps.print(pace+"\n");
-    }
-
     private void printLocation(PrintStream ps){
-        for(LatLng pos : route.getPolylineOptions().getPoints()){
-            ps.print(pos.latitude+","+pos.longitude+";");
+        if(route.getPolylineOptions().getPoints().size()==0){
+            ps.print(" ");
+        } else {
+            for(LatLng pos : route.getPolylineOptions().getPoints())
+                ps.print(pos.latitude+","+pos.longitude+";");
         }
     }
 }

@@ -1,7 +1,26 @@
 package com.example.raphaelattali.rythmrun.Android_activities;
 
-public class Pace {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Pace implements Parcelable {
     private double value; //min/km
+
+    protected Pace(Parcel in) {
+        value = in.readDouble();
+    }
+
+    public static final Creator<Pace> CREATOR = new Creator<Pace>() {
+        @Override
+        public Pace createFromParcel(Parcel in) {
+            return new Pace(in);
+        }
+
+        @Override
+        public Pace[] newArray(int size) {
+            return new Pace[size];
+        }
+    };
 
     public static String fancyPace(double d){
         int sec = Integer.parseInt(Double.toString(d*60).substring(0,Double.toString(d*60).indexOf(".")));
@@ -67,4 +86,13 @@ public class Pace {
         }
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeDouble(value);
+    }
 }

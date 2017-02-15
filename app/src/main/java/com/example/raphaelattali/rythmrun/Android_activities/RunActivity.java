@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -19,13 +20,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.raphaelattali.rythmrun.R;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,10 +37,8 @@ public class RunActivity extends AppCompatActivity {
 
     public static final int UPDATE_IDLE = 1000; //ms
 
-    public static final String EXTRA_DISTANCE = "distance";
-    public static final String EXTRA_PACE = "pace";
     public static final String EXTRA_ROUTE = "route";
-    public static final String EXTRA_TIME = "time";
+    public static final String EXTRA_RUN_DATA = "run_data";
 
     private long timeAtStop;
     private boolean isRunning=false;
@@ -49,15 +51,14 @@ public class RunActivity extends AppCompatActivity {
     private TextView tvBPM;
     private TextView tvCurrentSong;
 
-    private double distance;
-    private double pace;
-    private double heartRate;
-    private double elapsedTime; //s
+    private ArrayList<RunStatus> runData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
+
+        runData = new ArrayList<>();
 
         runMapFragment = (RunMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentRun);
 
@@ -140,10 +141,8 @@ public class RunActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), SumUpActivity.class);
-                intent.putExtra(EXTRA_DISTANCE,distance);
-                intent.putExtra(EXTRA_PACE,pace);
                 intent.putExtra(EXTRA_ROUTE,new CustomPolylineOptions(getRoute()));
-                intent.putExtra(EXTRA_TIME,elapsedTime);
+                intent.putParcelableArrayListExtra(EXTRA_RUN_DATA,runData);
                 startActivity(intent);
             }
         });
@@ -219,15 +218,19 @@ public class RunActivity extends AppCompatActivity {
     }
 
     public void update(){
-        if(isRunning) {
-            distance = getDistance();
-            pace = getPace();
-            heartRate = getHeartRate();
-            Chronometer chronometer = (Chronometer) findViewById(R.id.chronometer);
-            elapsedTime = SystemClock.elapsedRealtime() - chronometer.getBase();
 
-            updateDisplay();
+        if(isRunning) {
+            runData.add(new RunStatus(
+                    getElapsedTime(),
+                    getPosition(),
+                    getDistance(),
+                    getHeartRate()
+            ));
+
         }
+
+        updateDisplay();
+
     }
 
     public void updateDisplay(){
@@ -235,9 +238,16 @@ public class RunActivity extends AppCompatActivity {
         final String paceMode = sharedPreferences.getString("pace","p");
         final String unit = sharedPreferences.getString("unit","km");
 
-        tvDistance.setText(new Distance(distance).toStr(unit,true));
-        tvPace.setText(new Pace(pace).toStr(unit,paceMode,true));
-        tvHeartRate.setText(String.format(getString(R.string.run_heart_rate),heartRate));
+        RunStatus lastStatus = new RunStatus(0, null, new Distance(0),0);
+        Log.d("RunActivity updtDisp","runData size "+runData.size());
+        if(runData.size()>0){
+            lastStatus = runData.get(runData.size()-1);
+        }
+
+        tvDistance.setText(lastStatus.distance.toStr(unit,true));
+        tvPace.setText(lastStatus.pace.toStr(unit,paceMode,true));
+        tvHeartRate.setText(String.format(getString(R.string.run_heart_rate),lastStatus.heartRate));
+
         tvBPM.setText(String.format(getString(R.string.run_bpm),getBPM()));
         tvCurrentSong.setText(getCurrentSong());
     }
@@ -248,12 +258,17 @@ public class RunActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private double getDistance(){
+    private Distance getDistance(){
         return runMapFragment.getDistance();
     }
 
-    private double getPace(){
-        return elapsedTime/(60*distance);
+    private LatLng getPosition(){
+        return runMapFragment.getPosition();
+    }
+
+    private double getElapsedTime(){
+        Chronometer chronometer = (Chronometer) findViewById(R.id.chronometer);
+        return SystemClock.elapsedRealtime() - chronometer.getBase();
     }
 
     private int getHeartRate(){

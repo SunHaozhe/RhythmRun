@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
     private static ArrayList<LatLng> journey;
     private PolylineOptions journeyPolylineOptions;
     private Polyline journeyPolyline;
+
+    private LatLng lastLatLng=null;
 
     static {
         journey = new ArrayList<>();
@@ -54,11 +57,12 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                LatLng coordinates = new LatLng(location.getLatitude(), location.getLongitude());
-                journey.add(coordinates);
+                Log.d("Location","Location has changed.");
+                lastLatLng = new LatLng(location.getLatitude(),location.getLongitude());
+                journey.add(lastLatLng);
                 if(googleMap != null){
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(coordinates));
-                    journeyPolylineOptions.add(coordinates);
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(lastLatLng));
+                    journeyPolylineOptions.add(lastLatLng);
                     drawPolyline();
                 }
             }
@@ -107,10 +111,14 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
         }
     }
 
-    public double getDistance(){
+    public Distance getDistance(){
         if(journeyPolyline == null)
-            return 0;
-        return (double) ItineraryFragment.distanceOfPolyline(journeyPolylineOptions)/1000;
+            return new Distance(0);
+        return new Distance((double) ItineraryFragment.distanceOfPolyline(journeyPolylineOptions)/1000);
+    }
+
+    public LatLng getPosition(){
+        return lastLatLng;
     }
 
 }
