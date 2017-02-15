@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -46,6 +45,9 @@ import java.util.List;
 
 public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
+    //TODO: Force itinerary calculation if at least two markers are set.
+    //TODO: Warn if more than 22 way points are selected and block.
+
     private static PolylineOptions itinerary;
 
     private OnTouchListener listener;
@@ -53,7 +55,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     private ArrayList<LatLng> markerPoints = new ArrayList<>();
     private ArrayList<Marker> markers = new ArrayList<>();
     private Polyline polyline;
-    private float distance;
+    private Distance distance;
 
     private TextView distanceTextView;
 
@@ -66,16 +68,27 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         return itinerary;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Log.i("Itinerary","Initialization of ItineraryFragment.");
+
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
+
+        //The TouchableWrapper is required to disable scrollview in favor of map scroll.
         TouchableWrapper frameLayout = new TouchableWrapper(getActivity());
         frameLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-        ((ViewGroup) rootView).addView(frameLayout,
-                new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                ));
+        if (rootView != null) {
+            ((ViewGroup) rootView).addView(frameLayout,
+                    new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                    ));
+        } else {
+            Log.e("Itinerary","Error while creating TouchableWrapper, rootView is null.");
+        }
+
         return rootView;
     }
 
@@ -83,22 +96,6 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     public View initView(LayoutInflater inflater, ViewGroup container){
         View rootView = inflater.inflate(R.layout.fragment_itinerary, container, false);
         mapView = (MapView) rootView.findViewById(R.id.itineraryMapView);
-
-        /*ImageButton buttonDelete = (ImageButton) rootView.findViewById(R.id.itineraryButtonDelete);
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeLastMarker();
-            }
-        });
-        ImageButton buttonRoute = (ImageButton) rootView.findViewById(R.id.itineraryButtonRoute);
-        buttonRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initiateDirection();
-            }
-        });*/
-
         return rootView;
     }
 
@@ -106,6 +103,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         this.listener = listener;
     }
 
+    //This interface allows the definition of a On Touch Listener.
     public interface OnTouchListener{
         void onTouch();
     }
@@ -132,28 +130,33 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap map) {
         super.onMapReady(map);
+
+        //Handling the addition of markers
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng point) {
-                if (markerPoints.size() > 22) {
+
+                if (markerPoints.size() > Macros.MAX_MARKERS) {
+                    Log.w("Itinerary","Too much markers (max is "+Macros.MAX_MARKERS+"). Erasing all previous ones.");
                     markerPoints.clear();
                     googleMap.clear();
                 }
 
                 // Adding new item to the ArrayList
                 markerPoints.add(point);
+                Log.d("Itinerary","Adding marker "+point+" (total: "+markerPoints.size()+").");
                 // Creating MarkerOptions
                 MarkerOptions options = new MarkerOptions();
                 // Setting the position of the marker
                 options.position(point);
-                options.draggable(true);
-                if (markerPoints.size() == 1) {
+                options.draggable(true); //To be able to move already set markers.
+                if (markerPoints.size() == 1) { //Sets the first marker
                     options.title("Start");
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 } else {
-                    if(markerPoints.size()>2){
+                    if(markerPoints.size()>2){ //Sets previous marker to transition, orange marker.
                         markers.get(markers.size()-1).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                        markers.get(markers.size()-1).setTitle("Waypoint "+Integer.toString(markers.size()-1));
+                        markers.get(markers.size()-1).setTitle("Marker "+Integer.toString(markers.size()-1));
                     }
                     options.title("End");
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
@@ -164,6 +167,8 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
             }
         });
+
+        //Handling the drag of existing marker.
         googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
 
             @Override
@@ -176,54 +181,70 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
+                //Updating the position of an already added marker.
+                Log.d("Itinerary","Marker "+marker+" moved to "+marker.getPosition()+".");
                 markerPoints.set(markers.indexOf(marker), marker.getPosition());
             }
         });
+
         zoomToCurrentLocation();
+
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            googleMap.setMyLocationEnabled(true);
-            googleMap.getUiSettings().setAllGesturesEnabled(true);
+            googleMap.setMyLocationEnabled(true); //Enables the button to zoom on current location and the display of location cursor.
+            googleMap.getUiSettings().setAllGesturesEnabled(true); //Re-enable map touch.
         }
     }
 
-    public void initiateDirection(TextView textView){
-        distanceTextView = textView;
-        initiateDirection();
+    public void initiateRoute(TextView textView){
+        //Starts the direction calculation
+        Log.d("Itinerary","Beginning of route calculation.");
+        distanceTextView = textView; //Save reference of TextView to display distance.
+        initiateRoute();
     }
 
-    public void initiateDirection(){
+    public void initiateRoute(){
         if(markerPoints.size()>1){
             if(polyline != null){
-                polyline.remove();
-                polyline=null;
+                polyline.remove(); //Removes the polyline from the map.
+                polyline=null; //Reset of the variable.
+                Log.d("Itinerary","Existing polyline found. Deleted.");
             }
 
             String url = getUrl(markerPoints);
-            Log.d("onMapClick", url);
+            Log.d("Itinerary", "Route request URL: "+url);
             FetchUrl FetchUrl = new FetchUrl();
-
-            // Start downloading json data from Google Directions API
             FetchUrl.execute(url);
-            //move map camera
-            //googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerPoints.get(0)));
-            //googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+        } else {
+            Log.w("Itinerary","Can not calculate route, not enough markers ("+markerPoints.size()+" found).");
         }
     }
 
     public void removeLastMarker(){
+        /*
+            Removes the last marker added on the map by the user.
+         */
         if(markers.size()>0){
-            markers.get(markers.size()-1).remove();
-            markers.remove(markers.size()-1);
-            markerPoints.remove(markerPoints.size()-1);
+            markers.get(markers.size()-1).remove(); //Removes the top element of the map list
+            markers.remove(markers.size()-1); //Removes the last maker from the map
+            markerPoints.remove(markerPoints.size()-1); //Removes the last marker from the controller list
+            Log.d("Itinerary","Last marker removed.");
+        } else {
+            Log.w("Itinerary","No marker to be removed.");
         }
     }
 
-    public double getDistance(){
+    public Distance getDistance(){
+        /*
+            Returns distance of selected polyline, in km.
+         */
         return distance;
     }
 
     public String getUrl(ArrayList<LatLng> markerPoints){
+        /*
+            Returns the url for the route request.
+         */
         LatLng origin = markerPoints.get(0);
         LatLng dest = markerPoints.get(markerPoints.size()-1);
 
@@ -232,6 +253,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
                 "&origin="+origin.latitude+","+origin.longitude+
                 "&destination="+dest.latitude+","+dest.longitude;
         if(markerPoints.size()>=3)
+            //noinspection SpellCheckingInspection
             url = url + "&waypoints=";
         for(int i=1;i<markerPoints.size()-1;i++){
             url = url + markerPoints.get(i).latitude + "," + markerPoints.get(i).longitude + "|";
@@ -273,29 +295,15 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         } catch (Exception e) {
             Log.d("Exception", e.toString());
         } finally {
-            //noinspection ThrowFromFinallyBlock
-            iStream.close();
-            urlConnection.disconnect();
+            if (iStream != null) {
+                //noinspection ThrowFromFinallyBlock
+                iStream.close();
+            }
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
         return data;
-    }
-
-    public static float distanceOfPolyline(PolylineOptions polylineOptions){
-        List<LatLng> table = polylineOptions.getPoints();
-        int size = table.size() - 1;
-        float[] results = new float[1];
-        float sum = 0;
-
-        for(int i = 0; i < size; i++){
-            Location.distanceBetween(
-                    table.get(i).latitude,
-                    table.get(i).longitude,
-                    table.get(i+1).latitude,
-                    table.get(i+1).longitude,
-                    results);
-            sum += results[0];
-        }
-        return sum; //in meters
     }
 
     private class FetchUrl extends AsyncTask<String, Void, String> {
@@ -393,11 +401,11 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
             // Drawing polyline in the Google Map for the i-th route
             if(itinerary != null) {
                 polyline = googleMap.addPolyline(itinerary);
-                distance = distanceOfPolyline(itinerary);
+                distance = new Distance(SimpleMapFragment.distanceOfPolyline(itinerary)/1000);
 
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                 final String unit = sharedPreferences.getString("unit_list","km");
-                distanceTextView.setText(new Distance(distance/1000).toStr(unit,true));
+                distanceTextView.setText(distance.toStr(unit,true));
             }
             else {
                 Log.d("onPostExecute","without Poly lines drawn");
@@ -409,7 +417,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
 
         /** Receives a JSONObject and returns a list of lists containing latitude and longitude */
         @SuppressWarnings("unchecked")
-        public List<List<HashMap<String,String>>> parse(JSONObject jObject){
+        List<List<HashMap<String,String>>> parse(JSONObject jObject){
 
             List<List<HashMap<String, String>>> routes = new ArrayList<>() ;
             JSONArray jRoutes;

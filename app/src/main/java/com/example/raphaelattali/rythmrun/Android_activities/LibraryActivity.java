@@ -27,8 +27,6 @@ import java.util.List;
 
 public class LibraryActivity extends AppCompatActivity {
 
-    public final static String EXTRA_SONG = "song";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("LibraryActivity", "created LibraryActivity");
@@ -127,7 +125,7 @@ public class LibraryActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), SongActivity.class);
                     if (song != null) {
-                        intent.putExtra(EXTRA_SONG, Song.songs.indexOf(song));
+                        intent.putExtra(Macros.EXTRA_SONG, Song.songs.indexOf(song));
                     }
                     Log.d("LibraryActivity", "We lances the intent which contains the song selected");
                     startActivity(intent);

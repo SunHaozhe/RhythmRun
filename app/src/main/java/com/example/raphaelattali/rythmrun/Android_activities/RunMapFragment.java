@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,15 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
+//TODO: Check if Location is enabled and ask if necessary
+
 public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
     private static ArrayList<LatLng> journey;
     private PolylineOptions journeyPolylineOptions;
     private Polyline journeyPolyline;
+
+    private LatLng lastLatLng=null;
 
     static {
         journey = new ArrayList<>();
@@ -41,8 +46,12 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.i("Itinerary","Initialization of RunMapFragment.");
+
         journeyPolylineOptions = new PolylineOptions();
-        if(journey.size() > 0){
+        if(journey.size() > 0){ //If a run has already begun.
+            Log.d("RunMap","Redrawing pre-existing polyline.");
             journeyPolylineOptions.addAll(journey);
             drawPolyline();
         }
@@ -54,11 +63,13 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                LatLng coordinates = new LatLng(location.getLatitude(), location.getLongitude());
-                journey.add(coordinates);
+                Log.d("RunMap","Location has changed to "+location+".");
+                lastLatLng = new LatLng(location.getLatitude(),location.getLongitude());
+                journey.add(lastLatLng); //Adding the point to the list.
                 if(googleMap != null){
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(coordinates));
-                    journeyPolylineOptions.add(coordinates);
+                    Log.v("RunMap","Adding last location to the polyline.");
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(lastLatLng));
+                    journeyPolylineOptions.add(lastLatLng);
                     drawPolyline();
                 }
             }
@@ -85,9 +96,9 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Location location = locationManager.getLastKnownLocation(provider);
             if(location != null)
-                journey.add(new LatLng(location.getLatitude(), location.getLongitude()));
+                journey.add(new LatLng(location.getLatitude(), location.getLongitude())); //Adding of the first location.
         }
-        googleMap.getUiSettings().setAllGesturesEnabled(true);
+        googleMap.getUiSettings().setAllGesturesEnabled(true); //Enabling scrolling.
 
         zoomToCurrentLocation();
         startContinuousLocation();
@@ -107,10 +118,14 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
         }
     }
 
-    public double getDistance(){
+    public Distance getDistance(){
         if(journeyPolyline == null)
-            return 0;
-        return (double) ItineraryFragment.distanceOfPolyline(journeyPolylineOptions)/1000;
+            return new Distance(0);
+        return new Distance(ItineraryFragment.distanceOfPolyline(journeyPolylineOptions)/1000);
+    }
+
+    public LatLng getPosition(){
+        return lastLatLng;
     }
 
 }

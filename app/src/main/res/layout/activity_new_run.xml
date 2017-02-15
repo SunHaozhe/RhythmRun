@@ -278,7 +278,7 @@
                             android:layout_alignParentRight="true"
                             android:background="@drawable/flat_button"
                             android:textColor="@color/primary"
-                            android:text="@string/new_run_direction"/>
+                            android:text="@string/new_run_route"/>
 
                         <Button
                             android:id="@+id/newRunItineraryButtonMarker"

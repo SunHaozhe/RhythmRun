@@ -1,9 +1,28 @@
 package com.example.raphaelattali.rythmrun.Android_activities;
 
-public class Pace {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Pace implements Parcelable {
     private double value; //min/km
 
-    public static String fancyPace(double d){
+    protected Pace(Parcel in) {
+        value = in.readDouble();
+    }
+
+    public static final Creator<Pace> CREATOR = new Creator<Pace>() {
+        @Override
+        public Pace createFromParcel(Parcel in) {
+            return new Pace(in);
+        }
+
+        @Override
+        public Pace[] newArray(int size) {
+            return new Pace[size];
+        }
+    };
+
+    static String fancyPace(double d){
         int sec = Integer.parseInt(Double.toString(d*60).substring(0,Double.toString(d*60).indexOf(".")));
         int hrs = sec/3600;
         int min = (sec-(3600*hrs))/60;
@@ -28,11 +47,11 @@ public class Pace {
         return value;
     }
 
-    public String toStrPace(String unit){
+    String toStrPace(String unit){
         return toStrPace(unit,false);
     }
 
-    public String toStrPace(String unit, boolean displayUnits){
+    private String toStrPace(String unit, boolean displayUnits){
         String end="";
         if(displayUnits){
             end = " /"+unit;
@@ -46,11 +65,11 @@ public class Pace {
         return "";
     }
 
-    public String toStrSpeed(String unit){
+    String toStrSpeed(String unit){
         return toStrSpeed(unit,false);
     }
 
-    public String toStrSpeed(String unit, boolean displayUnits){
+    private String toStrSpeed(String unit, boolean displayUnits){
         String end="";
         if(displayUnits){
             end=" "+unit+"/h";
@@ -58,7 +77,7 @@ public class Pace {
         return new Distance(60/value).toStr(unit)+end;
     }
 
-    public String toStr(String unit, String mode, boolean displayUnits){
+    String toStr(String unit, String mode, boolean displayUnits){
         if(mode.equals("p")){
             return toStrPace(unit, displayUnits);
         }
@@ -67,4 +86,13 @@ public class Pace {
         }
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeDouble(value);
+    }
 }
