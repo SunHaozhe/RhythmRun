@@ -55,7 +55,9 @@ public class SumUpActivity extends AppCompatActivity {
         Intent intent = getIntent();
         runData = intent.getParcelableArrayListExtra(Macros.EXTRA_RUN_DATA);
         Log.d("SumUp","Reading run data from RunActivity intent. "+runData.size()+" points collected.");
-        RunStatus lastStatus = runData.get(runData.size()-1);
+        RunStatus lastStatus = new RunStatus(0,null,new Distance(0),0);
+        if(runData.size()>0)
+            lastStatus = runData.get(runData.size()-1);
 
         distance = lastStatus.distance;
         pace = lastStatus.pace;
@@ -66,13 +68,14 @@ public class SumUpActivity extends AppCompatActivity {
 
         //Getting the run polyline.
         route = intent.getParcelableExtra(Macros.EXTRA_ROUTE);
-        if(route!=null){
+        SimpleMapFragment simpleMapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.sumUpMapFragment);
+        if(route!=null && route.getPolylineOptions()!=null && route.getPolylineOptions().getPoints().size()>0){
             Log.d("SumUp","Found an itinerary.");
-            SimpleMapFragment simpleMapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.sumUpMapFragment);
             simpleMapFragment.drawnPolyline(route.getPolylineOptions());
             simpleMapFragment.waitToAnimateCamera(route.getBounds());
         } else {
             Log.d("SumUp","No itinerary found");
+            simpleMapFragment.zoomToCurrentLocation();
         }
 
         //Displaying info in TextViews.

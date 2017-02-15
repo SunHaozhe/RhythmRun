@@ -28,9 +28,11 @@ public class HistoryRunActivity extends AppCompatActivity {
 
         SimpleMapFragment mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.historyRunMap);
         CustomPolylineOptions route = intent.getParcelableExtra(Macros.EXTRA_ROUTE);
-        if(route != null){
+        if(route != null && route.getPolylineOptions()!=null && route.getPolylineOptions().getPoints().size()>0){
             mapFragment.drawnPolyline(route.getPolylineOptions());
             mapFragment.waitToAnimateCamera(route.getBounds());
+        } else {
+            mapFragment.zoomToCurrentLocation();
         }
 
     }

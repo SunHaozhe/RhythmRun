@@ -58,20 +58,20 @@ public class RecapActivity extends AppCompatActivity {
         Log.d("Recap","Recap music: "+music);
 
         final CustomPolylineOptions itinerary = intent.getParcelableExtra(Macros.EXTRA_ITINERARY);
+        SimpleMapFragment mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.recapMapFragment);
         if(itinerary != null){
             Log.v("Recap","Found a custom polyline options.");
             if(itinerary.getPolylineOptions() != null){
                 Log.d("Recap","Found an itinerary of "+itinerary.getPolylineOptions().getPoints().size()+" points.");
-                SimpleMapFragment mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.recapMapFragment);
                 mapFragment.drawnPolyline(itinerary.getPolylineOptions()); //Drawing the itinerary
                 mapFragment.waitToAnimateCamera(itinerary.getBounds()); //Zooming on the itinerary
             } else {
                 Log.d("Recap","No itinerary found.");
-                //TODO: Consider zooming on the last known location.
+                mapFragment.zoomToCurrentLocation();
             }
         } else {
             Log.d("Recap","No custom polyline options found.");
-            //TODO: Consider zooming on the last know location instead of Africa.
+            mapFragment.zoomToCurrentLocation();
         }
 
         //Setting up labels

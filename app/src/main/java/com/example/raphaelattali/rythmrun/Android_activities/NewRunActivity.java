@@ -288,6 +288,8 @@ public class NewRunActivity extends AppCompatActivity {
          */
         ItineraryFragment itineraryFragment = (ItineraryFragment) getSupportFragmentManager().findFragmentById(R.id.newRunItineraryFragment);
         Distance distance = itineraryFragment.getDistance();
+        if(distance == null)
+            distance = new Distance(0);
         Log.i("NewRun","Selected distance: "+distance.getValue()+" km");
         return distance;
     }

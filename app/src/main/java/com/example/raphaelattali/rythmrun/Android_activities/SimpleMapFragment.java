@@ -139,6 +139,23 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
             } else {
                 Log.e("SimpleMap","Error while zooming to current location: no location permission.");
             }
+        } else { //Waits for googleMap to be initialized.
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            zoomToCurrentLocation();
+                        }
+                    });
+                }
+            }).start();
         }
     }
 
