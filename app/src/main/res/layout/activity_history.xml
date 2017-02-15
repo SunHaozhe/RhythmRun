@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.raphaelattali.rhythmrun.Android_activities.HistoryActivity"
+    tools:context="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryActivity"
     tools:showIn="@layout/activity_history">
 
     <ListView

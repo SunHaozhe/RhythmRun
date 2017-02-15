@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.raphaelattali.rhythmrun">
+    package="com.telecom_paristech.pact25.rhythmrun">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -18,10 +18,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBvlvwvqg0aBDjY5zhpI0to6UNDLy3sLRs" />
 
-        <activity android:name="com.example.raphaelattali.rhythmrun.music.MainActivity" />
-        <activity android:name="com.example.raphaelattali.rhythmrun.music.Main2Activity" />
+        <activity android:name="com.telecom_paristech.pact25.rhythmrun.music.MainActivity" />
+        <activity android:name="com.telecom_paristech.pact25.rhythmrun.music.Main2Activity" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Android_activities.HomeActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
@@ -33,69 +33,69 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Android_activities.NewRunActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.NewRunActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_new_run"
-            android:parentActivityName="com.example.raphaelattali.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Android_activities.RecapActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.RecapActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_recap"
-            android:parentActivityName="com.example.raphaelattali.rhythmrun.Android_activities.NewRunActivity"
+            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.NewRunActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Android_activities.RunActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.RunActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_run"
-            android:parentActivityName="com.example.raphaelattali.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Android_activities.SettingsActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="com.example.raphaelattali.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Android_activities.LibraryActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.LibraryActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_library"
-            android:parentActivityName="com.example.raphaelattali.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Android_activities.SongActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SongActivity"
             android:label="@string/title_activity_library"
-            android:parentActivityName="com.example.raphaelattali.rhythmrun.Android_activities.LibraryActivity" />
+            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.LibraryActivity" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Client_serveur.BluetoothActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.BluetoothActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Android_activities.AboutActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.AboutActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_about"
-            android:parentActivityName="com.example.raphaelattali.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Client_serveur.LoginActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Android_activities.HistoryActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_historique"
-            android:parentActivityName="com.example.raphaelattali.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Android_activities.SumUpActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SumUpActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_sum_up"
-            android:parentActivityName="com.example.raphaelattali.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.raphaelattali.rhythmrun.Android_activities.HistoryRunActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryRunActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_history_run"
-            android:parentActivityName="com.example.raphaelattali.rhythmrun.Android_activities.HistoryActivity"
+            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryActivity"
             android:screenOrientation="portrait"/>
     </application>
 

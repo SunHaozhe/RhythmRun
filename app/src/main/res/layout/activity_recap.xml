@@ -4,13 +4,13 @@
     android:id="@+id/activity_recap"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.raphaelattali.rhythmrun.Android_activities.RecapActivity">
+    tools:context="com.telecom_paristech.pact25.rhythmrun.Android_activities.RecapActivity">
 
     <fragment
         android:id="@+id/recapMapFragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:name="com.example.raphaelattali.rhythmrun.Android_activities.SimpleMapFragment" />
+        android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SimpleMapFragment" />
 
     <RelativeLayout
         android:id="@+id/recapBarDistance"
