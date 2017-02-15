@@ -14,10 +14,9 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.telecom_paristech.pact25.rhythmrun.R;
-
-//TODO: show message if too much efforts
 
 public class RecapActivity extends AppCompatActivity {
 
@@ -122,6 +121,11 @@ public class RecapActivity extends AppCompatActivity {
         a = getLoadBarAnimation(recapBarDistance,200);
         b = getLoadBarAnimation(recapBarMusic,1000);
         c = getLoadBarAnimation(recapBarPace,600);
+
+        if(isTooMuchEffort(distance,pace)){
+            Log.i("Recap","The programmed effort is too much.");
+            Toast.makeText(this,R.string.recap_warning,Toast.LENGTH_LONG).show();
+        }
 
     }
 
@@ -229,6 +233,10 @@ public class RecapActivity extends AppCompatActivity {
         });
         a.setDuration(500);
         return a;
+    }
+
+    public boolean isTooMuchEffort(Distance distance, Pace pace){
+        return pace.getValue()<=5;
     }
 
 }
