@@ -45,8 +45,6 @@ import java.util.List;
 
 public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCallback {
 
-    //TODO: Warn if more than 22 way points are selected and block.
-
     private static PolylineOptions itinerary;
 
     private OnTouchListener listener;

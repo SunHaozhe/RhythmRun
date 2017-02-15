@@ -50,6 +50,12 @@ public class SumUpActivity extends AppCompatActivity {
                 effortContent.toggle();
             }
         });
+        findViewById(R.id.sumUpEffortDownArrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                effortContent.toggle();
+            }
+        });
 
         //Getting the intent from the Run activity.
         Intent intent = getIntent();

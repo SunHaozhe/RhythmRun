@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.telecom_paristech.pact25.rhythmrun.R;
 
+//TODO: show message if too much efforts
+
 public class RecapActivity extends AppCompatActivity {
 
     private View recapBarDistance;

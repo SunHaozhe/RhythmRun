@@ -108,10 +108,15 @@ public class NewRunActivity extends AppCompatActivity {
         RelativeLayout musicHeader=(RelativeLayout) findViewById(R.id.newRunMusicHeader);
 
         //Creates the expandable effect for the music CardView
-        //TODO: Add expandable effect to the down arrow image
         musicHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                musicContent.toggle();
+            }
+        });
+        findViewById(R.id.newRunMusicDownArrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 musicContent.toggle();
             }
         });
@@ -180,6 +185,12 @@ public class NewRunActivity extends AppCompatActivity {
                 itineraryContent.toggle();
             }
         });
+        findViewById(R.id.newRunItineraryDownArrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itineraryContent.toggle();
+            }
+        });
 
         //Disabling global scroll effect when touching the map, to be able to
         //move in the map view.
@@ -219,6 +230,12 @@ public class NewRunActivity extends AppCompatActivity {
         paceHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                paceContent.toggle();
+            }
+        });
+        findViewById(R.id.newRunPaceDownArrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 paceContent.toggle();
             }
         });
