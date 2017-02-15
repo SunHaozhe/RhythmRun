@@ -5,7 +5,7 @@
     android:id="@+id/activity_sum_up"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.raphaelattali.rythmrun.Android_activities.SumUpActivity">
+    tools:context="com.example.raphaelattali.rhythmrun.Android_activities.SumUpActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -104,7 +104,7 @@
                     android:layout_height="300dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:name="com.example.raphaelattali.rythmrun.Android_activities.SimpleMapFragment"/>
+                    android:name="com.example.raphaelattali.rhythmrun.Android_activities.SimpleMapFragment"/>
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
