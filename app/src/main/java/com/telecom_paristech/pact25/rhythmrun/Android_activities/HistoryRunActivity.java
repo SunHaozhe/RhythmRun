@@ -18,6 +18,7 @@ import java.io.File;
 public class HistoryRunActivity extends AppCompatActivity {
 
     HistoryItem historyItem;
+    DataManager dataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,8 @@ public class HistoryRunActivity extends AppCompatActivity {
         tvDistance.setText(historyItem.getDistance());
         tvPace.setText(historyItem.getPace());
         tvTime.setText(historyItem.getTime());
+
+        dataManager = new DataManager(this);
 
         SimpleMapFragment mapFragment = (SimpleMapFragment) getSupportFragmentManager().findFragmentById(R.id.historyRunMap);
         CustomPolylineOptions route = historyItem.getRoute();
@@ -55,11 +58,7 @@ public class HistoryRunActivity extends AppCompatActivity {
         findViewById(R.id.historyRunDiscardButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String dir = getFilesDir().getAbsolutePath();
-                File file = new File(dir, historyItem.getFilename());
-                boolean deleted = file.delete();
-                Log.i("HistoryRun",historyItem.getFilename()+" deleted: "+deleted);
-                if(deleted){
+                if(dataManager.deleteSong(historyItem.getFilename())){
                     Intent intent = new Intent(view.getContext(),HistoryActivity.class);
                     startActivity(intent);
                 }

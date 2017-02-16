@@ -28,6 +28,7 @@ import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity
 {
+    private DataManager dataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +37,12 @@ public class HistoryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        dataManager = new DataManager(this);
+
         //Initialization of the list view.
         ListView listView;
         listView = (ListView) findViewById(R.id.listView);
-        HistoryAdapter adapter = new HistoryAdapter(HistoryActivity.this, getRuns());
+        HistoryAdapter adapter = new HistoryAdapter(HistoryActivity.this, dataManager.getRuns());
         listView.setAdapter(adapter);
     }
 
@@ -102,10 +105,9 @@ public class HistoryActivity extends AppCompatActivity
         }
     }
 
+    /*
     private List<String> getFileNames(){
-        /*
-            Returns the filenames of the .run files
-         */
+
         ArrayList<String> fileNames = new ArrayList<>();
         Log.d("History","Exploring local data folder.");
 
@@ -130,9 +132,7 @@ public class HistoryActivity extends AppCompatActivity
     }
 
     private List<HistoryItem> getRuns(){
-        /*
-            Creating the list of history item from the .run files.
-         */
+
         Log.i("History","creating the history list...");
         ArrayList<HistoryItem> historyItems = new ArrayList<>();
         for(String filename: getFileNames()){
@@ -142,9 +142,7 @@ public class HistoryActivity extends AppCompatActivity
     }
 
     private HistoryItem getRun(String filename){
-        /*
-            Creating a run history item from a file reading.
-         */
+
 
         Log.d("History","loading run from "+filename+"...");
 
@@ -212,9 +210,7 @@ public class HistoryActivity extends AppCompatActivity
     }
 
     public PolylineOptions getPolylineFromString(String string){
-        /*
-            Returns a polyline from a string representation.
-         */
+
         PolylineOptions polylineOptions = new PolylineOptions();
         for(String lat_lng : string.split(";")){
             if(!lat_lng.equals("") && !lat_lng.equals(" ")){
@@ -224,6 +220,6 @@ public class HistoryActivity extends AppCompatActivity
             }
         }
         return polylineOptions;
-    }
+    }*/
 }
 

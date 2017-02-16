@@ -1,6 +1,5 @@
 package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -19,8 +18,6 @@ import android.widget.Toast;
 
 import com.telecom_paristech.pact25.rhythmrun.R;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsActivity extends AppCompatPreferenceActivity {
@@ -140,11 +137,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     public static class PrivacyPreferenceFragment extends PreferenceFragment {
+        private DataManager dataManager;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_privacy);
             setHasOptionsMenu(true);
+
+            dataManager = new DataManager(getActivity());
 
             PreferenceManager.setDefaultValues(getActivity(), R.xml.pref_privacy, true);
 
@@ -152,15 +153,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    File directory = getActivity().getFilesDir();
-                    File[] files = directory.listFiles();
-                    if (files != null) {
-                        for (File file:files) {
-                            if(file.getName().endsWith(".run")){
-                                file.delete();
-                            }
-                        }
-                    }
+                    dataManager.deleteAllSongs();
                     Toast.makeText(getActivity(),"All runs erased",Toast.LENGTH_LONG).show();
                     return true;
                 }
