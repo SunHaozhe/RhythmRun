@@ -197,6 +197,12 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void waitForLocation(){
+        waitForLocation(0);
+    }
+
+    private void waitForLocation(final int i){
+        if(i>1200) //About 2 minutes.
+            return;
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Location location = locationManager.getLastKnownLocation(provider);
@@ -210,7 +216,7 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        waitForLocation();
+                        waitForLocation(i+1);
                     }
                 }).start();
             } else { //A location has been found.
