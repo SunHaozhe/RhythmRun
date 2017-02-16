@@ -41,6 +41,11 @@ public class SumUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sum_up);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String unit = sharedPreferences.getString("unit_list","km");
+        String paceMode = sharedPreferences.getString("pace","p");
+        boolean recordHistory = sharedPreferences.getBoolean("recordHistoryOnOff",true);
+
         //Creating the expandable effect for the sum up CardView.
         final ExpandableLinearLayout effortContent=(ExpandableLinearLayout) findViewById(R.id.sumUpEffortContent);
         RelativeLayout contentHeader=(RelativeLayout) findViewById(R.id.sumUpEffortHeader);
@@ -85,10 +90,6 @@ public class SumUpActivity extends AppCompatActivity {
         }
 
         //Displaying info in TextViews.
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String unit = sharedPreferences.getString("unit_list","km");
-        String paceMode = sharedPreferences.getString("pace","p");
-
         TextView tvDistance = (TextView) findViewById(R.id.sumUpDistance);
         TextView tvPace = (TextView) findViewById(R.id.sumUpPace);
         TextView tvTime = (TextView) findViewById(R.id.sumUpTime);
@@ -118,6 +119,9 @@ public class SumUpActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        if(!recordHistory)
+            saveButton.setVisibility(View.GONE);
 
     }
 

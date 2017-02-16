@@ -114,7 +114,7 @@
                     android:layout_marginBottom="10dp">
 
                     <Button
-                        android:id="@+id/sumUpSaveButton"
+                        android:id="@+id/sumUpDiscardButton"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
                         android:paddingLeft="8dp"
@@ -122,18 +122,18 @@
                         android:layout_alignParentRight="true"
                         android:background="@drawable/flat_button"
                         android:textColor="@color/primary"
-                        android:text="Save"/>
+                        android:text="Discard"/>
 
                     <Button
-                        android:id="@+id/sumUpDiscardButton"
+                        android:id="@+id/sumUpSaveButton"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
-                        android:layout_toLeftOf="@id/sumUpSaveButton"
+                        android:layout_toLeftOf="@id/sumUpDiscardButton"
                         android:background="@drawable/flat_button"
                         android:textColor="@color/primary"
-                        android:text="Discard"/>
+                        android:text="Save"/>
 
                 </RelativeLayout>
 

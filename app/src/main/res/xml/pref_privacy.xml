@@ -1,0 +1,15 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="recordHistoryOnOff"
+        android:title="Record history"
+        />
+
+    <Preference
+        android:title="Erase history"
+        android:key="erase_history"
+        />
+
+
+</PreferenceScreen>

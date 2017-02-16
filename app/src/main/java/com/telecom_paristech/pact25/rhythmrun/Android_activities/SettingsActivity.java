@@ -15,9 +15,12 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.widget.Toast;
 
 import com.telecom_paristech.pact25.rhythmrun.R;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsActivity extends AppCompatPreferenceActivity {
@@ -105,7 +108,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
-                || GeneralPreferenceFragment.class.getName().equals(fragmentName);
+                || GeneralPreferenceFragment.class.getName().equals(fragmentName)
+                || PrivacyPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -122,6 +126,46 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("unit_list"));
             bindPreferenceSummaryToValue(findPreference("pace"));
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public static class PrivacyPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_privacy);
+            setHasOptionsMenu(true);
+
+            PreferenceManager.setDefaultValues(getActivity(), R.xml.pref_privacy, true);
+
+            Preference button = findPreference("erase_history");
+            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    File directory = getActivity().getFilesDir();
+                    File[] files = directory.listFiles();
+                    if (files != null) {
+                        for (File file:files) {
+                            if(file.getName().endsWith(".run")){
+                                file.delete();
+                            }
+                        }
+                    }
+                    Toast.makeText(getActivity(),"All runs erased",Toast.LENGTH_LONG).show();
+                    return true;
+                }
+            });
+
         }
 
         @Override
