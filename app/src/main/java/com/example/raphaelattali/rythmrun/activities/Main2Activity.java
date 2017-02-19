@@ -39,6 +39,7 @@ import static android.os.Environment.DIRECTORY_DOCUMENTS;
 public class Main2Activity extends AppCompatActivity {
 
     Button test_button = null;
+    Button button2 = null;
     TextView textview = null;
     private int k = 0;
     private Float pacefreq = 1.0f;
@@ -68,6 +69,8 @@ public class Main2Activity extends AppCompatActivity {
                 k = 1;
             }
         });
+
+        button2 = (Button) findViewById(R.id.button2);
 
         textview = (TextView) findViewById(R.id.textview);
 
@@ -181,11 +184,11 @@ public class Main2Activity extends AppCompatActivity {
                     MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.tut3);
                     MediaPlayer mediaPlayer2 = MediaPlayer.create(context, R.raw.tutoctave);
                     mediaPlayer.start();
-                    Podometer pod = new Podometer(context);
+                    final Podometer pod = new Podometer(context);
                     long beginning, step;
-                    float periode;
+                    float periode, frequence;
                     boolean playing;
-                    long timeToWaitBeforeSyncAgainMs = 10000;
+                    long timeToWaitBeforeSyncAgainMs = 5000;
                     while (!pod.isActive()) {
                         try {
                             Thread.sleep(100);
@@ -196,16 +199,24 @@ public class Main2Activity extends AppCompatActivity {
                     Log.i("lucas", "pod actif");
                     beginning = SystemClock.elapsedRealtime();
                     playing = false;
-                    periode = 1/pod.getRunningPaceFrequency();
-                    setTextViewToFreq(1-periode);
+                    frequence = pod.getRunningPaceFrequency();
+                    periode = 1/frequence;
+                    setTextViewToFreq(frequence);
                     step = pod.lastStepTimeSinceBoot();
+                    button2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            pod.manualSync();
+                        }
+                    });
                     while (k == 0) {
                         if (SystemClock.elapsedRealtime() > beginning + timeToWaitBeforeSyncAgainMs) {
                             mediaPlayer2.seekTo(0);
                             mediaPlayer2.start();
                             beginning = SystemClock.elapsedRealtime();
-                            periode = 1/pod.getRunningPaceFrequency();
-                            setTextViewToFreq(1/periode);
+                            frequence = pod.getRunningPaceFrequency();
+                            periode = 1/frequence;
+                            setTextViewToFreq(frequence);
                             step = pod.lastStepTimeSinceBoot();
                             playing = false;
                         }
@@ -219,16 +230,21 @@ public class Main2Activity extends AppCompatActivity {
                                 mediaPlayer.start();
                             }
                             else {
-                                while (abs(SystemClock.elapsedRealtime()-step-(long)periode*1000/2)%(1000*periode) > 30) {
+                                /*while (abs(SystemClock.elapsedRealtime()-step-(long)periode*1000/2)%(1000*periode) > 30) {
                                     Log.i("lucas", "on attend");
                                     try {
                                         Thread.sleep(10);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
-                                }
+                                }*/
                                 playing = true;
                                 mediaPlayer.seekTo(0);
+                                try {
+                                    Thread.sleep((long)(1000*periode)-((SystemClock.elapsedRealtime()-step)%(long)(1000*periode)));
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 mediaPlayer.start();
                             }
                     }
@@ -299,7 +315,7 @@ public class Main2Activity extends AppCompatActivity {
         }
         @Override
         public void run() {
-            textview.setText(String.valueOf(freq));
+            textview.setText(String.valueOf((int)(freq*60)) + "\nbpm");
         }
     }
 

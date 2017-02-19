@@ -11,16 +11,24 @@
     tools:context="com.example.raphaelattali.rythmrun.activities.Main2Activity"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textview"
-        android:text="2e activité"/>
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bouton test de Lucas avec un texte trop long"
         android:id="@+id/test_button"/>
+
+    <Button
+        android:text="Sync manuelle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="90dp"
+        android:id="@+id/textview"
+        android:text="___\nbpm"
+        android:gravity="center"/>
 
 </LinearLayout>
