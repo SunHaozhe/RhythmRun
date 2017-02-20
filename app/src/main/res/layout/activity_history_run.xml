@@ -4,7 +4,7 @@
     android:id="@+id/activity_history_run"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.raphaelattali.rythmrun.Android_activities.HistoryRunActivity"
+    tools:context="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryRunActivity"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1"
-                    android:name="com.example.raphaelattali.rythmrun.Android_activities.SimpleMapFragment"/>
+                    android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SimpleMapFragment"/>
 
 
                 <RelativeLayout

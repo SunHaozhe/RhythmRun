@@ -5,7 +5,7 @@
     android:id="@+id/activity_sum_up"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.raphaelattali.rythmrun.Android_activities.SumUpActivity">
+    tools:context="com.telecom_paristech.pact25.rhythmrun.Android_activities.SumUpActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -104,7 +104,7 @@
                     android:layout_height="300dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:name="com.example.raphaelattali.rythmrun.Android_activities.SimpleMapFragment"/>
+                    android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SimpleMapFragment"/>
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -114,7 +114,7 @@
                     android:layout_marginBottom="10dp">
 
                     <Button
-                        android:id="@+id/sumUpSaveButton"
+                        android:id="@+id/sumUpDiscardButton"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
                         android:paddingLeft="8dp"
@@ -122,18 +122,18 @@
                         android:layout_alignParentRight="true"
                         android:background="@drawable/flat_button"
                         android:textColor="@color/primary"
-                        android:text="Save"/>
+                        android:text="Discard"/>
 
                     <Button
-                        android:id="@+id/sumUpDiscardButton"
+                        android:id="@+id/sumUpSaveButton"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
-                        android:layout_toLeftOf="@id/sumUpSaveButton"
+                        android:layout_toLeftOf="@id/sumUpDiscardButton"
                         android:background="@drawable/flat_button"
                         android:textColor="@color/primary"
-                        android:text="Discard"/>
+                        android:text="Save"/>
 
                 </RelativeLayout>
 

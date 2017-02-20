@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Rhythm Run</string>
 
+    <string name="app_subtitle">Follow the beat</string>
+
     <string name="title_activity_home">Rhythm Run</string>
     <string name="home_distance_this_week">this week</string>
     <string name="home_average_pace">average pace</string>
