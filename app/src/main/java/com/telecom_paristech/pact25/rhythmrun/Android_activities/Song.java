@@ -7,6 +7,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.io.ByteArrayInputStream;
@@ -15,7 +17,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Song {
+public class Song implements Parcelable {
 
     private int color;
     private Bitmap bitmap;
@@ -25,68 +27,6 @@ public class Song {
     private String path;
     private String genre;
     private String duration;
-
-    public static List<Song> songs;
-    public static void loadSongs(){
-        songs = new ArrayList<>();
-
-        String path = Environment.getExternalStorageDirectory().toString() + "/Music";
-        Log.d("Files", "Path: " + path);
-        File directory = new File(path);
-        File[] files = directory.listFiles();
-        if (files != null) {
-            Log.d("Files", "Size: " + files.length);
-            for (File file:files) {
-                //Adds the song to the list
-                if (file.getName().endsWith(".mp3")) {
-                    Log.d("Files", "FileName:" + file.getName());
-                    songs.add(new Song(file));
-                }
-            }
-        } else {
-            Log.d("Files", "files is null: no files found ?");
-        }
-
-        sortSongs();
-    }
-
-    public static void sortSongs(){
-        for(int i=1;i<songs.size();i++){
-            int j=i;
-            while(j>0 && (songs.get(i).getArtist().compareTo(songs.get(j-1).getArtist())<0 ||
-                    (songs.get(i).getArtist().compareTo(songs.get(j).getArtist()) == 0 &&
-                    songs.get(i).getTitle().compareTo(songs.get(j).getTitle())<0))){
-                j-=1;
-            }
-            Song temp = songs.get(i);
-            songs.set(i,songs.get(j));
-            songs.set(j,temp);
-        }
-    }
-
-    public static List<Song> getSongsByGenre(String genre){
-        if(songs==null)
-            loadSongs();
-        List<Song> songsOfGenre = new ArrayList<>();
-        for(Song song:songs){
-            if(song.getGenre() != null){
-                if(song.getGenre().equals(genre))
-                    songsOfGenre.add(song);
-            }
-        }
-        return songsOfGenre;
-    }
-
-    public static ArrayList<String> getAllGenres(){
-        if(songs==null)
-            loadSongs();
-        ArrayList<String> genres = new ArrayList<>();
-        for(Song song:songs){
-            if(song.getGenre() != null && !genres.contains(song.getGenre()))
-                genres.add(song.getGenre());
-        }
-        return genres;
-    }
 
     public Song(File file) {
         path = file.getPath();
@@ -114,6 +54,29 @@ public class Song {
 
         mmr.release();
     }
+
+    protected Song(Parcel in) {
+        color = in.readInt();
+        bitmap = in.readParcelable(Bitmap.class.getClassLoader());
+        title = in.readString();
+        artist = in.readString();
+        album = in.readString();
+        path = in.readString();
+        genre = in.readString();
+        duration = in.readString();
+    }
+
+    public static final Creator<Song> CREATOR = new Creator<Song>() {
+        @Override
+        public Song createFromParcel(Parcel in) {
+            return new Song(in);
+        }
+
+        @Override
+        public Song[] newArray(int size) {
+            return new Song[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -151,4 +114,24 @@ public class Song {
         return bitmap!=null;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public String getString(){
+        return title+" - "+artist;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(color);
+        parcel.writeParcelable(bitmap, i);
+        parcel.writeString(title);
+        parcel.writeString(artist);
+        parcel.writeString(album);
+        parcel.writeString(path);
+        parcel.writeString(genre);
+        parcel.writeString(duration);
+    }
 }

@@ -44,9 +44,6 @@ public class LibraryActivity extends AppCompatActivity {
             Log.d("LibraryActivity", "external storage is NOT readable");
         }
 
-        if(Song.songs==null)
-            Song.loadSongs();
-
         createAdapter();
     }
 
@@ -71,7 +68,7 @@ public class LibraryActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_library_refresh:
-                Song.loadSongs();
+                MusicManager.loadSongs();
                 createAdapter();
                 return true;
             default:
@@ -80,7 +77,7 @@ public class LibraryActivity extends AppCompatActivity {
     }
 
     public void createAdapter(){
-        SongAdapter songAdapter = new SongAdapter(this, Song.songs);
+        SongAdapter songAdapter = new SongAdapter(this, MusicManager.getSongs());
         ListView listView = (ListView) findViewById(R.id.lvLibrary);
         listView.setAdapter(songAdapter);
     }
@@ -125,7 +122,7 @@ public class LibraryActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), SongActivity.class);
                     if (song != null) {
-                        intent.putExtra(Macros.EXTRA_SONG, Song.songs.indexOf(song));
+                        intent.putExtra(Macros.EXTRA_SONG, MusicManager.getSongs().indexOf(song));
                     }
                     Log.d("LibraryActivity", "We lances the intent which contains the song selected");
                     startActivity(intent);

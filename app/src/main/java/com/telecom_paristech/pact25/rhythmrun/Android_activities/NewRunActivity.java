@@ -129,8 +129,7 @@ public class NewRunActivity extends AppCompatActivity {
         final Spinner spinner = (Spinner) findViewById(R.id.newRunMusicSpinner);
         final CheckBox cbMusicRandom = (CheckBox) findViewById(R.id.newRunMusicCheckbox);
 
-        //Setting up the spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.custom_spinner_item, genres);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.custom_spinner_item, MusicManager.getAllGenres());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
