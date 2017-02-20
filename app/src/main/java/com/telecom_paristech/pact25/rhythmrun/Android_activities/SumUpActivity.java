@@ -157,6 +157,15 @@ public class SumUpActivity extends AppCompatActivity {
             printLocation(printStream);
 
             for(RunStatus status : runData){
+                if(status.location==null){
+                    printStream.print("\n"+
+                            status.time+";"+
+                            status.location.latitude+","+
+                            status.location.longitude+","+
+                            status.distance.getValue()+";"+
+                            status.pace.getValue()+";"+
+                            status.heartRate
+                    );}
                 printStream.print("\n"+
                         status.time+";"+
                         status.location.latitude+","+

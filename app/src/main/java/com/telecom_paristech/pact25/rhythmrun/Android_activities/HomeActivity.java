@@ -26,6 +26,8 @@ import com.telecom_paristech.pact25.rhythmrun.R;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private DataManager dataManager;
+
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,8 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        dataManager = new DataManager(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -207,13 +211,15 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public Distance getDistance(){
-        //TODO: calculate week distance
-        return new Distance(42.1);
+        Distance distance = dataManager.getLastWeekDistance();
+        Log.d("Home","Last week distance: "+distance.getValue());
+        return distance;
     }
 
     public Pace getPace(){
-        //TODO: calculate average pace
-        return new Pace(5.6);
+        Pace pace = dataManager.getLastWeekPace();
+        Log.d("Home","Last week pace: "+pace.getValue());
+        return pace;
     }
 
     public interface Callable{

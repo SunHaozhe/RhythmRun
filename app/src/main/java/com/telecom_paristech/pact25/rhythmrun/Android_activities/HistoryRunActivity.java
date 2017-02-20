@@ -1,6 +1,8 @@
 package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,11 +32,15 @@ public class HistoryRunActivity extends AppCompatActivity {
         TextView tvPace = (TextView) findViewById(R.id.historyRunPace);
         TextView tvTime = (TextView) findViewById(R.id.historyRunTime);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String unit = sharedPreferences.getString("unit_list","km");
+        String paceMode = sharedPreferences.getString("pace","p");
+
         Intent intent = getIntent();
         historyItem = intent.getParcelableExtra(Macros.EXTRA_HISTORY_ITEM);
         tvDate.setText(historyItem.getDate());
-        tvDistance.setText(historyItem.getDistance());
-        tvPace.setText(historyItem.getPace());
+        tvDistance.setText(historyItem.getDistance().toStr(unit,true));
+        tvPace.setText(historyItem.getPace().toStr(unit,paceMode,true));
         tvTime.setText(historyItem.getTime());
 
         dataManager = new DataManager(this);

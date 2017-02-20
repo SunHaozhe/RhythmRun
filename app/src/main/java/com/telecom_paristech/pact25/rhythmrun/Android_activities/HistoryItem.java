@@ -6,12 +6,12 @@ import android.os.Parcelable;
 class HistoryItem implements Parcelable{
     private CustomPolylineOptions route;
     private String date;
-    private String distance;
+    private Distance distance;
     private String filename;
     private String time;
-    private String pace;
+    private Pace pace;
 
-    HistoryItem(String filename, String date, String time, String distance, String pace, CustomPolylineOptions route) {
+    HistoryItem(String filename, String date, String time, Distance distance, Pace pace, CustomPolylineOptions route) {
         this.time = time;
         this.route = route;
         this.date = date;
@@ -23,10 +23,10 @@ class HistoryItem implements Parcelable{
     protected HistoryItem(Parcel in) {
         route = in.readParcelable(CustomPolylineOptions.class.getClassLoader());
         date = in.readString();
-        distance = in.readString();
+        distance = in.readParcelable(Distance.class.getClassLoader());
         filename = in.readString();
         time = in.readString();
-        pace = in.readString();
+        pace = in.readParcelable(Pace.class.getClassLoader());
     }
 
     public static final Creator<HistoryItem> CREATOR = new Creator<HistoryItem>() {
@@ -49,7 +49,7 @@ class HistoryItem implements Parcelable{
         return date;
     }
 
-    public String getDistance() {
+    public Distance getDistance() {
         return distance;
     }
 
@@ -61,7 +61,7 @@ class HistoryItem implements Parcelable{
         return time;
     }
 
-    public String getPace() {return pace;}
+    public Pace getPace() {return pace;}
 
     @Override
     public int describeContents() {
@@ -72,9 +72,9 @@ class HistoryItem implements Parcelable{
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeParcelable(route, i);
         parcel.writeString(date);
-        parcel.writeString(distance);
+        parcel.writeParcelable(distance, i);
         parcel.writeString(filename);
         parcel.writeString(time);
-        parcel.writeString(pace);
+        parcel.writeParcelable(pace, i);
     }
 }

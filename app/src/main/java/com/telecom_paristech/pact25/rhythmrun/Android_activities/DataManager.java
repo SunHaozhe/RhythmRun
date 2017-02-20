@@ -3,6 +3,9 @@ package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -14,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DataManager {
@@ -45,19 +49,30 @@ public class DataManager {
         runs = new ArrayList<>();
         runsLoaded = false;
 
-        new Thread(new Runnable() {
+        /*new Thread(new Runnable() {
             @Override
             public void run() {
                 for(String filename: getFileNames()){
                     runs.add(loadRun(filename));
                 }
+                sortRunsByDate();
                 if(onRunsLoadedListener != null){
                     onRunsLoadedListener.onRunsLoaded();
                     onRunsLoadedListener = null;
                 }
                 runsLoaded=true;
             }
-        }).start();
+        }).start();*/
+
+        for(String filename: getFileNames()){
+            runs.add(loadRun(filename));
+        }
+        sortRunsByDate();
+        if(onRunsLoadedListener != null){
+            onRunsLoadedListener.onRunsLoaded();
+            onRunsLoadedListener = null;
+        }
+        runsLoaded=true;
     }
 
     private List<String> getFileNames(){
@@ -152,8 +167,8 @@ public class DataManager {
         return new HistoryItem(filename,
                 date,
                 new Pace(time/60000).toStr(unit,"p",false),
-                distance.toStr(unit,true),
-                pace.toStr(unit,paceMode,true),
+                distance,
+                pace,
                 location);
     }
 
@@ -170,6 +185,21 @@ public class DataManager {
             }
         }
         return polylineOptions;
+    }
+
+    public void sortRunsByDate(){
+        /*
+            Last runs will be at index 0.
+         */
+        for(int i=1;i<runs.size();i++){
+            int j=i;
+            while(j>0 && (runs.get(i).getFilename().compareTo(runs.get(j-1).getFilename())>0)){
+                j-=1;
+            }
+            HistoryItem temp = runs.get(i);
+            runs.set(i,runs.get(j));
+            runs.set(j,temp);
+        }
     }
 
     interface OnRunsLoadedListener{
@@ -201,4 +231,47 @@ public class DataManager {
             success &= deleteSong(run.getFilename());
         return success;
     }
+
+    public List<HistoryItem> getLastWeekRuns(){
+        List<HistoryItem> weekRuns = new ArrayList<>();
+        Log.d("DataManager","Getting last week runs.");
+
+        Calendar calendar = null;
+        calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        Date weekStart = calendar.getTime();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
+        String weekStartString = df.format(weekStart)+".run";
+
+        Log.d("DataManager","Week start string: "+weekStartString);
+
+        for(HistoryItem run: runs){
+            if(run.getFilename().compareTo(weekStartString)>0){
+                Log.v("DataManager","Run in last week: "+run.getFilename());
+                weekRuns.add(run);
+            }
+        }
+        return weekRuns;
+    }
+
+    public Distance getLastWeekDistance(){
+        double distance=0;
+        for(HistoryItem run: getLastWeekRuns())
+            distance += run.getDistance().getValue();
+        return new Distance(distance);
+    }
+
+    public Pace getLastWeekPace(){
+        double pace=0;
+        int counter=0;
+        for(HistoryItem run: getLastWeekRuns()){
+            if(!Double.isInfinite(run.getPace().getValue())){
+                pace += run.getPace().getValue();
+                counter++;
+            }
+        }
+        return new Pace(pace/counter);
+    }
+
 }

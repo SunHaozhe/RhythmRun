@@ -55,6 +55,10 @@ public class HistoryActivity extends AppCompatActivity
         @NonNull
         @Override
         public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String unit = sharedPreferences.getString("unit_list","km");
+            String paceMode = sharedPreferences.getString("pace","p");
+
             Log.d("History","Creating of the history view at position "+position);
 
             //Initialization of an history row layout.
@@ -76,7 +80,7 @@ public class HistoryActivity extends AppCompatActivity
             if(history!=null){
                 Log.v("History","Setting the view content of item "+position+".");
                 viewHolder.date.setText(history.getDate());
-                viewHolder.distance.setText(history.getDistance());
+                viewHolder.distance.setText(history.getDistance().toStr(unit,true));
                 viewHolder.time.setText(history.getTime());
 
                 //Setting up the listener to display full information of a run.
