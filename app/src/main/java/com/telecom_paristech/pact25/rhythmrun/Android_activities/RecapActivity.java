@@ -25,6 +25,8 @@ public class RecapActivity extends AppCompatActivity {
     private View recapBarMusic;
     private Button recapGOButton;
 
+    private DataManager dataManager;
+
     private TranslateAnimation a;
     private TranslateAnimation b;
     private TranslateAnimation c;
@@ -35,6 +37,8 @@ public class RecapActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recap);
+
+        dataManager = new DataManager(this);
 
         //Used for correct display of diagonal bars (depth issues)
         findViewById(R.id.tvRecapLabelDistance).bringToFront();
@@ -236,7 +240,7 @@ public class RecapActivity extends AppCompatActivity {
     }
 
     public boolean isTooMuchEffort(Distance distance, Pace pace){
-        return pace.getValue()<=5;
+        return pace.getValue()<=dataManager.getLastWeekPace().getValue();
     }
 
 }
