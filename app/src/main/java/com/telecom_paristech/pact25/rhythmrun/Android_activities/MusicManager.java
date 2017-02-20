@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.Android_activities;
+package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -6,6 +6,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+
+import com.telecom_paristech.pact25.rhythmrun.Android_activities.Song;
 
 import java.io.File;
 import java.io.IOException;

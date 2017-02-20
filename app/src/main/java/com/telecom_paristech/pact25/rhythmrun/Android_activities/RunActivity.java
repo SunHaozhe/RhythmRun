@@ -3,9 +3,6 @@ package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -26,7 +23,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -273,6 +269,7 @@ public class RunActivity extends AppCompatActivity {
     @Override
     public void onStop(){
         runMapFragment.stopLocationUpdates(); //Stopping location updates.
+        MusicManager.stopPlaying();
         super.onStop();
     }
 
@@ -322,13 +319,6 @@ public class RunActivity extends AppCompatActivity {
          */
         return runMapFragment.getDistance();
 	}
-	
-    @Override
-    public void onStop(){
-        runMapFragment.stopLocationUpdates();
-        MusicManager.stopPlaying();
-        super.onStop();
-    }
 
     private LatLng getPosition(){
         /*

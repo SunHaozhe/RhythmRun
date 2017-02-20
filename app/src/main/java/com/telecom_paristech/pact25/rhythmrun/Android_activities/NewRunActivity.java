@@ -122,14 +122,14 @@ public class NewRunActivity extends AppCompatActivity {
         });
 
         //Getting the list of available genres from the library
-        List<String> genres = Song.getAllGenres();
+        List<String> genres = MusicManager.getAllGenres();
         Log.d("NewRun music",genres.size()+" music genre(s) found");
 
         final TextView tvMusicSelection = (TextView) findViewById(R.id.newRunMusicSelection);
         final Spinner spinner = (Spinner) findViewById(R.id.newRunMusicSpinner);
         final CheckBox cbMusicRandom = (CheckBox) findViewById(R.id.newRunMusicCheckbox);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.custom_spinner_item, MusicManager.getAllGenres());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.custom_spinner_item, genres);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
