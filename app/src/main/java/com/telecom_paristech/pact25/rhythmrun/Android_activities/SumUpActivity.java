@@ -1,6 +1,5 @@
 package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,15 +13,8 @@ import android.widget.TextView;
 
 import com.telecom_paristech.pact25.rhythmrun.R;
 import com.github.aakira.expandablelayout.ExpandableLinearLayout;
-import com.google.android.gms.maps.model.LatLng;
 
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 //TODO: implement the effort display
 
@@ -33,6 +25,7 @@ public class SumUpActivity extends AppCompatActivity {
     private Pace pace; //min/km
     private ArrayList<RunStatus> runData;
     private CustomPolylineOptions route;
+    private DataManager dataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +33,8 @@ public class SumUpActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sum_up);
+
+        dataManager = new DataManager(this);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String unit = sharedPreferences.getString("unit_list","km");
@@ -115,7 +110,7 @@ public class SumUpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.i("SumUp","Saving run selected. Going to HistoryActivity");
                 Intent intent = new Intent(view.getContext(),HistoryActivity.class);
-                writeRunInfo(); //Saving run data in a file.
+                dataManager.writeRunInfo(elapsedTime,distance,pace,runData,route); //Saving run data in a file.
                 startActivity(intent);
             }
         });
@@ -123,74 +118,5 @@ public class SumUpActivity extends AppCompatActivity {
         if(!recordHistory)
             saveButton.setVisibility(View.GONE);
 
-    }
-
-    private void writeRunInfo(){
-
-        /*
-            Writes run data in a .run file, with the following pattern:
-                date
-                time
-                distance
-                pace
-                location: lat,lng;lat,lng;lat,lng; ...
-                run status 1: time;lat,lng;distance;pace;heartRate
-                run status 2: time:lat,lng;distance;pace;heartRate
-                ...
-         */
-
-        DateFormat df = new SimpleDateFormat("yyyy-MM-d-HH-mm-ss", Locale.FRANCE);
-        String date = df.format(Calendar.getInstance().getTime());
-        String filename = date+".run";
-        Log.i("SumUp","Saving run data in "+filename);
-
-        FileOutputStream outputStream;
-        try {
-            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-            PrintStream printStream = new PrintStream(outputStream); //Use of a print stream to write text
-
-            @SuppressWarnings("SpellCheckingInspection") DateFormat df2 = new SimpleDateFormat("EEEE d MMMM yyyy", Locale.FRANCE);
-            printStream.print(df2.format(Calendar.getInstance().getTime())+"\n");
-            printStream.print(elapsedTime+"\n");
-            printStream.print(distance.getValue()+"\n");
-            printStream.print(pace.getValue()+"\n");
-            printLocation(printStream);
-
-            for(RunStatus status : runData){
-                if(status.location==null){
-                    printStream.print("\n"+
-                            status.time+";"+
-                            status.location.latitude+","+
-                            status.location.longitude+","+
-                            status.distance.getValue()+";"+
-                            status.pace.getValue()+";"+
-                            status.heartRate
-                    );}
-                printStream.print("\n"+
-                        status.time+";"+
-                        status.location.latitude+","+
-                        status.location.longitude+","+
-                        status.distance.getValue()+";"+
-                        status.pace.getValue()+";"+
-                        status.heartRate
-                );
-            }
-            outputStream.close();
-            Log.d("SumUp","Run data successfully saved!");
-        } catch (Exception e) {
-            Log.e("SumUp","Error in saving run data.");
-            e.printStackTrace();
-        }
-    }
-
-    private void printLocation(PrintStream ps){
-        //Printing location with the following pattern:
-        //  lat,lng;lat,lng;lat,lng ...
-        if(route.getPolylineOptions().getPoints().size()==0){
-            ps.print(" ");
-        } else {
-            for(LatLng pos : route.getPolylineOptions().getPoints())
-                ps.print(pos.latitude+","+pos.longitude+";");
-        }
     }
 }

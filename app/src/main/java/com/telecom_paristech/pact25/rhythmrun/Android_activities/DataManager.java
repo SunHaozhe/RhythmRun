@@ -1,12 +1,9 @@
 package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -15,26 +12,29 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class DataManager {
+class DataManager {
 
     private static List<HistoryItem> runs;
-    private static boolean runsLoaded=false;
 
     private OnRunsLoadedListener onRunsLoadedListener;
     private final Context context;
 
-    public DataManager(Context context){
+    DataManager(Context context){
         this.context = context;
         if(runs==null)
             loadRuns();
     }
 
-    public List<HistoryItem> getRuns(){
+    List<HistoryItem> getRuns(){
         return runs;
     }
 
@@ -47,22 +47,6 @@ public class DataManager {
             Creating the list of history item from the .run files.
          */
         runs = new ArrayList<>();
-        runsLoaded = false;
-
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for(String filename: getFileNames()){
-                    runs.add(loadRun(filename));
-                }
-                sortRunsByDate();
-                if(onRunsLoadedListener != null){
-                    onRunsLoadedListener.onRunsLoaded();
-                    onRunsLoadedListener = null;
-                }
-                runsLoaded=true;
-            }
-        }).start();*/
 
         for(String filename: getFileNames()){
             runs.add(loadRun(filename));
@@ -72,7 +56,6 @@ public class DataManager {
             onRunsLoadedListener.onRunsLoaded();
             onRunsLoadedListener = null;
         }
-        runsLoaded=true;
     }
 
     private List<String> getFileNames(){
@@ -151,10 +134,6 @@ public class DataManager {
             e.printStackTrace();
         }
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String unit = sharedPreferences.getString("unit_list","km");
-        String paceMode = sharedPreferences.getString("pace","p");
-
         if(distance==null){
             distance = new Distance(0);
             Log.w("DataManager","Distance of "+filename+" is null.");
@@ -166,7 +145,7 @@ public class DataManager {
 
         return new HistoryItem(filename,
                 date,
-                new Pace(time/60000).toStr(unit,"p",false),
+                new Pace(time/60000).toStr("km","p",false),
                 distance,
                 pace,
                 location);
@@ -187,7 +166,7 @@ public class DataManager {
         return polylineOptions;
     }
 
-    public void sortRunsByDate(){
+    private void sortRunsByDate(){
         /*
             Last runs will be at index 0.
          */
@@ -206,7 +185,7 @@ public class DataManager {
         void onRunsLoaded();
     }
 
-    public boolean deleteSong(String filename){
+    boolean deleteSong(String filename){
         boolean deleted=false;
         int i=-1;
         for(int j=0;j<runs.size();j++){
@@ -225,18 +204,18 @@ public class DataManager {
         return deleted;
     }
 
-    public boolean deleteAllSongs(){
+    boolean deleteAllSongs(){
         boolean success = false;
         for(HistoryItem run : runs)
             success &= deleteSong(run.getFilename());
         return success;
     }
 
-    public List<HistoryItem> getLastWeekRuns(){
+    private List<HistoryItem> getLastWeekRuns(){
         List<HistoryItem> weekRuns = new ArrayList<>();
         Log.d("DataManager","Getting last week runs.");
 
-        Calendar calendar = null;
+        Calendar calendar;
         calendar = Calendar.getInstance();
 
         calendar.add(Calendar.DAY_OF_MONTH, -7);
@@ -255,14 +234,14 @@ public class DataManager {
         return weekRuns;
     }
 
-    public Distance getLastWeekDistance(){
+    Distance getLastWeekDistance(){
         double distance=0;
         for(HistoryItem run: getLastWeekRuns())
             distance += run.getDistance().getValue();
         return new Distance(distance);
     }
 
-    public Pace getLastWeekPace(){
+    Pace getLastWeekPace(){
         double pace=0;
         int counter=0;
         for(HistoryItem run: getLastWeekRuns()){
@@ -272,6 +251,85 @@ public class DataManager {
             }
         }
         return new Pace(pace/counter);
+    }
+
+    public void writeRunInfo(double elapsedTime, Distance distance, Pace pace, List<RunStatus> runData, CustomPolylineOptions route){
+        /*
+            Writes run data in a .run file, with the following pattern:
+                date
+                time
+                distance
+                pace
+                location: lat,lng;lat,lng;lat,lng; ...
+                run status 1: time;lat,lng;distance;pace;heartRate
+                run status 2: time:lat,lng;distance;pace;heartRate
+                ...
+         */
+
+        java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-d-HH-mm-ss", Locale.FRANCE);
+        String date = df.format(java.util.Calendar.getInstance().getTime());
+        String filename = date+".run";
+        Log.i("SumUp","Saving run data in "+filename);
+
+        FileOutputStream outputStream;
+        try {
+            outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            PrintStream printStream = new PrintStream(outputStream); //Use of a print stream to write text
+
+            @SuppressWarnings("SpellCheckingInspection") java.text.DateFormat df2 = new java.text.SimpleDateFormat("EEEE d MMMM yyyy", Locale.FRANCE);
+            printStream.print(df2.format(java.util.Calendar.getInstance().getTime())+"\n");
+            printStream.print(elapsedTime+"\n");
+            printStream.print(distance.getValue()+"\n");
+            printStream.print(pace.getValue()+"\n");
+            printLocation(printStream, route);
+
+            for(RunStatus status : runData){
+                if(status.location==null){
+                    printStream.print("\n"+
+                            status.time+";"+
+                            "0,"+
+                            "O,"+
+                            status.distance.getValue()+";"+
+                            status.pace.getValue()+";"+
+                            status.heartRate
+                    );} else {
+                printStream.print("\n"+
+                        status.time+";"+
+                        status.location.latitude+","+
+                        status.location.longitude+","+
+                        status.distance.getValue()+";"+
+                        status.pace.getValue()+";"+
+                        status.heartRate
+                );}
+            }
+            outputStream.close();
+
+            runs.add(new HistoryItem(
+                    filename,
+                    df2.format(java.util.Calendar.getInstance().getTime()),
+                    new Pace(elapsedTime/6000).toStr("km","p",false),
+                    distance,
+                    pace,
+                    route
+            ));
+
+            Log.d("SumUp","Run data successfully saved!");
+        } catch (Exception e) {
+            Log.e("SumUp","Error in saving run data.");
+            e.printStackTrace();
+        }
+
+    }
+
+    private void printLocation(PrintStream ps, CustomPolylineOptions route){
+        //Printing location with the following pattern:
+        //  lat,lng;lat,lng;lat,lng ...
+        if(route.getPolylineOptions().getPoints().size()==0){
+            ps.print(" ");
+        } else {
+            for(LatLng pos : route.getPolylineOptions().getPoints())
+                ps.print(pos.latitude+","+pos.longitude+";");
+        }
     }
 
 }
