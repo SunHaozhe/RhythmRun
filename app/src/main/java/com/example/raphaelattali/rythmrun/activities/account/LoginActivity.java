@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.activities;
+package com.example.raphaelattali.rythmrun.activities.account;
 
 import android.app.ProgressDialog;
 import android.content.Context;

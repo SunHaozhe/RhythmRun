@@ -36,7 +36,8 @@ public class DataSave implements DataSaveInterface {
 
     @Override
     public void tempoDataSave(String songPath, double freq) {
-        TempoDataBase.addSongAndTempo(songPath, freq);
+        // TempoDataBase.addSongAndTempo(songPath, freq);
+        //TODO : résoudre le problème avec addSongAndTempo -> souci de fonction déclarée static
     }
 
     @Override

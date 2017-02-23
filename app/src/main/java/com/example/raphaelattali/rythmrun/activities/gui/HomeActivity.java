@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.example.raphaelattali.rythmrun.Distance;
 import com.example.raphaelattali.rythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
-import com.example.raphaelattali.rythmrun.activities.LoginActivity;
+import com.example.raphaelattali.rythmrun.activities.account.LoginActivity;
 import com.example.raphaelattali.rythmrun.login.SessionConfiguration;
 import com.example.raphaelattali.rythmrun.music.Song;
 

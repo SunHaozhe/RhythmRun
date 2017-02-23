@@ -59,7 +59,7 @@
             android:label="@string/title_activity_about"
             android:parentActivityName=".activities.gui.HomeActivity" />
         <activity
-            android:name=".activities.LoginActivity">
+            android:name=".activities.account.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -73,7 +73,7 @@
         <activity
             android:name=".activities.gui.SumUpActivity"
             android:parentActivityName=".activities.gui.RunActivity" />
-        <activity android:name=".activities.RegisterActivity"></activity>
+        <activity android:name=".activities.account.RegisterActivity"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,6 @@
 package com.example.raphaelattali.rythmrun.test;
 
-import com.example.raphaelattali.rythmrun.activities.LoginActivity;
+import com.example.raphaelattali.rythmrun.activities.account.LoginActivity;
 
 import org.junit.Before;
 
