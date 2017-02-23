@@ -1,5 +1,6 @@
 package com.example.raphaelattali.rythmrun.music;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -10,6 +11,8 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.example.raphaelattali.rythmrun.Pace;
+import com.example.raphaelattali.rythmrun.data.TempoDataBase;
+import com.example.raphaelattali.rythmrun.music.tempo.Tempo;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -27,6 +30,8 @@ public class Song {
     private String path;
     private String genre;
     private String duration;
+    private double freq;
+    Context context;
 
     public static List<Song> songs;
     public static void loadSongs(){
@@ -42,7 +47,7 @@ public class Song {
                 //Adds the song to the list
                 if (file.getName().endsWith(".mp3")) {
                     Log.d("Files", "FileName:" + file.getName());
-                    songs.add(new Song(file));
+                    songs.add(new Song(file));                          //a synchroniser
                 }
             }
         } else {
@@ -101,6 +106,10 @@ public class Song {
         album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
         genre = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
         duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        freq = Tempo.findTempoHzFast(path);
+
+        TempoDataBase db = new TempoDataBase(context);
+        db.addSongAndTempo(path, freq);
 
         if(duration != null)
             duration = Pace.fancyPace(Double.parseDouble(duration)/60000);
@@ -152,5 +161,6 @@ public class Song {
     public boolean hasArt(){
         return bitmap!=null;
     }
+
 
 }

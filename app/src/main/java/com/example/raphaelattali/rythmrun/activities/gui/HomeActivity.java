@@ -73,6 +73,15 @@ public class HomeActivity extends AppCompatActivity
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     PERMISSION_READ_EXTERNAL_STORAGE);
         }
+        
+        Thread thread1 = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                Song.loadSongs();
+            }
+        });
+        thread1.start();
 
         if (Song.songs == null){
             Thread thread = new Thread(new Runnable() {
