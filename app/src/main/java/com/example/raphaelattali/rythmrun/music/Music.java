@@ -10,9 +10,17 @@ package com.example.raphaelattali.rythmrun.music;
  * Ainsi on va pouvoir manipuler de la musique directement
  * et non pas manipuler des fichiers audio
  *
- *  CETTE CLASSE N'EST PEUT ETRE PAS ADAPTEE AU PROJET, ELLE CONSTITUE UNE PREMIERE IDEE
- *  DE LA FACON DONT ON POURRAIT GERER DES BOUTS DE FICHIERS AUDIO
+ *
  */
-public class Music {
 
+public class Music {
+    private byte[] tab;
+
+    public Music(byte[] tab){
+        this.tab = tab;
+    }
+
+    public byte[] getTab() {
+        return tab;
+    }
 }
