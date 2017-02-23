@@ -48,7 +48,7 @@ public class HomeActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this); // TODO : Instruction à revoir
 
         Button buttonNewRun = (Button) findViewById(R.id.buttonHomeNewRun);
         buttonNewRun.setOnClickListener(new View.OnClickListener() {
