@@ -14,13 +14,13 @@ package com.example.raphaelattali.rythmrun.music;
  */
 
 public class Music {
-    private byte[] tab;
+    private double[] tab;
 
-    public Music(byte[] tab){
+    public Music(double[] tab){
         this.tab = tab;
     }
 
-    public byte[] getTab() {
+    public double[] getTab() {
         return tab;
     }
 }
