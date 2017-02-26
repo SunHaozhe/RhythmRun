@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="app/src/main/java"/>
 	<classpathentry kind="src" path="app/src/test/java"/>
 	<classpathentry kind="lib" path="gradle/wrapper/gradle-wrapper.jar"/>
-	<classpathentry kind="lib" path="/Users/sun-haozhe/Desktop/commons-net-1.4.1/commons-net-1.4.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
