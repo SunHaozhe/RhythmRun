@@ -175,12 +175,14 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         int periodeDansLeTableau = (int)(numberOfValues/(paceFrequency*tempsReleves));
         int decalageMax = 0;
         float maxi = 0;
+        float[] derivee = derivee(values[index]);
         for (int decalage = 0, intercorrelation = 0, indice = 0; decalage<periodeDansLeTableau; decalage++) {
             for (int k = 0; (indice = numberOfValues-1 - (int) ((k * numberOfValues) / (paceFrequency * tempsReleves))) >= periodeDansLeTableau; k++) {
                 //if (indice-decalage<0 || indice-decalage>=numberOfValues){
                 //    Log.i("lucas", "nimporte quoi : " + String.valueOf(indice-decalage) + " et " + numberOfValues);
                 //} else {
-                    intercorrelation += values[index][indice - decalage];
+                    //intercorrelation += values[index][indice - decalage];
+                intercorrelation += derivee[indice - decalage];
                 //}
             }
             if (intercorrelation > maxi) {
@@ -204,5 +206,14 @@ public class Podometer implements PodometerInterface, SensorEventListener {
             return b;
         }
         return a;
+    }
+
+    private final float[] derivee(float[] tab) {
+        float[] derivee = new float[tab.length];
+        derivee[0] = tab[0];
+        for (int i = 1; i<tab.length; i++) {
+            derivee[i] = tab[i]-tab[i-1];
+        }
+        return derivee;
     }
 }
