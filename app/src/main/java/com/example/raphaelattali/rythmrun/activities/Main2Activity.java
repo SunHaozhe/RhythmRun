@@ -40,10 +40,12 @@ public class Main2Activity extends AppCompatActivity {
 
     Button test_button = null;
     Button button2 = null;
+    Button button3 = null;
     TextView textview = null;
     private int k = 0;
     private Float pacefreq = 1.0f;
     Context context;
+    boolean boutonPas = false;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -55,7 +57,7 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        int optionsDeDebug = 3;
+        int optionsDeDebug = 0;
         //0 : ecrit les releves de l'accelerometre dans Downloads/donnees.csv
         //1 : affiche la frequence de pas calculee par le podometre
         //2 : calcule le tempo de la musique specifiee dans le thread
@@ -67,6 +69,14 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 k = 1;
+            }
+        });
+
+        button3 = (Button) findViewById(R.id.button3);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boutonPas = true;
             }
         });
 
@@ -113,10 +123,21 @@ public class Main2Activity extends AppCompatActivity {
                         PrintWriter pw = new PrintWriter(file);
                         Log.i("lucas", "on a ouvert le fileoutputstream");
                         String x, y, z;
+                        boolean caacommence = false;
                         while (k == 0) {
                             if (acc.isActive()) {
+                                if (caacommence == false) {
+                                    caacommence = true;
+                                    setTextViewToString("On écoute.");
+                                }
                                 x = String.valueOf(acc.getAx());
-                                y = String.valueOf(acc.getAy());
+                                //y = String.valueOf(acc.getAy());
+                                if (boutonPas) {
+                                    y = "1";
+                                    boutonPas = false;
+                                } else {
+                                    y = "0";
+                                }
                                 z = String.valueOf(acc.getAz());
                                 //oSW.append(x + "," + y + "," + z + "\n");
                                 pw.write(x + "," + y + "," + z + "\n");
@@ -126,6 +147,7 @@ public class Main2Activity extends AppCompatActivity {
                             } catch (InterruptedException e) {
                             }
                         }
+                        setTextViewToString("On écoute plus.");
                         Log.i("lucas", "on est sortis du while");
                         //oSW.flush();
                         //oSW.close();
@@ -305,18 +327,22 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     private final void setTextViewToFreq(float freq) {
-        runOnUiThread(new RunnableForTextView(freq));
+        runOnUiThread(new RunnableForTextView(String.valueOf((int)(freq*60)) + "\nbpm"));
     }
 
     class RunnableForTextView implements Runnable {
-        private float freq;
-        public RunnableForTextView(float freq){
-            this.freq = freq;
+        private String string;
+        public RunnableForTextView(String string){
+            this.string = string;
         }
         @Override
         public void run() {
-            textview.setText(String.valueOf((int)(freq*60)) + "\nbpm");
+            textview.setText(string);
         }
+    }
+
+    private final void setTextViewToString(String string) {
+        runOnUiThread(new RunnableForTextView(string));
     }
 
 }

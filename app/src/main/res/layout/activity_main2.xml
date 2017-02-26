@@ -31,4 +31,10 @@
         android:text="___\nbpm"
         android:gravity="center"/>
 
+    <Button
+        android:text="Bouton pas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button3" />
+
 </LinearLayout>
