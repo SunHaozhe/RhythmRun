@@ -9,7 +9,7 @@ import org.apache.commons.net.ftp.FTPClient;
 
 /**
  * traits the FTP 
- * @author sun-haozhe
+ *
  *
  */
 public class FtpServeur {
