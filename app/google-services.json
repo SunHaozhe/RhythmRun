@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "484304205752",
+    "firebase_url": "https://rhythmrun-2b009.firebaseio.com",
+    "project_id": "rhythmrun-2b009",
+    "storage_bucket": "rhythmrun-2b009.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484304205752:android:2feabfd0a3a8ca26",
+        "android_client_info": {
+          "package_name": "com.telecom_paristech.pact25.rhythmrun"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "484304205752-mfb3tmjc7po500fhv97kg17sl0i67a7a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUH3IQeVMK-aoa7eqnob1-Eca4LyK5gLc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
