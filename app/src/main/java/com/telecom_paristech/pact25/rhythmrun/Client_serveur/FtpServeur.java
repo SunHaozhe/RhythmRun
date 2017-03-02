@@ -21,13 +21,13 @@ public class FtpServeur extends AppCompatActivity {
     Button upload_btn,download_btn;
 
     //work only for Dedicated IP
-    static final String FTP_HOST = "XX.XX.XX.XX"; //TODO
+    static final String FTP_HOST = "93.188.160.186";
 
     //FTP USERNAME
-    static final String FTP_USER = "XXXXXX";  //TODO
+    static final String FTP_USER = "u564168340";  //TODO
 
     //FTP PASSWORD
-    static final String FTP_PASS = "XXXXXX";  //TODO
+    static final String FTP_PASS = "123456";  //TODO
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
