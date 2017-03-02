@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import com.telecom_paristech.pact25.rhythmrun.R;
-import android.view.View.OnClickListener;
 import android.widget.Toast;
 import java.io.File;
 import it.sauronsoftware.ftp4j.FTPClient;
@@ -14,46 +13,48 @@ import it.sauronsoftware.ftp4j.FTPDataTransferListener;
 import it.sauronsoftware.ftp4j.FTPFile;
 import static com.facebook.internal.Utility.deleteDirectory;
 
-
 /**
- * Traits the FTP server
+ * Traits the FTP server, for now, just download function has been implemented
  */
-public class FtpServeur extends AppCompatActivity implements OnClickListener {
-    /*********
-     * work only for Dedicated IP
-     ***********/
+public class FtpServeur extends AppCompatActivity {
+
+    Button upload_btn,download_btn;
+
+    //work only for Dedicated IP
     static final String FTP_HOST = "XX.XX.XX.XX"; //TODO
 
-    /*********
-     * FTP USERNAME
-     ***********/
+    //FTP USERNAME
     static final String FTP_USER = "XXXXXX";  //TODO
 
-    /*********
-     * FTP PASSWORD
-     ***********/
+    //FTP PASSWORD
     static final String FTP_PASS = "XXXXXX";  //TODO
-
-    Button upload_btn, download_btn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ftpserveur);
         try {
-            upload_btn = (Button) findViewById(R.id.button_send_ftp);
-            upload_btn.setOnClickListener(this);
+            upload_btn= (Button) findViewById(R.id.button_send_ftp);
+            upload_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO
+                    Toast.makeText(FtpServeur.this,"Sorry, upload function has not yet been implemented.",Toast.LENGTH_LONG).show();
+
+                }
+            });
             download_btn = (Button) findViewById(R.id.button_download_ftp);
-            download_btn.setOnClickListener(this);
+            download_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    downloadStart();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
 
     private void downloadStart() {
         FTPClient ftp = new FTPClient();
@@ -64,10 +65,9 @@ public class FtpServeur extends AppCompatActivity implements OnClickListener {
                 StrictMode.setThreadPolicy(policy);
             }
             ftp.connect(FTP_HOST,21);
-            //System.out.println(ftp.connect(host)[0]);
             ftp.login(FTP_USER, FTP_PASS);
 
-            //If change occurs in perticular language then first delete folder from sdcard, also pass which language contains change.
+            //If change occurs in particular language then first delete folder from sdcard, also pass which language contains change.
             File dirStructure = new File("PATH"); //TODO
             deleteDirectory(dirStructure);
 
@@ -81,7 +81,7 @@ public class FtpServeur extends AppCompatActivity implements OnClickListener {
             FTPFile[] arrEnglishContent = ftp.list("PATH"); //TODO ftp file path. Example : FTPFile[] arrEnglishContent = ftp.list("FTPFolder/Sample/Main");
 
             //as per requirement apply some cases to download single file at time
-            String fileName="";
+            String fileName = null;
             File fileDownload = null;
 
             for (int i = 0; i < arrEnglishContent.length; i++) {
@@ -103,7 +103,6 @@ public class FtpServeur extends AppCompatActivity implements OnClickListener {
                 e2.printStackTrace();
             }
         }
-
     }
 
     private void startActualFileDownload(String ftpFileDonwnloadPath,FTPClient ftp, File sdcardFileDownloadPath){
@@ -143,50 +142,6 @@ public class FtpServeur extends AppCompatActivity implements OnClickListener {
                     });
         } catch (Exception e) {
             e.toString();
-        }
-    }
-
-    //Sets up a FTPDataTransferListener to show progress
-    public class MyTransferListener implements FTPDataTransferListener {
-
-        public void started() {
-
-            upload_btn.setVisibility(View.GONE);
-            // Transfer started
-            Toast.makeText(getBaseContext(), " Upload Started ...", Toast.LENGTH_SHORT).show();
-            //System.out.println(" Upload Started ...");
-        }
-
-        public void transferred(int length) {
-
-            // Yet other length bytes has been transferred since the last time this
-            // method was called
-            Toast.makeText(getBaseContext(), " transferred ..." + length, Toast.LENGTH_SHORT).show();
-            //System.out.println(" transferred ..." + length);
-        }
-
-        public void completed() {
-
-            upload_btn.setVisibility(View.VISIBLE);
-            // Transfer completed
-
-            Toast.makeText(getBaseContext(), " completed ...", Toast.LENGTH_SHORT).show();
-            //System.out.println(" completed ..." );
-        }
-
-        public void aborted() {
-
-            upload_btn.setVisibility(View.VISIBLE);
-            // Transfer aborted
-            Toast.makeText(getBaseContext()," transfer aborted,please try again...", Toast.LENGTH_SHORT).show();
-            //System.out.println(" aborted ..." );
-        }
-
-        public void failed() {
-
-            upload_btn.setVisibility(View.VISIBLE);
-            // Transfer failed
-            System.out.println(" failed ..." );
         }
     }
 }
