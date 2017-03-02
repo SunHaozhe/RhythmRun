@@ -1,4 +1,4 @@
-package com.telecom_paristech.pact25.rhythmrun.login;
+package com.telecom_paristech.pact25.rhythmrun.Client_serveur.login;
 
 import android.content.ContentValues;
 import android.content.Context;

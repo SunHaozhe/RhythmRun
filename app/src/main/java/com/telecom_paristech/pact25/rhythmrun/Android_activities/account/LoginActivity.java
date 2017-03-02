@@ -19,9 +19,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.telecom_paristech.pact25.rhythmrun.R;
 import com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity;
 import com.telecom_paristech.pact25.rhythmrun.app_config.AppConfig;
-import com.telecom_paristech.pact25.rhythmrun.login.AppModified;
-import com.telecom_paristech.pact25.rhythmrun.login.SQLLiteUser;
-import com.telecom_paristech.pact25.rhythmrun.login.SessionConfiguration;
+import com.telecom_paristech.pact25.rhythmrun.Client_serveur.login.AppModified;
+import com.telecom_paristech.pact25.rhythmrun.Client_serveur.login.SQLLiteUser;
+import com.telecom_paristech.pact25.rhythmrun.Client_serveur.login.SessionConfiguration;
 
 import org.json.JSONException;
 import org.json.JSONObject;

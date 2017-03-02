@@ -1,4 +1,4 @@
-package com.telecom_paristech.pact25.rhythmrun.login;
+package com.telecom_paristech.pact25.rhythmrun.Client_serveur.login;
 
 /**
  * Created by Raphael Attali on 31/01/2017.
