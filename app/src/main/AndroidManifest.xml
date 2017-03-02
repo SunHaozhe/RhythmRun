@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
+        android:name=".Client_serveur.login.AppModified"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
@@ -26,11 +27,7 @@
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.NewRunActivity"
@@ -81,9 +78,6 @@
             android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.LoginActivity"
-            android:label="@string/title_activity_login" />
-        <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_historique"
@@ -101,6 +95,16 @@
             android:label="@string/title_activity_history_run"
             android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryActivity"
             android:screenOrientation="portrait"/>
+
+        <activity android:name=".Android_activities.account.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Android_activities.account.RegisterActivity"/>
+
     </application>
+
 
 </manifest>

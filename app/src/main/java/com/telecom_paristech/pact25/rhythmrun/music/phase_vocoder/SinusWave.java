@@ -10,7 +10,7 @@ package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
  * Hérite de PeriodicWave
  *
  * @see PeriodicWave
- * @see FourierAnalysis
+ * @see FastFourierTransform
  * @see PhaseVocoder
  *
  * @author Raphael Attali

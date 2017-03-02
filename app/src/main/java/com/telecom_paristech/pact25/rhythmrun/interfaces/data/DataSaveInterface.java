@@ -11,7 +11,7 @@ package com.telecom_paristech.pact25.rhythmrun.interfaces.data;
 import android.media.Image;
 
 /**
- * Les fonctions de cette interface ont été trouvées avec l'aide de Haozhe Sun
+ * Les fonctions de cette interface ont été trouvées avec l'aide de Haozhe Sun et Clément Robin
  */
 
 public interface DataSaveInterface {
@@ -29,6 +29,12 @@ public interface DataSaveInterface {
 
     // Déterminer le nombre de données maximales enregistrées
     void setDataMax(int dataMax);
+
+    // Sauvegarder le tempo et le chemin d'accès d'un morceau
+    void tempoDataSave(String songPath, double freq);
+
+    // Récupération du tempo d'un musique
+    double tempoData(String songPath);
 
 
 }
