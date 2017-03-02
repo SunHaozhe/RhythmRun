@@ -10,7 +10,7 @@ import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.util.Log;
 
-import com.telecom_paristech.pact25.rhythmrun.Pace;
+import com.telecom_paristech.pact25.rhythmrun.Android_activities.Pace;
 import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
 import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
 

@@ -2,6 +2,7 @@ package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class Pace implements Parcelable {
     private double value; //min/km
@@ -22,8 +23,14 @@ public class Pace implements Parcelable {
         }
     };
 
-    static String fancyPace(double d){
-        int sec = Integer.parseInt(Double.toString(d*60).substring(0,Double.toString(d*60).indexOf(".")));
+    public static String fancyPace(double d){
+        int sec;
+
+        int index = Double.toString(d*60).indexOf(".");
+        Log.d("FANCY",String.valueOf(d));
+        if (index==-1) sec = Integer.parseInt(Double.toString(d*60));
+        else sec = Integer.parseInt(Double.toString(d*60).substring(0,Double.toString(d*60).indexOf(".")));
+
         int hrs = sec/3600;
         int min = (sec-(3600*hrs))/60;
         sec = sec-(3600*hrs)-(60*min);
