@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Rhythm Run</string>
 
+    <string name="app_subtitle">Follow the beat</string>
+
     <string name="title_activity_home">Rhythm Run</string>
     <string name="home_distance_this_week">this week</string>
     <string name="home_average_pace">average pace</string>
@@ -20,24 +22,20 @@
 
     <string name="home_new_run">New Run</string>
     <string name="title_activity_new_run">New Run</string>
-
-    <string name="pace_your_speed">YOUR SPEED</string>
-    <string name="pace_your_pace">YOUR PACE</string>
-    <string name="pace_your_distance">YOUR DISTANCE</string>
-    <string name="pace_selected_itinerary">Selected itinerary</string>
-    <string name="pace_estimated_time">Estimated time</string>
-
-    <string name="music_choose_style">Choose your style:</string>
-    <string name="music_random">Random</string>
-    <string name="music_no_files_found">No song found.</string>
-    <string name="music_files_found">%1$d song(s) found.</string>
+    <string name="new_run_pace">Pace</string>
+    <string name="new_run_speed">Speed</string>
+    <string name="new_run_itinerary">Itinerary</string>
+    <string name="new_run_music">Music</string>
+    <string name="new_run_random">Random</string>
+    <string name="new_run_free">Free</string>
+    <string name="new_run_delete_marker">Delete marker</string>
+    <string name="new_run_route">Route</string>
 
     <string name="title_activity_recap">Recap</string>
-    <string name="recap_of_your_run">RECAP OF YOUR RUN</string>
-    <string name="recap_selected_pace">Selected pace:</string>
-    <string name="recap_selected_speed">Selected speed:</string>
-    <string name="recap_selected_distance">Selected distance:</string>
-    <string name="recap_selected_music">Selected music:</string>
+    <string name="recap_selected_pace">Pace</string>
+    <string name="recap_selected_speed">Speed</string>
+    <string name="recap_selected_distance">Distance</string>
+    <string name="recap_selected_music">Music</string>
     <string name="recap_free">Free</string>
     <string name="recap_button_go">GO</string>
     <string name="recap_warning">Warning: this might be too hard for you! Consider
@@ -46,6 +44,8 @@
     <string name="title_activity_run">Run</string>
     <string name="run_play">Play</string>
     <string name="run_pause">Pause</string>
+    <string name="run_heart_rate">%1$.0f Hz</string>
+    <string name="run_bpm">%1$d bpm</string>
 
     <string name="title_activity_library">Library</string>
     <string name="menu_library_refresh">Refresh</string>
@@ -85,5 +85,9 @@
     <string name="title_activity_login">Sign in</string>
 
     <string name="title_activity_historique">Activity</string>
+
+    <string name="title_activity_sum_up">Last Run</string>
+
+    <string name="title_activity_history_run">Activity</string>
 
 </resources>

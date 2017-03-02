@@ -12,78 +12,118 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:gravity="center_horizontal"
+    android:background="@drawable/background"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.raphaelattali.rythmrun.activities.gui.HomeActivity"
+    tools:context="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
     tools:showIn="@layout/app_bar_home" >
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp">
+        app:cardCornerRadius="2dp"
+        app:cardElevation="3dp"
+        android:layout_marginBottom="10dp">
 
-        <TextView
-            android:id="@+id/tvHomeDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/colorBold"
-            android:textSize="60sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
 
-        <TextView
-            android:id="@+id/tvHomeDistanceUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tvHomeDistance"
-            android:layout_alignBaseline="@id/tvHomeDistance"
-            android:textColor="@color/colorBold"
-            android:textSize="30sp"/>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:textColor="@color/textPrimary"
+                android:textAllCaps="true"
+                android:textStyle="italic"
+                android:text="@string/home_distance_this_week"/>
 
-    </RelativeLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    <TextView
+                <TextView
+                    android:id="@+id/tvHomeDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="60sp"/>
+
+                <TextView
+                    android:id="@+id/tvHomeDistanceUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="30sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/home_distance_this_week"/>
+        app:cardCornerRadius="2dp"
+        app:cardElevation="3dp"
+        android:layout_marginBottom="50dp">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
 
-        <TextView
-            android:id="@+id/tvHomePace"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/colorBold"
-            android:textSize="60sp" />
+            <TextView
+                android:id="@+id/tvHomeAveragePace"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:textColor="@color/textPrimary"
+                android:textAllCaps="true"
+                android:textStyle="italic"
+                android:text="@string/home_average_pace"/>
 
-        <TextView
-            android:id="@+id/tvHomePaceUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tvHomePace"
-            android:layout_alignBaseline="@id/tvHomePace"
-            android:textColor="@color/colorBold"
-            android:textSize="30sp" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/tvHomePace"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBold"
+                    android:textSize="60sp" />
 
-    <TextView
-        android:id="@+id/tvHomeAveragePace"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/home_average_pace"/>
+                <TextView
+                    android:id="@+id/tvHomePaceUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBold"
+                    android:textSize="30sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
     <Button
         android:id="@+id/buttonHomeNewRun"
-        android:layout_marginTop="50dp"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@drawable/round_shape_btn"
-        android:textColor="#FFFFFF"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textSecondary"
+        android:background="@drawable/new_run_button"
+        android:fontFamily="@string/font_family_black"
+        android:textStyle="italic"
+        android:textSize="40sp"
         android:text="@string/home_new_run"/>
 
 </LinearLayout>

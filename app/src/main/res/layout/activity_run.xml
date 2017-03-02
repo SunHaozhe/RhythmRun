@@ -1,42 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_run"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="com.example.raphaelattali.rythmrun.activities.gui.RunActivity">
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/buttonRunPlay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="@string/run_play" />
-
-        <Chronometer
-            android:id="@+id/chronometer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorBold"
-            android:layout_gravity="center_vertical"
-            android:textSize="32sp"/>
-
-    </LinearLayout>
+    android:layout_height="match_parent">
 
     <fragment
+        android:id="@+id/fragmentRun"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.RunMapFragment" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/dataView"
+        android:layout_width="fill_parent"
+        android:layout_height="52dp"
+        android:layout_alignParentBottom="true"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ImageButton
+                android:id="@+id/runToggleButton"
+                android:layout_width="fill_parent"
+                android:layout_height="52dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_expand_less_black_24dp"
+                android:tint="@color/primary"
+                android:background="@android:color/transparent"/>
+
+            <Chronometer
+                android:id="@+id/chronometer"
+                android:layout_width="fill_parent"
+                android:layout_height="52dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:background="@color/primary"
+                android:layout_below="@id/runToggleButton"
+                android:textSize="32sp"
+                android:textColor="@color/textSecondary" />
+
+            <LinearLayout
+                android:id="@+id/runLayout1"
+                android:layout_width="fill_parent"
+                android:layout_height="52dp"
+                android:layout_below="@id/chronometer"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:weightSum="3"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/runDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textPrimary"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:textSize="17sp"/>
+
+                <TextView
+                    android:id="@+id/runPace"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textPrimary"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:textSize="17sp"/>
+
+                <TextView
+                    android:id="@+id/runHeartRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textPrimary"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textSize="17sp"/>
+
+                <!---->
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/runSeparator1"
+                android:layout_below="@id/runLayout1"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/primary"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/runSeparator1"
+                android:paddingTop="20dp"
+                android:paddingLeft="20dp"
+                android:layout_marginRight="70dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:text="Currently playing"/>
+
+                <TextView
+                    android:id="@+id/runCurrentSong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="17sp"/>
+
+                <TextView
+                    android:id="@+id/runBPM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textLight"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/runPlay"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:name="com.example.raphaelattali.rythmrun.activities.gui.RunMapFragment"
-        android:id="@+id/fragmentRun" />
+        android:src="@drawable/ic_play_arrow_black_24dp"
+        app:backgroundTint="@color/primary"
+        android:tint="@color/textSecondary"/>
 
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/runStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/runPlay"
+        android:layout_above="@id/runPlay"
+        android:src="@drawable/ic_stop_black_24dp"
+        app:backgroundTint="@color/primary"
+        android:tint="@color/textSecondary"/>
+
+</RelativeLayout>
