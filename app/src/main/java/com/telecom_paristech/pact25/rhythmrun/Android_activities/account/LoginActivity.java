@@ -1,4 +1,4 @@
-package com.telecom_paristech.pact25.rhythmrun.activities.account;
+package com.telecom_paristech.pact25.rhythmrun.Android_activities.account;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,7 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.telecom_paristech.pact25.rhythmrun.R;
-import com.telecom_paristech.pact25.rhythmrun.activities.gui.HomeActivity;
+import com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity;
 import com.telecom_paristech.pact25.rhythmrun.app_config.AppConfig;
 import com.telecom_paristech.pact25.rhythmrun.login.AppModified;
 import com.telecom_paristech.pact25.rhythmrun.login.SQLLiteUser;

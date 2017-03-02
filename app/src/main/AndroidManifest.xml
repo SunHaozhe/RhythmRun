@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.telecom_paristech.pact25.rhythmrun">
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -10,7 +9,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
-        android:name=".login.AppModified"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
@@ -28,6 +26,7 @@
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.NewRunActivity"
@@ -42,17 +41,10 @@
             android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.NewRunActivity"
             android:screenOrientation="portrait" />
         <activity
-<<<<<<< HEAD
-            android:name=".activities.gui.RunActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_activity_run"
-            android:parentActivityName=".activities.gui.HomeActivity"
-=======
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.RunActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_run"
             android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
->>>>>>> distant_server/master
             android:screenOrientation="portrait" />
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SettingsActivity"
@@ -69,10 +61,6 @@
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SongActivity"
             android:label="@string/title_activity_library"
-<<<<<<< HEAD
-            android:parentActivityName=".activities.gui.LibraryActivity" />
-        <activity android:name=".activities.gui.BluetoothActivity" />
-=======
             android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.LibraryActivity" />
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.BluetoothActivity"
@@ -82,7 +70,6 @@
             android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.FtpTestActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
->>>>>>> distant_server/master
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.AboutActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -90,23 +77,8 @@
             android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-<<<<<<< HEAD
-            android:name=".activities.account.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".activities.gui.HistoriqueActivity"
-=======
-            android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.LoginActivity"
-            android:label="@string/title_activity_login" />
-        <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryActivity"
             android:configChanges="orientation|keyboardHidden"
->>>>>>> distant_server/master
             android:label="@string/title_activity_historique"
             android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
@@ -117,17 +89,21 @@
             android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-<<<<<<< HEAD
-            android:name=".activities.gui.SumUpActivity"
-            android:parentActivityName=".activities.gui.RunActivity" />
-        <activity android:name=".activities.account.RegisterActivity"></activity>
-=======
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryRunActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_history_run"
             android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryActivity"
             android:screenOrientation="portrait"/>
->>>>>>> distant_server/master
+
+        <activity android:name=".Android_activities.account.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Android_activities.account.RegisterActivity"/>
+
     </application>
+
 
 </manifest>
