@@ -158,6 +158,8 @@ public class Song {
         return new ColorDrawable(color);
     }
 
+    public double getFreq(){return freq;}
+
     public boolean hasArt(){
         return bitmap!=null;
     }

@@ -27,21 +27,20 @@ import ru.sscc.spline.polynomial.PSplineCalculator;
  * Classe permettant d'accélérer/de ralentir une chanson. Attention, le résultat ne sera pas agréable à l'oreille si
  * les différences de vitesse sont de plus de 20-30%
  */
-public class SongSpeedChanger implements PhaseVocoderInterface {
+public class SongSpeedChanger {
 
 
     WavFile file;
 
-    @Override
     public Music modifyMusicToFitTempo(Song song, float tempo) {
 
         String path = song.getPath();
 
-        double[] musicTab = song.getPath();
+        double musicTab = song.getFreq();
 
 
         LinearInterpolator interpolator = new LinearInterpolator();
-        PolynomialSplineFunction f = interpolator.interpolate(musicTab,song.getYTab());
+        PolynomialSplineFunction f = interpolator.interpolate(null,null);
 
 
         return null;
