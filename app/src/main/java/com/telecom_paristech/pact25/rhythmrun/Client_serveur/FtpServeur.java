@@ -28,6 +28,8 @@ public class FtpServeur extends AppCompatActivity {
 
     Button upload_btn,download_btn;
     static final int FTP_Port = 21;
+    static final String nameOfHost = "ftp.sunjing.pe.hu";
+    static final String uploadFileDirectory = "public_html";
 
     //work only for Dedicated IP
     static final String FTP_HOST = "93.188.160.186";
