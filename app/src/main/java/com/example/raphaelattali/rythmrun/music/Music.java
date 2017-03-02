@@ -4,6 +4,8 @@ package com.example.raphaelattali.rythmrun.music;
  * Created by Raphael Attali on 01/12/2016.
  */
 
+import com.example.raphaelattali.rythmrun.music.waveFileReaderLib.WavFile;
+
 /**
  * La classe Music représente une partie d'un morceau audio
  *
@@ -14,13 +16,21 @@ package com.example.raphaelattali.rythmrun.music;
  */
 
 public class Music {
-    private double[] tab;
 
-    public Music(double[] tab){
-        this.tab = tab;
+    private double[] xTab;
+    private double[] yTab;
+
+    public Music(double[] xTab){
+             this.xTab = xTab;
+             this.yTab = new double[xTab.length];
     }
 
-    public double[] getTab() {
-        return tab;
+    public double[] getXTab() {
+        return xTab;
+    }
+
+
+    public double[] getYTab() {
+        return yTab;
     }
 }

@@ -7,10 +7,21 @@ package com.example.raphaelattali.rythmrun.music.phase_vocoder;
  */
 
 
+import android.graphics.Interpolator;
+
 import com.example.raphaelattali.rythmrun.interfaces.music.PhaseVocoderInterface;
 import com.example.raphaelattali.rythmrun.music.Music;
+import com.example.raphaelattali.rythmrun.music.Song;
+import com.example.raphaelattali.rythmrun.music.waveFileReaderLib.WavFile;
 
+import org.apache.commons.math3.analysis.interpolation.InterpolatingMicrosphere;
+import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
+import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
+import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import org.apache.commons.math3.complex.Complex;
+
+import ru.sscc.spline.polynomial.PSplineCalculator;
 
 /**
  * Classe permettant d'accélérer/de ralentir une chanson. Attention, le résultat ne sera pas agréable à l'oreille si
@@ -19,11 +30,19 @@ import org.apache.commons.math3.complex.Complex;
 public class SongSpeedChanger implements PhaseVocoderInterface {
 
 
-    @Override
-    public Music modifyMusicToFitTempo(Music music, float tempo) {
+    WavFile file;
 
-        double[] musicTab = music.getTab();
-        Complex[] fft = FastFourierTransform.fft(musicTab);
+    @Override
+    public Music modifyMusicToFitTempo(Song song, float tempo) {
+
+        String path = song.getPath();
+
+        double[] musicTab = song.getPath();
+
+
+        LinearInterpolator interpolator = new LinearInterpolator();
+        PolynomialSplineFunction f = interpolator.interpolate(musicTab,song.getYTab());
+
 
         return null;
     }
