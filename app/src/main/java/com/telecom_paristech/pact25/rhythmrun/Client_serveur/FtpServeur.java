@@ -1,49 +1,38 @@
 package com.telecom_paristech.pact25.rhythmrun.Client_serveur;
 
-import android.annotation.TargetApi;
-import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-
 import com.telecom_paristech.pact25.rhythmrun.R;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
-
-
 import java.io.File;
-
 import it.sauronsoftware.ftp4j.FTPClient;
 import it.sauronsoftware.ftp4j.FTPDataTransferListener;
 import it.sauronsoftware.ftp4j.FTPFile;
-
 import static com.facebook.internal.Utility.deleteDirectory;
 
 
 /**
- * traits the FTP
- *
- *
+ * Traits the FTP server
  */
-@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class FtpServeur extends AppCompatActivity implements OnClickListener {
     /*********
      * work only for Dedicated IP
      ***********/
-    static final String FTP_HOST = "XX.XX.XX.XX";
+    static final String FTP_HOST = "XX.XX.XX.XX"; //TODO
 
     /*********
      * FTP USERNAME
      ***********/
-    static final String FTP_USER = "XXXXXX";
+    static final String FTP_USER = "XXXXXX";  //TODO
 
     /*********
      * FTP PASSWORD
      ***********/
-    static final String FTP_PASS = "XXXXXX";
+    static final String FTP_PASS = "XXXXXX";  //TODO
 
     Button upload_btn, download_btn;
 
@@ -59,8 +48,6 @@ public class FtpServeur extends AppCompatActivity implements OnClickListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -81,7 +68,7 @@ public class FtpServeur extends AppCompatActivity implements OnClickListener {
             ftp.login(FTP_USER, FTP_PASS);
 
             //If change occurs in perticular language then first delete folder from sdcard, also pass which language contains change.
-            File dirStructure = new File("/sdcard/Nikhil/Test/");
+            File dirStructure = new File("PATH"); //TODO
             deleteDirectory(dirStructure);
 
             //cross check folder deleted or not, if not exist then create same folder at same location,
@@ -91,13 +78,13 @@ public class FtpServeur extends AppCompatActivity implements OnClickListener {
             }
 
             //fetch file contents from ftp directory
-            FTPFile[] arrEnglishContent = ftp.list("ftp file path");
-            //example:
-            //FTPFile[] arrEnglishContent = ftp.list("FTPFolder/Sample/Main");
+            FTPFile[] arrEnglishContent = ftp.list("PATH"); //TODO ftp file path. Example : FTPFile[] arrEnglishContent = ftp.list("FTPFolder/Sample/Main");
 
             //as per requirement apply some cases to download single file at time
             String fileName="";
-            File fileDownload = null;for (int i = 0; i < arrEnglishContent.length; i++) {
+            File fileDownload = null;
+
+            for (int i = 0; i < arrEnglishContent.length; i++) {
                 int indexOFEqual = arrEnglishContent[i].toString().indexOf("=");
                 int indexOfSWF = arrEnglishContent[i].toString().indexOf(".txt");
                 fileName = arrEnglishContent[i].toString().substring(indexOFEqual+1, indexOfSWF)+".txt";
@@ -156,6 +143,50 @@ public class FtpServeur extends AppCompatActivity implements OnClickListener {
                     });
         } catch (Exception e) {
             e.toString();
+        }
+    }
+
+    //Sets up a FTPDataTransferListener to show progress
+    public class MyTransferListener implements FTPDataTransferListener {
+
+        public void started() {
+
+            upload_btn.setVisibility(View.GONE);
+            // Transfer started
+            Toast.makeText(getBaseContext(), " Upload Started ...", Toast.LENGTH_SHORT).show();
+            //System.out.println(" Upload Started ...");
+        }
+
+        public void transferred(int length) {
+
+            // Yet other length bytes has been transferred since the last time this
+            // method was called
+            Toast.makeText(getBaseContext(), " transferred ..." + length, Toast.LENGTH_SHORT).show();
+            //System.out.println(" transferred ..." + length);
+        }
+
+        public void completed() {
+
+            upload_btn.setVisibility(View.VISIBLE);
+            // Transfer completed
+
+            Toast.makeText(getBaseContext(), " completed ...", Toast.LENGTH_SHORT).show();
+            //System.out.println(" completed ..." );
+        }
+
+        public void aborted() {
+
+            upload_btn.setVisibility(View.VISIBLE);
+            // Transfer aborted
+            Toast.makeText(getBaseContext()," transfer aborted,please try again...", Toast.LENGTH_SHORT).show();
+            //System.out.println(" aborted ..." );
+        }
+
+        public void failed() {
+
+            upload_btn.setVisibility(View.VISIBLE);
+            // Transfer failed
+            System.out.println(" failed ..." );
         }
     }
 }
