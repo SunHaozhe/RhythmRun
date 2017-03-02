@@ -46,5 +46,4 @@ dependencies {
     //compile 'com.cocosw:bottomsheet:1.+@aar'
 
     testCompile 'junit:junit:4.12'
-    compile files('/Users/sun-haozhe/Documents/java workspace/rattali-rhythm_run/commons-net-1.4.1.jar')
 }
