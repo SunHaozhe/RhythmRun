@@ -3,9 +3,9 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '25.0.1'
+    buildToolsVersion '25.0.2'
     defaultConfig {
-        applicationId "com.telecom_paristech.pact25.rhythmrunn"
+        applicationId "com.telecom_paristech.pact25.rhythmrun"
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
@@ -45,6 +45,6 @@ dependencies {
     compile 'com.github.aakira:expandable-layout:1.5.1@aar'
     //compile 'com.cocosw:bottomsheet:1.+@aar'
 
+    compile 'com.github.aakira:expandable-layout:1.5.1@aar'
     testCompile 'junit:junit:4.12'
-    compile files('/Users/sun-haozhe/Documents/java workspace/rattali-rhythm_run/commons-net-1.4.1.jar')
 }
