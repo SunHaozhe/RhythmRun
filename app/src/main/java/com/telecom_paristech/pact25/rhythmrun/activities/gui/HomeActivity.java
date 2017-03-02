@@ -21,8 +21,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.raphaelattali.rythmrun.Distance;
-import com.example.raphaelattali.rythmrun.Pace;
+import com.telecom_paristech.pact25.rhythmrun.Distance;
+import com.telecom_paristech.pact25.rhythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
 import com.example.raphaelattali.rythmrun.activities.account.LoginActivity;
 import com.example.raphaelattali.rythmrun.login.SessionConfiguration;

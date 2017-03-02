@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun;
+package com.telecom_paristech.pact25.rhythmrun;
 
 public class Distance {
     public final static double KM_TO_MI = 0.621371;

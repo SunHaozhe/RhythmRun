@@ -14,8 +14,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.raphaelattali.rythmrun.Distance;
-import com.example.raphaelattali.rythmrun.Pace;
+import com.telecom_paristech.pact25.rhythmrun.Distance;
+import com.telecom_paristech.pact25.rhythmrun.Pace;
 import com.example.raphaelattali.rythmrun.R;
 
 public class RecapActivity extends AppCompatActivity {

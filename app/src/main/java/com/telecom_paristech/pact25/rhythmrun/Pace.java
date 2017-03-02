@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun;
+package com.telecom_paristech.pact25.rhythmrun;
 
 public class Pace {
     private double value; //min/km

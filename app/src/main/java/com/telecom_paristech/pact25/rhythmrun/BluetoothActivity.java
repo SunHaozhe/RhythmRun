@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.activities;
+package com.telecom_paristech.pact25.rhythmrun;
 
 import android.app.Activity;
 import android.os.Bundle;
