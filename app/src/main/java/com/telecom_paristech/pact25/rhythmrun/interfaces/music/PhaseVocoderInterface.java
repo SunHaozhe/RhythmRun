@@ -1,17 +1,17 @@
-package com.example.raphaelattali.rythmrun.interfaces.music;
+package com.telecom_paristech.pact25.rhythmrun.interfaces.music;
 
 /**
  * Created by Raphael Attali on 01/12/2016.
  *
  */
 
-import com.example.raphaelattali.rythmrun.music.Music;
+import com.telecom_paristech.pact25.rhythmrun.music.Music;
 
 /**
  * Interface liée au vocodeur de phase
  * Il faut qu'il puisse modifier la musique et la renvoyer
  *
- * @see com.example.raphaelattali.rythmrun.music.phase_vocoder.PhaseVocoder
+ * @see com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.PhaseVocoder
  *
  * @author Raphael Attali
  * @version 1.0

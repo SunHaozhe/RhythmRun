@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.interfaces.data;
+package com.telecom_paristech.pact25.rhythmrun.interfaces.data;
 
 /**
  * Created by Raphael Attali on 01/12/2016.

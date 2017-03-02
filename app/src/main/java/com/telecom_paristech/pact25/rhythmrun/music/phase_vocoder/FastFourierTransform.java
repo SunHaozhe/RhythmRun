@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.music.phase_vocoder;
+package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
 
 /**
  * Created by Raphael Attali on 07/12/2016.

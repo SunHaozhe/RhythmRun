@@ -1,6 +1,6 @@
-package com.example.raphaelattali.rythmrun.Health;
+package com.telecom_paristech.pact25.rhythmrun.Health;
 
-import com.example.raphaelattali.rythmrun.interfaces.Health.EtatReductInterface;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.Health.EtatReductInterface;
 
 /**
  * Created by ClemSurfaceBook on 30/01/2017.

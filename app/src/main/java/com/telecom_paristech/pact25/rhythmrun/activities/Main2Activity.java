@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.activities;
+package com.telecom_paristech.pact25.rhythmrun.activities.;
 
 import android.Manifest;
 import android.content.Context;
@@ -13,10 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.raphaelattali.rythmrun.R;
-import com.example.raphaelattali.rythmrun.music.tempo.Tempo;
-import com.example.raphaelattali.rythmrun.sensors.Accelerometer;
-import com.example.raphaelattali.rythmrun.sensors.Podometer;
+import com.telecom_paristech.pact25.rhythmrun.R;
+import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
+import com.telecom_paristech.pact25.rhythmrun.sensors.Accelerometer;
+import com.telecom_paristech.pact25.rhythmrun.sensors.Podometer;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 

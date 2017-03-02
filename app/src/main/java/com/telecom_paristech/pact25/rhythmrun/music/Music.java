@@ -1,10 +1,10 @@
-package com.example.raphaelattali.rythmrun.music;
+package com.telecom_paristech.pact25.rhythmrun.music;
 
 /**
  * Created by Raphael Attali on 01/12/2016.
  */
 
-import com.example.raphaelattali.rythmrun.music.waveFileReaderLib.WavFile;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFile;
 
 /**
  * La classe Music représente une partie d'un morceau audio

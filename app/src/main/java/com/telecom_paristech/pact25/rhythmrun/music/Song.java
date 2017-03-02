@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.music;
+package com.telecom_paristech.pact25.rhythmrun.music;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,8 +11,8 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.telecom_paristech.pact25.rhythmrun.Pace;
-import com.example.raphaelattali.rythmrun.data.TempoDataBase;
-import com.example.raphaelattali.rythmrun.music.tempo.Tempo;
+import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
+import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

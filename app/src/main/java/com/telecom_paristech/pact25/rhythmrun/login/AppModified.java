@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.login;
+package com.telecom_paristech.pact25.rhythmrun.login;
 
 /**
  * Created by Raphael Attali on 31/01/2017.

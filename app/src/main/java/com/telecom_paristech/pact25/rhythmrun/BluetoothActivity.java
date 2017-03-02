@@ -3,7 +3,7 @@ package com.telecom_paristech.pact25.rhythmrun;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.example.raphaelattali.rythmrun.R;
+import com.telecom_paristech.pact25.rhythmrun.R;
 
 /**
  * Created by sun-haozhe on 18/01/2017.

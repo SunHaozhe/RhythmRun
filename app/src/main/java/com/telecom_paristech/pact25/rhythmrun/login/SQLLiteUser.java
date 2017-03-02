@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.login;
+package com.telecom_paristech.pact25.rhythmrun.login;
 
 import android.content.ContentValues;
 import android.content.Context;

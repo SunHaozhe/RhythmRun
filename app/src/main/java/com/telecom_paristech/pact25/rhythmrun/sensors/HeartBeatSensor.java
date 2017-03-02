@@ -1,6 +1,6 @@
-package com.example.raphaelattali.rythmrun.sensors;
+package com.telecom_paristech.pact25.rhythmrun.sensors;
 
-import com.example.raphaelattali.rythmrun.interfaces.sensors.HeartBeatSensorInterface;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.sensors.HeartBeatSensorInterface;
 
 /**
  * Created by ClemSurfaceBook on 26/01/2017.

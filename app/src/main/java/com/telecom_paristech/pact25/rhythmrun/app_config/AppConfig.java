@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.app_config;
+package com.telecom_paristech.pact25.rhythmrun.app_config;
 
 /**
  * Created by Raphael Attali on 31/01/2017.

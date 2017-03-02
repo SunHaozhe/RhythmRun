@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.music.waveFileReaderLib;
+package com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib;
 // Wav file IO class
 // A.Greensted
 // http://www.labbookpages.co.uk

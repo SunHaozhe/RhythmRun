@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.activities.account;
+package com.telecom_paristech.pact25.rhythmrun.activities.account;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,12 +16,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.raphaelattali.rythmrun.R;
-import com.example.raphaelattali.rythmrun.activities.gui.HomeActivity;
-import com.example.raphaelattali.rythmrun.app_config.AppConfig;
-import com.example.raphaelattali.rythmrun.login.AppModified;
-import com.example.raphaelattali.rythmrun.login.SQLLiteUser;
-import com.example.raphaelattali.rythmrun.login.SessionConfiguration;
+import com.telecom_paristech.pact25.rhythmrun.R;
+import com.telecom_paristech.pact25.rhythmrun.activities.gui.HomeActivity;
+import com.telecom_paristech.pact25.rhythmrun.app_config.AppConfig;
+import com.telecom_paristech.pact25.rhythmrun.login.AppModified;
+import com.telecom_paristech.pact25.rhythmrun.login.SQLLiteUser;
+import com.telecom_paristech.pact25.rhythmrun.login.SessionConfiguration;
 
 import org.json.JSONException;
 import org.json.JSONObject;

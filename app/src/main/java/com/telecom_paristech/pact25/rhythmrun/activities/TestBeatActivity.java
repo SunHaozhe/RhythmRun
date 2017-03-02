@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.activities;
+package com.telecom_paristech.pact25.rhythmrun.activities.;
 
 import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.example.raphaelattali.rythmrun.R;
+import com.telecom_paristech.pact25.rhythmrun.R;
 
 public class TestBeatActivity extends AppCompatActivity implements View.OnClickListener {
 

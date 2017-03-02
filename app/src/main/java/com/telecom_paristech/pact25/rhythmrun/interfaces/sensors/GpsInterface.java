@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.interfaces.sensors;
+package com.telecom_paristech.pact25.rhythmrun.interfaces.sensors;
 
 import android.location.Location;
 

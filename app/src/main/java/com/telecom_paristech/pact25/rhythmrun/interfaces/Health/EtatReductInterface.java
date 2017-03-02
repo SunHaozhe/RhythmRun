@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.interfaces.Health;
+package com.telecom_paristech.pact25.rhythmrun.interfaces.Health;
 
 /**
  * Created by ClemSurfaceBook on 30/01/2017.

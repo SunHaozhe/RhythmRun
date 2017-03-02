@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.music.phase_vocoder;
+package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
 
 /**
  * Created by Raphael Attali on 31/01/2017.
@@ -9,10 +9,10 @@ package com.example.raphaelattali.rythmrun.music.phase_vocoder;
 
 import android.graphics.Interpolator;
 
-import com.example.raphaelattali.rythmrun.interfaces.music.PhaseVocoderInterface;
-import com.example.raphaelattali.rythmrun.music.Music;
-import com.example.raphaelattali.rythmrun.music.Song;
-import com.example.raphaelattali.rythmrun.music.waveFileReaderLib.WavFile;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.PhaseVocoderInterface;
+import com.telecom_paristech.pact25.rhythmrun.music.Music;
+import com.telecom_paristech.pact25.rhythmrun.music.Song;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFile;
 
 import org.apache.commons.math3.analysis.interpolation.InterpolatingMicrosphere;
 import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;

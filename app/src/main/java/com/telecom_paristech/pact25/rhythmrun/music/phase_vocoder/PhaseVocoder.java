@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.music.phase_vocoder;
+package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
 
 /**
  * Created by Raphael Attali on 07/12/2016.
@@ -6,8 +6,8 @@ package com.example.raphaelattali.rythmrun.music.phase_vocoder;
 
 import android.util.Log;
 
-import com.example.raphaelattali.rythmrun.interfaces.music.PhaseVocoderInterface;
-import com.example.raphaelattali.rythmrun.music.Music;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.PhaseVocoderInterface;
+import com.telecom_paristech.pact25.rhythmrun.music.Music;
 
 /**
  * <b>Le vocodeur de phase permet de compresser ou de dilater l'échelle d'une musique</b>

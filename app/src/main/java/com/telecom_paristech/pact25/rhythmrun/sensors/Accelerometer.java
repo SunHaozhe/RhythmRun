@@ -1,4 +1,4 @@
-package com.example.raphaelattali.rythmrun.sensors;
+package com.telecom_paristech.pact25.rhythmrun.sensors;
 
 import android.content.Context;
 import android.hardware.Sensor;

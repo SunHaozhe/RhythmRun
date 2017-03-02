@@ -1,10 +1,10 @@
-package com.example.raphaelattali.rythmrun.music.phase_vocoder;
+package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
 
 /**
  * Created by Raphael Attali on 07/12/2016.
  */
 
-import com.example.raphaelattali.rythmrun.music.phase_vocoder.PhaseVocoder;
+import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.PhaseVocoder;
 
 /**
  * Onde sinusoïdale, de fréquence f, d'amplitude A et avec un certain dephasage.
@@ -12,7 +12,7 @@ import com.example.raphaelattali.rythmrun.music.phase_vocoder.PhaseVocoder;
  * Hérite de PeriodicWave
  *
  * @see PeriodicWave
- * @see FourierAnalysis
+ * @see FastFourierTransform
  * @see PhaseVocoder
  *
  * @author Raphael Attali

@@ -1,9 +1,9 @@
-package com.example.raphaelattali.rythmrun.music.tempo;
+package com.telecom_paristech.pact25.rhythmrun.music.tempo;
 
 import android.util.Log;
 
-import com.example.raphaelattali.rythmrun.music.waveFileReaderLib.WavFile;
-import com.example.raphaelattali.rythmrun.music.waveFileReaderLib.WavFileException;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFile;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 
 import java.io.File;
 import java.io.IOException;

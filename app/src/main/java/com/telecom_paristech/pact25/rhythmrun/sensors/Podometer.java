@@ -1,6 +1,6 @@
-package com.example.raphaelattali.rythmrun.sensors;
+package com.telecom_paristech.pact25.rhythmrun.sensors;
 
-import com.example.raphaelattali.rythmrun.interfaces.sensors.PodometerInterface;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.sensors.PodometerInterface;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

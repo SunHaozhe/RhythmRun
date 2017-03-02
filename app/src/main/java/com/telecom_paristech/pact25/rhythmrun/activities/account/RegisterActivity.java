@@ -1,9 +1,9 @@
-package com.example.raphaelattali.rythmrun.activities.account;
+package com.telecom_paristech.pact25.rhythmrun.activities.account;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.example.raphaelattali.rythmrun.R;
+import com.telecom_paristech.pact25.rhythmrun.R;
 
 public class RegisterActivity extends AppCompatActivity {
 

@@ -1,8 +1,8 @@
-package com.example.raphaelattali.rythmrun.data;
+package com.telecom_paristech.pact25.rhythmrun.data;
 
 import android.media.Image;
 
-import com.example.raphaelattali.rythmrun.interfaces.data.DataSaveInterface;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.data.DataSaveInterface;
 
 /**
  * Created by ClemSurfaceBook on 30/01/2017.
