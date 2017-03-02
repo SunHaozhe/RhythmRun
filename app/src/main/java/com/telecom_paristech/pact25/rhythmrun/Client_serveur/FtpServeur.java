@@ -3,31 +3,40 @@ package com.telecom_paristech.pact25.rhythmrun.Client_serveur;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import com.telecom_paristech.pact25.rhythmrun.R;
 import android.widget.Toast;
+
+import org.apache.commons.net.ftp.FTP;
+
 import java.io.File;
-import it.sauronsoftware.ftp4j.FTPClient;
-import it.sauronsoftware.ftp4j.FTPDataTransferListener;
-import it.sauronsoftware.ftp4j.FTPFile;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+
+//import it.sauronsoftware.ftp4j.FTPClient;
+//import it.sauronsoftware.ftp4j.FTPDataTransferListener;
+//import it.sauronsoftware.ftp4j.FTPFile;
 import static com.facebook.internal.Utility.deleteDirectory;
 
 /**
- * Traits the FTP server, for now, just download function has been implemented
+ * Traits the FTP server, upload and download
  */
 public class FtpServeur extends AppCompatActivity {
 
     Button upload_btn,download_btn;
+    static final int FTP_Port = 21;
 
     //work only for Dedicated IP
     static final String FTP_HOST = "93.188.160.186";
 
     //FTP USERNAME
-    static final String FTP_USER = "u564168340";  //TODO
+    static final String FTP_USER = "u564168340";
 
     //FTP PASSWORD
-    static final String FTP_PASS = "123456";  //TODO
+    static final String FTP_PASS = "123456";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,16 +47,14 @@ public class FtpServeur extends AppCompatActivity {
             upload_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO
-                    Toast.makeText(FtpServeur.this,"Sorry, upload function has not yet been implemented.",Toast.LENGTH_LONG).show();
-
+                    uploadFTP();
                 }
             });
             download_btn = (Button) findViewById(R.id.button_download_ftp);
             download_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    downloadStart();
+                    downloadFTP();
                 }
             });
         } catch (Exception e) {
@@ -55,7 +62,64 @@ public class FtpServeur extends AppCompatActivity {
         }
     }
 
+    private void uploadFTP(){
+        org.apache.commons.net.ftp.FTPClient ftpClient = null;
 
+        try
+        {
+            ftpClient = new org.apache.commons.net.ftp.FTPClient();
+            ftpClient.connect(FTP_HOST);
+
+            if (ftpClient.login(FTP_USER, FTP_PASS))
+            {
+                ftpClient.enterLocalPassiveMode();
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+                String data = "XXXX"; //TODO chemin vers le fichier à upload
+
+                FileInputStream in = new FileInputStream(new File(data));
+                boolean result = ftpClient.storeFile("XXXX", in);  //TODO   /name of the fichier
+                in.close();
+                if (result) Log.v("FTP upload result", "succeeded");
+                ftpClient.logout();
+                ftpClient.disconnect();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void downloadFTP(){
+        org.apache.commons.net.ftp.FTPClient ftpClient = null;
+
+        try
+        {
+            ftpClient = new org.apache.commons.net.ftp.FTPClient();
+            ftpClient.connect(FTP_HOST);
+
+            if (ftpClient.login(FTP_USER, FTP_PASS))
+            {
+                ftpClient.enterLocalPassiveMode();
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+                String data = "XXXX"; //TODO chemin vers le fichier à download
+
+                OutputStream out = new FileOutputStream(new File(data));
+                boolean result = ftpClient.retrieveFile("XXXX", out);  //TODO   name of the fichier
+                out.close();
+                if (result) Log.v("FTP download result", "succeeded");
+                ftpClient.logout();
+                ftpClient.disconnect();
+            }
+        }
+        catch (Exception e)
+        {
+            Log.v("download result","failed");
+            e.printStackTrace();
+        }
+    }
+
+/*
     private void downloadStart() {
         FTPClient ftp = new FTPClient();
         try {
@@ -64,7 +128,7 @@ public class FtpServeur extends AppCompatActivity {
                         new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
             }
-            ftp.connect(FTP_HOST,21);
+            ftp.connect(FTP_HOST,FTP_Port);
             ftp.login(FTP_USER, FTP_PASS);
 
             //If change occurs in particular language then first delete folder from sdcard, also pass which language contains change.
@@ -143,5 +207,5 @@ public class FtpServeur extends AppCompatActivity {
         } catch (Exception e) {
             e.toString();
         }
-    }
+    }*/
 }
