@@ -8,7 +8,6 @@ import android.hardware.SensorManager;
 import android.os.SystemClock;
 import android.util.Log;
 
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;

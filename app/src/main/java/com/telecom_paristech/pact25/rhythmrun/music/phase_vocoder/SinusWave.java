@@ -4,8 +4,11 @@ package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
  * Created by Raphael Attali on 07/12/2016.
  */
 
+<<<<<<< HEAD:app/src/main/java/com/telecom_paristech/pact25/rhythmrun/music/phase_vocoder/SinusWave.java
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.PhaseVocoder;
 
+=======
+>>>>>>> distant_server/master:app/src/main/java/com/telecom_paristech/pact25/rhythmrun/music/phase_vocoder/SinusWave.java
 /**
  * Onde sinusoïdale, de fréquence f, d'amplitude A et avec un certain dephasage.
  * Objet idéal pour une transformée de Fourier.

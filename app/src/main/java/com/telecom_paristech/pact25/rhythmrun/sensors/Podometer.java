@@ -5,11 +5,7 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.os.SystemClock;
 import android.util.Log;
-
-import java.util.ArrayList;
 
 /**
  * Created by lucas on 12/12/16.
