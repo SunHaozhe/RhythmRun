@@ -1,6 +1,7 @@
 package com.telecom_paristech.pact25.rhythmrun.Client_serveur;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,8 +14,11 @@ import org.apache.commons.net.ftp.FTP;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.net.SocketException;
 
 //import it.sauronsoftware.ftp4j.FTPClient;
 //import it.sauronsoftware.ftp4j.FTPDataTransferListener;
@@ -49,7 +53,12 @@ public class FtpServeur extends AppCompatActivity {
             upload_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    uploadFTP();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            uploadFTP();
+                        }
+                    }).start();
                 }
             });
             download_btn = (Button) findViewById(R.id.button_download_ftp);
@@ -76,20 +85,25 @@ public class FtpServeur extends AppCompatActivity {
             {
                 ftpClient.enterLocalPassiveMode();
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-                String data = "XXXX"; //TODO chemin vers le fichier à upload
-
-                FileInputStream in = new FileInputStream(new File(data));
-                boolean result = ftpClient.storeFile("XXXX", in);  //TODO   /name of the fichier
+                String data = Environment.getExternalStorageDirectory()+File.separator +"201700081700980.jpg"; //TODO chemin vers le fichier à upload
+                Log.i("FTP",data);
+                File file = new File(data);
+                if(!file.exists()) Log.e("FTP","File not Find");
+                 FileInputStream in = new FileInputStream(file);
+                boolean result = ftpClient.storeFile("201700081700980.jpg", in);  //TODO   /name of the fichier
                 in.close();
                 if (result) Log.v("FTP upload result", "succeeded");
                 ftpClient.logout();
                 ftpClient.disconnect();
             }
-        }
-        catch (Exception e)
-        {
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void downloadFTP(){

@@ -114,8 +114,6 @@ public class Main2Activity extends AppCompatActivity {
                         pw.close();
                         } catch (FileNotFoundException e) {
                         e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
             }
         });

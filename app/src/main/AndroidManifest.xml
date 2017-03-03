@@ -101,7 +101,9 @@
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.FtpServeur"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+
+            </activity>
     </application>
 
 
