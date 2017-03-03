@@ -126,4 +126,8 @@ public class RunMapFragment extends SimpleMapFragment implements OnMapReadyCallb
         return lastLatLng;
     }
 
+    public void reset(){
+        journey = new ArrayList<>();
+    }
+
 }
