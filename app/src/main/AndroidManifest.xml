@@ -71,10 +71,6 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.FtpTestActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.AboutActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_about"
@@ -98,12 +94,14 @@
             android:label="@string/title_activity_history_run"
             android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryActivity"
             android:screenOrientation="portrait"/>
-
         <activity android:name=".Android_activities.account.LoginActivity">
 
         </activity>
         <activity android:name=".Android_activities.account.RegisterActivity"/>
-
+        <activity
+            android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.FtpServeur"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
     </application>
 
 
