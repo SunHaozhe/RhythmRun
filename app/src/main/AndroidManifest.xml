@@ -18,18 +18,23 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBvlvwvqg0aBDjY5zhpI0to6UNDLy3sLRs" />
+
         <activity android:name="com.telecom_paristech.pact25.rhythmrun.music.MainActivity" />
-        <activity android:name="com.telecom_paristech.pact25.rhythmrun.music.Main2Activity" />
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_activity_home"
+            android:name="com.telecom_paristech.pact25.rhythmrun.music.Main2Activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.NewRunActivity"

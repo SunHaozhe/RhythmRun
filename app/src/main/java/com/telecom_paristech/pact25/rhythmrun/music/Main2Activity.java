@@ -300,16 +300,16 @@ public class Main2Activity extends AppCompatActivity {
                 .build();
     }*/
 
-    @Override
+    /*@Override
     public void onStart() {
         super.onStart();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
-        //AppIndex.AppIndexApi.start(client, getIndexApiAction());
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
 
-    }
+    }*/
 
     @Override
     public void onStop() {
