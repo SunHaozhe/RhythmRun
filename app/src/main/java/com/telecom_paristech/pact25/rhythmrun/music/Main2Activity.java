@@ -20,6 +20,7 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 */
 import com.telecom_paristech.pact25.rhythmrun.R;
+import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.FastFourierTransform;
 import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
 import com.telecom_paristech.pact25.rhythmrun.sensors.Accelerometer;
 import com.telecom_paristech.pact25.rhythmrun.sensors.Podometer;
@@ -53,7 +54,7 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        int optionsDeDebug = 2;
+        int optionsDeDebug = 1;
         //0 : ecrit les releves de l'accelerometre dans Downloads/donnees.csv
         //1 : affiche la frequence de pas calculee par le podometre
         //2 : calcule le tempo de la musique specifiee dans le thread
