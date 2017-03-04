@@ -51,7 +51,8 @@ public class Tempo { //faire le tri entre les int et les long
 
     public final static double findTempoHz(String waveFilePath) {//resultat negatif si le morceau ne convient pas
         Log.i("lucas", "on est rentrés dans findTempoHz");
-        double tempo = -1;
+        return findTempoHzFast(waveFilePath);
+        /*double tempo = -1;
         try {
             WavFile waveFile = WavFile.openWavFile(new File(waveFilePath)); //on suppose le fichier a 44100Hz
 
@@ -63,7 +64,7 @@ public class Tempo { //faire le tri entre les int et les long
         } catch (WavFileException e) {
             e.printStackTrace();
         }
-        return tempo;
+        return tempo;*/
     }
 
     public final static double findTempoHzFast(String waveFilePath) {
@@ -91,7 +92,7 @@ public class Tempo { //faire le tri entre les int et les long
     private final static double findTempo(double buffer[], int numberOfFrames, long sampleRate) {
         Log.i("lucas", "on est rentrés dans findTempo");
         double a = 0.9998;
-        int N = 8; //parametre calcule pour fech = 44100kHz, a generaliser
+        int N = 8; //parametre calcule pour fech = 44100kHz, on est toujours dans ce cas
 
         double[] energie = new double[numberOfFrames];
         energie[0] = carre(buffer[0]);
@@ -109,6 +110,18 @@ public class Tempo { //faire le tri entre les int et les long
 
         double[] d = new double[l];
         diff(energieReEchantillonee, d, N, l);
+
+        //faisons le zero-padding
+        int tpsMin = 60; //pour avoir une precision inférieure au bpm
+        int l2 = (int)(tpsMin/dt);
+        int k = 1;
+        while (k<l2 || k<l) {
+            k *= 2;
+        }
+        double[] d2 = new double[k];
+        System.arraycopy(d, 0, d2, 0, l);
+        l = k;
+        d = d2;
 
         double[] tfd = new double[l];
         TFDModule(d, tfd, l);
