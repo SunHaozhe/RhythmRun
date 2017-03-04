@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PACT.iml" filepath="$PROJECT_DIR$/PACT.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RhythmRun.iml" filepath="$PROJECT_DIR$/RhythmRun.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

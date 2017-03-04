@@ -3,8 +3,13 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="com.example.raphaelattali.rythmrun.activities.gui.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="com.telecom_paristech.pact25.rhythmrun.Android_activities.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
         android:title="@string/pref_header_general" />
+
+    <header
+        android:fragment="com.telecom_paristech.pact25.rhythmrun.Android_activities.SettingsActivity$PrivacyPreferenceFragment"
+        android:icon="@drawable/ic_lock_black_24dp"
+        android:title="Privacy" />
 
 </preference-headers>
