@@ -39,7 +39,8 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         numberOfValues = acc.getNombreEchantillons();
         values = new float[3][numberOfValues];
         accValues = acc.getArray();
-        while (!acc.isActive()) {
+        while (!acc.isActive())
+        {
             sleep(500);
             Log.i("lucas", "attente...");
         }
