@@ -82,7 +82,7 @@ public class Main2Activity extends AppCompatActivity {
         textview = (TextView) findViewById(R.id.textview);
 
         context = this;
-        Log.d("lucas", "on va verifier les permissions d ecriture");
+        Log.d("lucas-File Reading", "on va verifier les permissions d ecriture");
         // Permission d'ecriture
         int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -93,7 +93,7 @@ public class Main2Activity extends AppCompatActivity {
         if (permission != PackageManager.PERMISSION_GRANTED) {
 
 
-            Log.d("lucas", "on va demander à l'utilisateur");
+            Log.d("lucas-File Reading", "on va demander à l'utilisateur");
 
             ActivityCompat.requestPermissions(
                     this,
@@ -101,24 +101,24 @@ public class Main2Activity extends AppCompatActivity {
                     REQUEST_EXTERNAL_STORAGE
             );
         }
-        Log.d("lucas", "on a les permissions d'écriture");
+        Log.d("lucas-File", "on a les permissions d'écriture");
 
 
         Thread thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
 
-                Log.i("lucas", "on est rentrés dans le thread");
+                Log.i("lucas-File", "on est rentrés dans le thread");
                 Accelerometer acc = new Accelerometer(0.1f, 10, context);
 
                     File file = new File("/storage/emulated/0/Download/donnees.csv");
-                    Log.i("lucas", "on a créé le file");
+                    Log.i("lucas-File", "on a créé le file");
                     try {
                         //FileOutputStream fOS = new FileOutputStream(file);
                         //Log.i("lucas", "on a ouvert le fileoutputstream");
                         //OutputStreamWriter oSW = new OutputStreamWriter(fOS);
                         PrintWriter pw = new PrintWriter(file);
-                        Log.i("lucas", "on a ouvert le fileoutputstream");
+                        Log.i("lucas- File Reading", "on a ouvert le fileoutputstream");
                         String x, y, z;
                         boolean caacommence = false;
                         while (k == 0) {
@@ -145,7 +145,7 @@ public class Main2Activity extends AppCompatActivity {
                             }
                         }
                         setTextViewToString("On écoute plus.");
-                        Log.i("lucas", "on est sortis du while");
+                        Log.i("lucas- File reading", "on est sortis du while");
                         //oSW.flush();
                         //oSW.close();
                         //fOS.close();
@@ -160,7 +160,7 @@ public class Main2Activity extends AppCompatActivity {
             }
 
             public void run() {
-                Log.i("lucas", "on est rentrés dans le thread de main2activity");
+                Log.i("lucas-monRunnable class", "on est rentrés dans le thread de main2activity");
                 final Podometer pod = new Podometer(context);
                 for (int i = 0; i<10 && !pod.isActive(); i++)
                 {
@@ -213,7 +213,7 @@ public class Main2Activity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    Log.i("lucas", "pod actif");
+                    Log.i("lucas-monRunnable class", "pod actif");
                     beginning = SystemClock.elapsedRealtime();
                     playing = false;
                     frequence = pod.getRunningPaceFrequency();
