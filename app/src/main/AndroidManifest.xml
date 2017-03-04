@@ -20,14 +20,21 @@
             android:value="AIzaSyBvlvwvqg0aBDjY5zhpI0to6UNDLy3sLRs" />
 
         <activity android:name="com.telecom_paristech.pact25.rhythmrun.music.MainActivity" />
-        <activity android:name="com.telecom_paristech.pact25.rhythmrun.music.Main2Activity" />
+        <activity
+            android:name="com.telecom_paristech.pact25.rhythmrun.music.Main2Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.NewRunActivity"
@@ -68,10 +75,6 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.FtpTestActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.AboutActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_about"
@@ -95,15 +98,16 @@
             android:label="@string/title_activity_history_run"
             android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryActivity"
             android:screenOrientation="portrait"/>
-
         <activity android:name=".Android_activities.account.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity android:name=".Android_activities.account.RegisterActivity"/>
+        <activity
+            android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.FtpServeur"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
 
+            </activity>
     </application>
 
 
