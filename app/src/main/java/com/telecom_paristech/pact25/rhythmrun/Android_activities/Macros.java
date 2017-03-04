@@ -20,6 +20,7 @@ public final class Macros {
     static final int PERMISSION_ACCESS_FINE_LOCATION = 1;
     static final int PERMISSION_READ_EXTERNAL_STORAGE = 2;
     static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 3;
+    static final int PERMISSION_GLOBAL_REQUEST = 4;
 
     static final int MAX_MARKERS = 22; //Google max is 22
 }

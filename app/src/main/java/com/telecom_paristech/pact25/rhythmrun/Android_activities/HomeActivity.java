@@ -49,9 +49,6 @@ public class HomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(!MusicManager.areSongsLoaded())
-            MusicManager.init();
-
         Button buttonNewRun = (Button) findViewById(R.id.buttonHomeNewRun);
         buttonNewRun.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,31 +58,12 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-        //Check if location is granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.i("Home","Requesting location permission.");
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    Macros.PERMISSION_ACCESS_FINE_LOCATION);
-        }
-
-        //Check if external storage reading is granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            Log.i("Home","Requesting read external storage permission.");
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    Macros.PERMISSION_READ_EXTERNAL_STORAGE);
-        }
-
-        //Check if external storage writing is granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            Log.i("Home","Requesting write external storage permission.");
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    Macros.PERMISSION_WRITE_EXTERNAL_STORAGE);
-        }
-
+        //Always requests permissions at the beginning
+        ActivityCompat.requestPermissions(this,
+                new String[] {Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                Macros.PERMISSION_GLOBAL_REQUEST);
    }
 
     @Override
@@ -237,6 +215,14 @@ public class HomeActivity extends AppCompatActivity
             }
         });
         animator.start();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        if(requestCode == Macros.PERMISSION_GLOBAL_REQUEST){
+            if(!MusicManager.areSongsLoaded())
+                MusicManager.init();
+        }
     }
 
 }

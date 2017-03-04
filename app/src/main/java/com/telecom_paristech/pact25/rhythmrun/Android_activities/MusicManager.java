@@ -107,7 +107,9 @@ public class MusicManager{
     }
 
     public static Song getCurrentSong(){
-        return songs.get(currentSong);
+        if(songs.size()>0)
+            return songs.get(currentSong);
+        return null;
     }
 
     private static void initMediaPlayer(){
@@ -116,8 +118,11 @@ public class MusicManager{
     }
 
     public static void playCurrentSong(){
+        Song cs = getCurrentSong();
+        if(cs == null)
+            return;
         try {
-            mediaPlayer.setDataSource(getCurrentSong().getPath());
+            mediaPlayer.setDataSource(cs.getPath());
             mediaPlayer.prepare();
             mediaPlayer.start();
         } catch (IOException e) {

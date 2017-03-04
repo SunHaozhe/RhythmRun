@@ -24,7 +24,7 @@ public class Pace implements Parcelable {
     };
 
     public static String fancyPace(double d){
-        if(Double.isNaN(d)){
+        if(Double.isNaN(d) || Double.isInfinite(d)){
             return "inf";
         }
         int sec;
