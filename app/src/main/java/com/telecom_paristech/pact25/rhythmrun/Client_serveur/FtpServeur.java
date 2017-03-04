@@ -65,7 +65,12 @@ public class FtpServeur extends AppCompatActivity {
             download_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    downloadFTP();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            downloadFTP();
+                        }
+                    }).start();
                 }
             });
         } catch (Exception e) {
@@ -86,10 +91,10 @@ public class FtpServeur extends AppCompatActivity {
                 ftpClient.enterLocalPassiveMode();
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
                 String data = Environment.getExternalStorageDirectory()+File.separator +"201700081700980.jpg"; //TODO chemin vers le fichier à upload
-                Log.i("FTP",data);
+                Log.i("FTP upload",data);
                 File file = new File(data);
-                if(!file.exists()) Log.e("FTP","File not Find");
-                 FileInputStream in = new FileInputStream(file);
+                if(!file.exists()) Log.e("FTP upload","File not Find");
+                FileInputStream in = new FileInputStream(file);
                 boolean result = ftpClient.storeFile("201700081700980.jpg", in);  //TODO   /name of the fichier
                 in.close();
                 if (result) Log.v("FTP upload result", "succeeded");
@@ -119,20 +124,24 @@ public class FtpServeur extends AppCompatActivity {
                 ftpClient.enterLocalPassiveMode();
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
                 String data = "XXXX"; //TODO chemin vers le fichier à download
-
-                OutputStream out = new FileOutputStream(new File(data));
+                Log.i("FTP download",data);
+                File file = new File(data);
+                if(!file.exists()) Log.e("FTP download","File not Find");
+                FileOutputStream out = new FileOutputStream(file);
                 boolean result = ftpClient.retrieveFile("XXXX", out);  //TODO   name of the fichier
                 out.close();
                 if (result) Log.v("FTP download result", "succeeded");
                 ftpClient.logout();
                 ftpClient.disconnect();
             }
-        }
-        catch (Exception e)
-        {
-            Log.v("download result","failed");
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
 /*
