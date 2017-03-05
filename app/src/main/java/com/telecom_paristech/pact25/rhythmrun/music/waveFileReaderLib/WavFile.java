@@ -9,6 +9,8 @@ package com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib;
 
 // Version 1.0
 
+import android.util.Log;
+
 import java.io.*;
 
 public class WavFile
@@ -192,16 +194,19 @@ public class WavFile
 		if (riffTypeID != RIFF_TYPE_ID) throw new WavFileException("Invalid Wav Header data, incorrect riff type ID");
 
 		// Check that the file size matches the number of bytes listed in header
-		if (file.length() != chunkSize+8) {
+		if (file.length() != chunkSize+8)
+		{
 			throw new WavFileException("Header chunk size (" + chunkSize + ") does not match file size (" + file.length() + ")");
 		}
 
 		boolean foundFormat = false;
 		boolean foundData = false;
+		Log.i("WaveFile","File opening");
 
 		// Search for the Format and Data Chunks
 		while (true)
 		{
+			Log.i("WaveFile","True in while for reading chunk header");
 			// Read the first 8 bytes of the chunk (ID and chunk size)
 			bytesRead = wavFile.iStream.read(wavFile.buffer, 0, 8);
 			if (bytesRead == -1) throw new WavFileException("Reached end of file without finding format chunk");
@@ -219,6 +224,7 @@ public class WavFile
 
 			if (chunkID == FMT_CHUNK_ID)
 			{
+				Log.i("WaveFile","ChunkID=FMT_CHUNK_ID");
 				// Flag that the format chunk has been found
 				foundFormat = true;
 
@@ -252,6 +258,7 @@ public class WavFile
 			}
 			else if (chunkID == DATA_CHUNK_ID)
 			{
+				Log.i("WaveFile","chukID=DATA_CHUNK_ID");
 				// Check if we've found the format chunk,
 				// If not, throw an exception as we need the format information
 				// before we can read the data chunk
@@ -307,6 +314,7 @@ public class WavFile
 	// ------------------------------------------------
 	private static long getLE(byte[] buffer, int pos, int numBytes)
 	{
+		Log.i("WaveFile","return of getLE");
 		numBytes --;
 		pos += numBytes;
 
@@ -318,6 +326,7 @@ public class WavFile
 
 	private static void putLE(long val, byte[] buffer, int pos, int numBytes)
 	{
+		Log.i("WaveFile","Entrée putLE ");
 		for (int b=0 ; b<numBytes ; b++)
 		{
 			buffer[pos] = (byte) (val & 0xFF);
@@ -424,6 +433,7 @@ public class WavFile
 
 	public int writeFrames(int[] sampleBuffer, int offset, int numFramesToWrite) throws IOException, WavFileException
 	{
+		Log.i("WaveFile","writeFrames");
 		if (ioState != IOState.WRITING) throw new IOException("Cannot write to WavFile instance");
 
 		for (int f=0 ; f<numFramesToWrite ; f++)
@@ -468,6 +478,7 @@ public class WavFile
 	// ----
 	public int readFrames(long[] sampleBuffer, int numFramesToRead) throws IOException, WavFileException
 	{
+		Log.i("WaveFile","readFrames in WaveFile");
 		return readFrames(sampleBuffer, 0, numFramesToRead);
 	}
 
@@ -659,6 +670,7 @@ public class WavFile
 
 	public void close() throws IOException
 	{
+
 		// Close the input stream and set to null
 		if (iStream != null)
 		{
@@ -681,6 +693,7 @@ public class WavFile
 
 		// Flag that the stream is closed
 		ioState = IOState.CLOSED;
+		Log.i("WaveFile","IOstate closed in close() function");
 	}
 
 	public void display()
@@ -690,6 +703,7 @@ public class WavFile
 
 	public void display(PrintStream out)
 	{
+		Log.i("WaveFile","display of PrintStream");
 		out.printf("File: %s\n", file);
 		out.printf("Channels: %d, Frames: %d\n", numChannels, numFrames);
 		out.printf("IO State: %s\n", ioState);
@@ -699,6 +713,7 @@ public class WavFile
 
 	public static void main(String[] args)
 	{
+		Log.i("WaveFile","main function");
 		if (args.length < 1)
 		{
 			System.err.println("Must supply filename");

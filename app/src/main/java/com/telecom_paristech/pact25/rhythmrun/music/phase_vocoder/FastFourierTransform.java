@@ -17,16 +17,16 @@ import java.util.List;
  * Cette classe permet d'effectuer une transformée de Fourier rapide.
  */
 
-class FastFourierTransform {
+public class FastFourierTransform {
 
     private final static String TAG = "Analyse de Fourier";
     private final static FastFourierTransformer mFFT = new FastFourierTransformer(DftNormalization.STANDARD);
 
-    static Complex[] fft(double[] music){
+    public static Complex[] fft(double[] music){
         return mFFT.transform(music, TransformType.FORWARD);
     }
 
-    static Complex[] fftReversed(double[] music){
+    public static Complex[] fftReversed(double[] music){
         return mFFT.transform(music,TransformType.INVERSE);
     }
 

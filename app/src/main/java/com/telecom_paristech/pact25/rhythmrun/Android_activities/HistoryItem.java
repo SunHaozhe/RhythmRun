@@ -11,7 +11,8 @@ class HistoryItem implements Parcelable{
     private String time;
     private Pace pace;
 
-    HistoryItem(String filename, String date, String time, Distance distance, Pace pace, CustomPolylineOptions route) {
+    HistoryItem(String filename, String date, String time, Distance distance, Pace pace, CustomPolylineOptions route)
+    {
         this.time = time;
         this.route = route;
         this.date = date;
