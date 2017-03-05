@@ -218,11 +218,6 @@ class DataManager {
         java.util.Calendar calendar;
         calendar = java.util.Calendar.getInstance();
 
-/*
-        Calendar calendar;
-        calendar = Calendar.getInstance();
->>>>>>> Stashed changes
-
         calendar.add(java.util.Calendar.DAY_OF_MONTH, -7);
         Date weekStart = calendar.getTime();
         java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
@@ -236,7 +231,6 @@ class DataManager {
                 weekRuns.add(run);
             }
         }
-        */
         return weekRuns;
     }
 
