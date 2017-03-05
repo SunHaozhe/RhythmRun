@@ -32,7 +32,7 @@ public class SelfMadeInterpolator {
         }
         double[] dx = new double[abscisses.length - 1];
         double[] dy = new double[abscisses.length - 1];
-        double[] slope = new double[abscisses.length - 1];
+        double[] penteTab = new double[abscisses.length - 1];
         double[] intercept = new double[abscisses.length - 1];
 
         // Calcul de l'équation de la ligne entre 2 points
@@ -43,11 +43,11 @@ public class SelfMadeInterpolator {
             }
             
             dy[i] = ordonnees[i + 1] - ordonnees[i];
-            slope[i] = dy[i] / dx[i];
-            intercept[i] = ordonnees[i] - abscisses[i] * slope[i];
+            penteTab[i] = dy[i] / dx[i];
+            intercept[i] = ordonnees[i] - abscisses[i] * penteTab[i];
         }
 
-        // Interpolation
+        // Une fois tout cela fait, on procède à l'interpolation
         double[] yInterpole = new double[abscissesInterp.length];
         for (int i = 0; i < abscissesInterp.length; i++) {
             if ((abscissesInterp[i] > abscisses[abscisses.length - 1]) || (abscissesInterp[i] < abscisses[0])) {
@@ -57,7 +57,7 @@ public class SelfMadeInterpolator {
                 int loc = Arrays.binarySearch(abscisses, abscissesInterp[i]);
                 if (loc < -1) {
                     loc = -loc - 2;
-                    yInterpole[i] = slope[loc] * abscissesInterp[i] + intercept[loc];
+                    yInterpole[i] = penteTab[loc] * abscissesInterp[i] + intercept[loc];
                 }
                 else {
                     yInterpole[i] = ordonnees[loc];
@@ -66,5 +66,31 @@ public class SelfMadeInterpolator {
         }
 
         return yInterpole;
+    }
+
+
+    /**
+     * Equivalent de la fonction t = (0:N-1)/N de Matlab
+     * @param N le nombre de points
+     * @return t (cf fonction Matlab)
+     */
+    public static double[] getIndexesTab(int N){
+        double[] t = new double[N];
+
+        for (int i=0 ; i<N ; i++){
+            t[i] = i/N;
+        }
+
+        return t;
+    }
+
+    public static double[] getIndexesInterpTab(int N, double coef) {
+        double[] ti = new double[N];
+
+        for (int i=0 ; i<N ; i++){
+            ti[i] = i/N*coef;
+        }
+
+        return ti;
     }
 }

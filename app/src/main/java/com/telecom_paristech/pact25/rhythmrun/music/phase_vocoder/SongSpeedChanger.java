@@ -27,11 +27,17 @@ public class SongSpeedChanger {
 
         String path = song.getPath();
 
+        // y = audioread(...)
 
+        int N = 5;//length(y)
 
+        // t = (0:N-1)/N
+        double[] t = SelfMadeInterpolator.getIndexesTab(N);
 
-        LinearInterpolator interpolator = new LinearInterpolator();
-        PolynomialSplineFunction f = interpolator.interpolate(null,null);
+        double coef = tempo;// /freq;
+        double[] tInterpol = SelfMadeInterpolator.getIndexesInterpTab(N,coef);
+
+        double[] valuesInterp = SelfMadeInterpolator.interp1(t,song.getValues(),tInterpol);
 
 
         return null;

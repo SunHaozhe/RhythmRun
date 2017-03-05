@@ -11,6 +11,7 @@ import static java.lang.Math.sqrt;
  */
 
 public class MusicManager {
+
     private float[] paceFrequency;
     private final int l = 5; //longueur de paceFrequency
     int indice; //indice courant dans le tableau circulaire paceFrequency
@@ -66,6 +67,7 @@ public class MusicManager {
             computeTempo();
         }
     }
+
 
     public float getWantedTempo() {
         return wantedTempoHz;

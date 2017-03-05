@@ -29,6 +29,15 @@ public class Song implements Parcelable {
     private String path;
     private String genre;
     private String duration;
+    private double[] values;
+
+    public double[] getValues() {
+        return values;
+    }
+
+    public void setValues(double[] values) {
+        this.values = values;
+    }
 
     public Song(File file) {
         path = file.getPath();
