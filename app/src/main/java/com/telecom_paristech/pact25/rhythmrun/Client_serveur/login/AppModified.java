@@ -8,6 +8,7 @@ package com.telecom_paristech.pact25.rhythmrun.Client_serveur.login;
 
 import android.app.Application;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -53,9 +54,11 @@ public class AppModified extends Application {
         getRequestQueue().add(req);
     }
 
-    public <T> void addToRequestQueue(Request<T> req) {
+    public <T> void addToRequestQueue(Request<T> req)
+    {
         req.setTag(TAG);
         getRequestQueue().add(req);
+        Log.i("AppModified_INFO","add to request queue");
     }
 
     /**
@@ -63,9 +66,12 @@ public class AppModified extends Application {
      *
      * @param tag La signature des requêtes à annuler
      */
-    public void cancelPendingRequests(Object tag) {
-        if (mRequestQueue != null) {
+    public void cancelPendingRequests(Object tag)
+    {
+        if (mRequestQueue != null)
+        {
             mRequestQueue.cancelAll(tag);
+            Log.i("AppModified","Cancel of pending requests");
         }
     }
 }
