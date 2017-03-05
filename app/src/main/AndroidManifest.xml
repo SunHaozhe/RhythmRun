@@ -99,7 +99,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <activity android:name=".Android_activities.account.RegisterActivity" />
         <activity
             android:name=".Client_serveur.FtpServeur"
