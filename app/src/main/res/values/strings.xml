@@ -89,5 +89,6 @@
     <string name="title_activity_sum_up">Last Run</string>
 
     <string name="title_activity_history_run">Activity</string>
+    <string name="logged_out">Vous avez été déconnecté avec succès !</string>
 
 </resources>

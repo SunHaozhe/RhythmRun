@@ -215,12 +215,17 @@ class DataManager {
         List<HistoryItem> weekRuns = new ArrayList<>();
         Log.d("DataManager","Getting last week runs.");
 
+        java.util.Calendar calendar;
+        calendar = java.util.Calendar.getInstance();
+
+/*
         Calendar calendar;
         calendar = Calendar.getInstance();
+>>>>>>> Stashed changes
 
-        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        calendar.add(java.util.Calendar.DAY_OF_MONTH, -7);
         Date weekStart = calendar.getTime();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
+        java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
         String weekStartString = df.format(weekStart)+".run";
 
         Log.d("DataManager","Week start string: "+weekStartString);
@@ -231,6 +236,7 @@ class DataManager {
                 weekRuns.add(run);
             }
         }
+        */
         return weekRuns;
     }
 

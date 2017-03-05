@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/RythmRun.iml" filepath="$PROJECT_DIR$/RythmRun.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/rattali-rhythm_run.iml" filepath="$PROJECT_DIR$/rattali-rhythm_run.iml" />
       <module fileurl="file://$PROJECT_DIR$/rattali-rhythm_run.git.iml" filepath="$PROJECT_DIR$/rattali-rhythm_run.git.iml" />

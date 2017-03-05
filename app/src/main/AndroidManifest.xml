@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
+    <!-- APPLICATION -->
     <application
         android:name=".Client_serveur.login.AppModified"
         android:allowBackup="true"
@@ -19,16 +20,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBvlvwvqg0aBDjY5zhpI0to6UNDLy3sLRs" />
 
-        <activity android:name="com.telecom_paristech.pact25.rhythmrun.music.MainActivity" />
-        <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.music.Main2Activity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+        <!-- Mains -->
+        <activity android:name=".music.MainActivity" />
+        <activity android:name=".music.Main2Activity" />
 
-
-        </activity>
+        <!-- Home -->
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
+            android:name=".Android_activities.HomeActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
@@ -38,79 +36,106 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- New Run -->
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.NewRunActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_new_run"
-            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName=".Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
+
+        <!-- Recap -->
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.RecapActivity"
+            android:name=".Android_activities.RecapActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_recap"
-            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.NewRunActivity"
+            android:parentActivityName=".Android_activities.NewRunActivity"
             android:screenOrientation="portrait" />
+
+        <!-- Run -->
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.RunActivity"
+            android:name=".Android_activities.RunActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_run"
-            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName=".Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
+
+        <!-- Settings -->
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SettingsActivity"
+            android:name=".Android_activities.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName=".Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
+
+        <!-- Library -->
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.LibraryActivity"
+            android:name=".Android_activities.LibraryActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_library"
-            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName=".Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
+
+        <!-- Song -->
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SongActivity"
+            android:name=".Android_activities.SongActivity"
             android:label="@string/title_activity_library"
-            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.LibraryActivity" />
+            android:parentActivityName=".Android_activities.LibraryActivity" />
+
+        <!-- Bluetooth -->
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.BluetoothActivity"
+            android:name=".Client_serveur.BluetoothActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
+
+        <!-- About -->
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.AboutActivity"
+            android:name=".Android_activities.AboutActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_about"
-            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName=".Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
+
+        <!-- History -->
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryActivity"
+            android:name=".Android_activities.HistoryActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_historique"
-            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName=".Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
+
+        <!-- Summary -->
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SumUpActivity"
+            android:name=".Android_activities.SumUpActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_sum_up"
-            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
+            android:parentActivityName=".Android_activities.HomeActivity"
             android:screenOrientation="portrait" />
+
+        <!-- History -->
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryRunActivity"
+            android:name=".Android_activities.HistoryRunActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_history_run"
-            android:parentActivityName="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryActivity"
-            android:screenOrientation="portrait"/>
+            android:parentActivityName=".Android_activities.HistoryActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- Login / register -->
         <activity android:name=".Android_activities.account.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".Android_activities.account.RegisterActivity"/>
+
+        <activity android:name=".Android_activities.account.RegisterActivity" />
         <activity
-            android:name="com.telecom_paristech.pact25.rhythmrun.Client_serveur.FtpServeur"
+            android:name=".Client_serveur.FtpServeur"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" >
-
-            </activity>
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Android_activities.test.AudioTestActivity"></activity>
     </application>
-
 
 </manifest>

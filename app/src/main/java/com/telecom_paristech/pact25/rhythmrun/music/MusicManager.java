@@ -2,7 +2,10 @@ package com.telecom_paristech.pact25.rhythmrun.music;
 
 import android.util.Log;
 
+
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavProcess;
+
 
 import java.io.File;
 
@@ -14,7 +17,9 @@ import static java.lang.Math.sqrt;
  * Created by lucas on 04/03/17.
  */
 
+
 public class MusicManager implements MusicManagerInterface {
+
     private float[] paceFrequency;
     private final int l = 5; //longueur de paceFrequency
     int indice; //indice courant dans le tableau circulaire paceFrequency
@@ -77,9 +82,11 @@ public class MusicManager implements MusicManagerInterface {
         }
     }
 
+
     public float getWantedTempo()
     {
         Log.i("MusicManager","retour du tempo voulu");
+
         return wantedTempoHz;
     }
 
@@ -91,4 +98,21 @@ public class MusicManager implements MusicManagerInterface {
     public void songEnded() {
         trackPlaying = false;
     }
+
+
+
+    public static void readMusic(final String path){
+        //TODO : remplacer path par l'attribut songPath
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                WavProcess.wavRead(path);
+                Log.i("READ","Fin de la procédure");
+            }
+        }).start();
+
+
+    }
+
 }

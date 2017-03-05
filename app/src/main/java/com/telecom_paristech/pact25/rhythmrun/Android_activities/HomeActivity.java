@@ -2,6 +2,7 @@ package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,13 +22,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.telecom_paristech.pact25.rhythmrun.Android_activities.account.LoginActivity;
+import com.telecom_paristech.pact25.rhythmrun.Android_activities.test.AudioTestActivity;
+import com.telecom_paristech.pact25.rhythmrun.Client_serveur.login.SQLLiteUser;
+import com.telecom_paristech.pact25.rhythmrun.Client_serveur.login.SessionConfiguration;
 import com.telecom_paristech.pact25.rhythmrun.R;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private DataManager dataManager;
+    private SessionConfiguration session;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -37,6 +45,10 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Paramétrage de la session
+        session = new SessionConfiguration(getApplicationContext());
+        if (!session.isLoggedIn()) logout();
 
         dataManager = new DataManager(this);
 
@@ -164,6 +176,13 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_about:
                 startActivityFromClass(AboutActivity.class);
                 break;
+            case R.id.audio_test:
+                startActivity(new Intent(HomeActivity.this, AudioTestActivity.class));
+                break;
+            case R.id.nav_logout:
+                askForLogout();
+                break;
+
         }
 
         //Close the drawer after an item has been clicked.
@@ -188,6 +207,41 @@ public class HomeActivity extends AppCompatActivity
         Pace pace = dataManager.getLastWeekPace();
         Log.d("Home","Last week pace: "+pace.getValue());
         return pace;
+    }
+
+    /**
+     * Demande si l'utilisateur veut vraiment se déconnecter
+     */
+    private void askForLogout(){
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch(which)
+                {
+                    //L'utilisateur veut se déconnecter
+                    case DialogInterface.BUTTON_POSITIVE:
+                        logout();
+                        break;
+                    // Annuler
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage("Voulez-vous vraiment déconnecter votre session ?")
+                .setNegativeButton("Annuler",listener)
+                .setPositiveButton("Se déconnecter",listener)
+                .show();
+    }
+
+    private void logout(){
+        session.setLogin(false);
+        new SQLLiteUser(getApplicationContext()).deleteUsers();
+        Toast.makeText(this, getResources().getString(R.string.logged_out), Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(HomeActivity.this,LoginActivity.class));
+        finish();
     }
 
     public interface Callable{
