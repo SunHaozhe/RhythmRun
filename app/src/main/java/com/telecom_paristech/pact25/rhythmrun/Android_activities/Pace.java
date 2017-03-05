@@ -24,10 +24,12 @@ public class Pace implements Parcelable {
     };
 
     public static String fancyPace(double d){
+        if(Double.isNaN(d) || Double.isInfinite(d)){
+            return "inf";
+        }
         int sec;
 
         int index = Double.toString(d*60).indexOf(".");
-        Log.d("FANCY",String.valueOf(d));
         if (index==-1) sec = Integer.parseInt(Double.toString(d*60));
         else sec = Integer.parseInt(Double.toString(d*60).substring(0,Double.toString(d*60).indexOf(".")));
 

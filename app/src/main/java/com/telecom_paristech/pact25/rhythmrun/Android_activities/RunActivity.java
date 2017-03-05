@@ -158,6 +158,11 @@ public class RunActivity extends AppCompatActivity {
                 Intent intent = new Intent(view.getContext(), SumUpActivity.class);
                 intent.putExtra(Macros.EXTRA_ROUTE,new CustomPolylineOptions(getRoute()));
                 intent.putParcelableArrayListExtra(Macros.EXTRA_RUN_DATA,runData);
+
+                //Reset of static Run data
+                runMapFragment.reset();
+
+
                 startActivity(intent);
             }
         });
