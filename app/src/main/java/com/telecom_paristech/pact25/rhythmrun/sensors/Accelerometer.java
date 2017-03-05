@@ -32,10 +32,11 @@ public class Accelerometer implements SensorEventListener {
     private boolean active;
     private boolean auMoinsUnTour = false;
     private int k = 0;
-    private final ScheduledExecutorService scheduler;
-    private final ScheduledFuture<?> scheduledTabCompleter;
+    //private final ScheduledExecutorService scheduler;
+    //private final ScheduledFuture<?> scheduledTabCompleter;
     private Long tempsDebut;
     private Long dernierTemps;
+    private Boolean ended = false;
 
     public boolean isActive() {
         return active&&auMoinsUnTour;
@@ -76,9 +77,11 @@ public class Accelerometer implements SensorEventListener {
         this.nombreEchantillons = nombre_echantillons;
         this.plageEchantillonage = nombre_echantillons/frequenceEchantillonage;
         valeurs = new float[3][nombre_echantillons];
-        scheduler = Executors.newScheduledThreadPool(1);
-        tempsDebut = (long)0;
-        scheduledTabCompleter = scheduler.scheduleAtFixedRate(new tabCompleter(tempsDebut), 10L, (long) (1000*periode), TimeUnit.MILLISECONDS);
+        //scheduler = Executors.newScheduledThreadPool(1);
+        //tempsDebut = (long)0;
+        //scheduledTabCompleter = scheduler.scheduleAtFixedRate(new tabCompleter(tempsDebut), 10L, (long) (1000*periode), TimeUnit.MILLISECONDS);
+        Thread thread = new Thread(new tabCompleter(ended, (int)(1000*periode)));
+        thread.start();
     }
 
     /**
@@ -125,7 +128,8 @@ public class Accelerometer implements SensorEventListener {
     }
 
     public final void stop() {
-        scheduledTabCompleter.cancel(true);
+        //scheduledTabCompleter.cancel(true);
+        ended = true;
     }
 
     public final float[][] getArray() {
@@ -154,23 +158,34 @@ public class Accelerometer implements SensorEventListener {
     class tabCompleter implements Runnable {
         boolean firstRun = true;
         long tempsDebut;
-        tabCompleter(Long tempsDebut) {
-            this.tempsDebut = tempsDebut;
+        long periode;
+        Boolean ended;
+        tabCompleter(Boolean ended, int periodeMs) {
+            tempsDebut = 0;
+            this.periode = periodeMs;
+            this.ended = ended;
         }
         @Override
         public void run() {
-            dernierTemps = SystemClock.elapsedRealtime();
-            if (firstRun) {
-                tempsDebut = dernierTemps;
-                firstRun = false;
+            while (!ended) {
+                dernierTemps = SystemClock.elapsedRealtime();
+                if (firstRun) {
+                    tempsDebut = dernierTemps;
+                    firstRun = false;
+                }
+                synchronized (valeurs) {
+                    valeurs[0][k] = ax;
+                    valeurs[1][k] = ay;
+                    valeurs[2][k] = az;
+                }
+                if (k == nombreEchantillons - 1) auMoinsUnTour = true;
+                k = (k + 1) % nombreEchantillons;
+                try {
+                    Thread.sleep(periode);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            synchronized (valeurs) {
-                valeurs[0][k] = ax;
-                valeurs[1][k] = ay;
-                valeurs[2][k] = az;
-            }
-            if (k==nombreEchantillons-1) auMoinsUnTour = true;
-            k = (k+1)%nombreEchantillons;
         }
 
     }
