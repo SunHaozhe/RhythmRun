@@ -1,5 +1,9 @@
 package com.telecom_paristech.pact25.rhythmrun.music;
 
+import android.util.Log;
+
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavProcess;
+
 import java.io.File;
 
 import static java.lang.Math.abs;
@@ -80,4 +84,21 @@ public class MusicManager {
     public void songEnded() {
         trackPlaying = false;
     }
+
+
+
+    public static void readMusic(final String path){
+        //TODO : remplacer path par l'attribut songPath
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                WavProcess.wavRead(path);
+                Log.i("READ","Fin de la procédure");
+            }
+        }).start();
+
+
+    }
+
 }

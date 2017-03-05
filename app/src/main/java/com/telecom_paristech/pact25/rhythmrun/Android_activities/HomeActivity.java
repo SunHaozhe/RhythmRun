@@ -167,6 +167,9 @@ public class HomeActivity extends AppCompatActivity
                 break;
             case R.id.audio_test:
                 startActivity(new Intent(HomeActivity.this, AudioTestActivity.class));
+                break;
+            case R.id.nav_logout:
+
         }
 
         //Close the drawer after an item has been clicked.
