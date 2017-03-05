@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.telecom_paristech.pact25.rhythmrun.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.telecom_paristech.pact25.rhythmrun.sensors.Podometer;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -340,11 +341,14 @@ public class RunActivity extends AppCompatActivity {
         return SystemClock.elapsedRealtime() - chronometer.getBase();
     }
 
-    private int getHeartRate(){
+    final Podometer pod= new Podometer(context);
+    float frequence = pod.getRunningPaceFrequency();
+
+    private float getHeartRate(){
         /*
             Fetches the heart rate from the Bluetooth belt.
          */
-        return 120;
+        return frequence;
     }
 
     private String getCurrentSong(){
