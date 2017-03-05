@@ -29,6 +29,7 @@ public class MusicManager {
 
     private final void loadNewTrack() {
         float[][] tempoIntervalsHz = {{wantedTempoHz*0.9f, wantedTempoHz*1.1f}, {2*wantedTempoHz*0.9f, 2*wantedTempoHz*1.1f}};
+        //TODO :
         String songPath = ""; //a completer avec la BDD en utilisant la ligne precedente si possible
         //(on veut le chemin d'acces d'une musique de la bdd avec un tempo dans les intervalles de tempoIntervalsHz)
         songTempoHz = -1; //pareil
