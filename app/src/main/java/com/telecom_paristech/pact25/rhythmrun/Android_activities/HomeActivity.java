@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.telecom_paristech.pact25.rhythmrun.Android_activities.test.AudioTestActivity;
 import com.telecom_paristech.pact25.rhythmrun.R;
 
 public class HomeActivity extends AppCompatActivity
@@ -164,6 +165,8 @@ public class HomeActivity extends AppCompatActivity
             case R.id.nav_about:
                 startActivityFromClass(AboutActivity.class);
                 break;
+            case R.id.audio_test:
+                startActivity(new Intent(HomeActivity.this, AudioTestActivity.class));
         }
 
         //Close the drawer after an item has been clicked.

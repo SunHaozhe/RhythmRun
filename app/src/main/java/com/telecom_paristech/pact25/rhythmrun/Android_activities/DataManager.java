@@ -214,9 +214,15 @@ class DataManager {
     private List<HistoryItem> getLastWeekRuns(){
         List<HistoryItem> weekRuns = new ArrayList<>();
         Log.d("DataManager","Getting last week runs.");
+<<<<<<< Updated upstream
 
         java.util.Calendar calendar;
         calendar = java.util.Calendar.getInstance();
+=======
+/*
+        Calendar calendar;
+        calendar = Calendar.getInstance();
+>>>>>>> Stashed changes
 
         calendar.add(java.util.Calendar.DAY_OF_MONTH, -7);
         Date weekStart = calendar.getTime();
@@ -231,6 +237,7 @@ class DataManager {
                 weekRuns.add(run);
             }
         }
+        */
         return weekRuns;
     }
 
