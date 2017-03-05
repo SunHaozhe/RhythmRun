@@ -341,7 +341,7 @@ public class RunActivity extends AppCompatActivity {
         return SystemClock.elapsedRealtime() - chronometer.getBase();
     }
 
-    final Podometer pod= new Podometer(context);
+    final Podometer pod= new Podometer(this);
     float frequence = pod.getRunningPaceFrequency();
 
     private float getHeartRate(){
