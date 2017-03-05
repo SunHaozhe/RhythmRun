@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -13,6 +14,7 @@ import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -133,5 +135,17 @@ public class Song implements Parcelable {
         parcel.writeString(path);
         parcel.writeString(genre);
         parcel.writeString(duration);
+    }
+
+    public void play(){
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
