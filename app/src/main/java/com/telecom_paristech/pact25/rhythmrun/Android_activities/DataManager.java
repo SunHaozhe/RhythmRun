@@ -307,7 +307,7 @@ class DataManager {
             runs.add(new HistoryItem(
                     filename,
                     df2.format(java.util.Calendar.getInstance().getTime()),
-                    new Pace(elapsedTime/6000).toStr("km","p",false),
+                    new Pace(elapsedTime/60000).toStr("km","p",false),
                     distance,
                     pace,
                     route
