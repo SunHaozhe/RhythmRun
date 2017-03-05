@@ -65,7 +65,9 @@ public class Podometer implements PodometerInterface, SensorEventListener {
             public void run() {
                 Log.i("Podomètre", "on est rentrés dans le thread du podometre");
                 while (!fini) {
-                    computePacePeriod();
+                    if (acc.isActive()) {
+                        computePacePeriod();
+                    }
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
