@@ -7,21 +7,12 @@ package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
  */
 
 
-import android.graphics.Interpolator;
-
-import com.telecom_paristech.pact25.rhythmrun.interfaces.music.PhaseVocoderInterface;
+import com.telecom_paristech.pact25.rhythmrun.Android_activities.Song;
 import com.telecom_paristech.pact25.rhythmrun.music.Music;
-import com.telecom_paristech.pact25.rhythmrun.music.Song;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFile;
 
-import org.apache.commons.math3.analysis.interpolation.InterpolatingMicrosphere;
 import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
-import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
-import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
-import org.apache.commons.math3.complex.Complex;
-
-import ru.sscc.spline.polynomial.PSplineCalculator;
 
 /**
  * Classe permettant d'accélérer/de ralentir une chanson. Attention, le résultat ne sera pas agréable à l'oreille si
@@ -36,7 +27,7 @@ public class SongSpeedChanger {
 
         String path = song.getPath();
 
-        double musicTab = song.getFreq();
+
 
 
         LinearInterpolator interpolator = new LinearInterpolator();
