@@ -1,5 +1,6 @@
 package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
@@ -40,6 +41,8 @@ public class RunActivity extends AppCompatActivity {
     private TextView tvHeartRate;
     private TextView tvBPM;
     private TextView tvCurrentSong;
+
+    private Podometer podometer=null;
 
     private Timer t;
 
@@ -244,6 +247,21 @@ public class RunActivity extends AppCompatActivity {
         //Initialization of run data.
         runData = new ArrayList<>();
 
+        final Context context = this;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                podometer = new Podometer(context);
+                while(!podometer.isActive()){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
     }
 
     @Override
@@ -341,14 +359,13 @@ public class RunActivity extends AppCompatActivity {
         return SystemClock.elapsedRealtime() - chronometer.getBase();
     }
 
-    final Podometer pod= new Podometer(context);
-    float frequence = pod.getRunningPaceFrequency();
-
     private float getHeartRate(){
         /*
             Fetches the heart rate from the Bluetooth belt.
          */
-        return frequence;
+        if(podometer == null)
+            return -1;
+        return podometer.getRunningPaceFrequency();
     }
 
     private String getCurrentSong(){

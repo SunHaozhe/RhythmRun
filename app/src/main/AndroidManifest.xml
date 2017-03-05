@@ -24,10 +24,8 @@
             android:name="com.telecom_paristech.pact25.rhythmrun.music.Main2Activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
+
         </activity>
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.HomeActivity"
@@ -35,6 +33,10 @@
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.NewRunActivity"
