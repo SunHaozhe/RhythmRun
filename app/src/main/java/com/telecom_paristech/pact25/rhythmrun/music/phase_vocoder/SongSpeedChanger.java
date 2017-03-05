@@ -23,9 +23,10 @@ public class SongSpeedChanger {
 
     WavFile file;
 
-    public Music modifyMusicToFitTempo(Song song, float tempo) {
+    public double[] modifyMusicToFitTempo(Song song, float tempo) {
 
         String path = song.getPath();
+
 
         // y = audioread(...)
 
@@ -35,11 +36,10 @@ public class SongSpeedChanger {
         double[] t = SelfMadeInterpolator.getIndexesTab(N);
 
         double coef = tempo;// /freq;
+
+
         double[] tInterpol = SelfMadeInterpolator.getIndexesInterpTab(N,coef);
 
-        double[] valuesInterp = SelfMadeInterpolator.interp1(t,song.getValues(),tInterpol);
-
-
-        return null;
+        return SelfMadeInterpolator.interp1(t,song.getValues(),tInterpol);
     }
 }
