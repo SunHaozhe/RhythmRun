@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.telecom_paristech.pact25.rhythmrun.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
 import com.telecom_paristech.pact25.rhythmrun.sensors.Podometer;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class RunActivity extends AppCompatActivity {
     private TextView tvCurrentSong;
 
     private Podometer podometer=null;
+    private MusicManagerInterface musicManagerInterface;
 
     private Timer t;
 
@@ -262,6 +264,7 @@ public class RunActivity extends AppCompatActivity {
             }
         }).start();
 
+        musicManagerInterface = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager();
     }
 
     @Override
@@ -294,6 +297,8 @@ public class RunActivity extends AppCompatActivity {
     public void onStop(){
         runMapFragment.stopLocationUpdates(); //Stopping location updates.
         MusicManager.stopPlaying();
+        if(podometer != null)
+            podometer.stop();
         super.onStop();
     }
 
@@ -311,6 +316,7 @@ public class RunActivity extends AppCompatActivity {
                     getDistance(),
                     getHeartRate()
             ));
+            musicManagerInterface.updateRythm(getHeartRate());
             Log.v("Run","Updating the run status while running is "+isRunning+" ("+runData.size()+" points collected).");
             updateDisplay();
         }

@@ -2,6 +2,8 @@ package com.telecom_paristech.pact25.rhythmrun.music;
 
 import android.util.Log;
 
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
+
 import java.io.File;
 
 import static java.lang.Math.abs;
@@ -12,7 +14,7 @@ import static java.lang.Math.sqrt;
  * Created by lucas on 04/03/17.
  */
 
-public class MusicManager {
+public class MusicManager implements MusicManagerInterface {
     private float[] paceFrequency;
     private final int l = 5; //longueur de paceFrequency
     int indice; //indice courant dans le tableau circulaire paceFrequency
