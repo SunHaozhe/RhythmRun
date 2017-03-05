@@ -1,5 +1,7 @@
 package com.telecom_paristech.pact25.rhythmrun.music;
 
+import android.util.Log;
+
 import java.io.File;
 
 import static java.lang.Math.abs;
@@ -34,7 +36,8 @@ public class MusicManager {
         songTempoHz = -1; //pareil
     }
 
-    private void computeTempo() {
+    private void computeTempo()
+    {
         double ecartType = 0, variance = 0; // on met a jour le tempo si l'ecart type des frequences de pas relevees est petite
         double moyenne = 0;
         for (int i = 0; i<l; i++) {
@@ -53,24 +56,32 @@ public class MusicManager {
         if (!trackPlaying) {
             loadNewTrack();
         }
+        Log.i("ComputeTempo classe", "Sortie de la classe");
     }
 
-    public void updateRythm(float paceFrequency) {
+    public void updateRythm(float paceFrequency)
+    {
         this.paceFrequency[indice] = paceFrequency;
-        if (indice == l-1) {
+        if (indice == l-1)
+        {
             premierTour = false;
         }
         indice = (indice +1)%l;
-        if (premierTour) {
+        if (premierTour)
+        {
             computeTempo();
+            Log.i("MusicManager","premier tour in the updateRythm");
         }
     }
 
-    public float getWantedTempo() {
+    public float getWantedTempo()
+    {
+        Log.i("MusicManager","retour du tempo voulu");
         return wantedTempoHz;
     }
 
-    public String getSongPath() {
+    public String getSongPath()
+    {
         return songPath;
     }
 
