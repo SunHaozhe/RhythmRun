@@ -5,6 +5,9 @@ import android.util.Log;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFile;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 
+import org.apache.commons.math3.complex.Complex;
+import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.FastFourierTransform;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -51,7 +54,8 @@ public class Tempo { //faire le tri entre les int et les long
 
     public final static double findTempoHz(String waveFilePath) {//resultat negatif si le morceau ne convient pas
         Log.i("lucas", "on est rentrés dans findTempoHz");
-        double tempo = -1;
+        return findTempoHzFast(waveFilePath);
+        /*double tempo = -1;
         try {
             WavFile waveFile = WavFile.openWavFile(new File(waveFilePath)); //on suppose le fichier a 44100Hz
 
@@ -63,7 +67,7 @@ public class Tempo { //faire le tri entre les int et les long
         } catch (WavFileException e) {
             e.printStackTrace();
         }
-        return tempo;
+        return tempo;*/
     }
 
     public final static double findTempoHzFast(String waveFilePath) {
@@ -91,7 +95,7 @@ public class Tempo { //faire le tri entre les int et les long
     private final static double findTempo(double buffer[], int numberOfFrames, long sampleRate) {
         Log.i("lucas", "on est rentrés dans findTempo");
         double a = 0.9998;
-        int N = 8; //parametre calcule pour fech = 44100kHz, a generaliser
+        int N = 8; //parametre calcule pour fech = 44100kHz, on est toujours dans ce cas
 
         double[] energie = new double[numberOfFrames];
         energie[0] = carre(buffer[0]);
@@ -110,14 +114,27 @@ public class Tempo { //faire le tri entre les int et les long
         double[] d = new double[l];
         diff(energieReEchantillonee, d, N, l);
 
-        double[] tfd = new double[l];
-        TFDModule(d, tfd, l);
+        //faisons le zero-padding
+        int tpsMin = 60; //pour avoir une precision inférieure au bpm
+        int l2 = (int)(tpsMin/dt);
+        int k = 1;
+        while (k<l2 || k<l) {
+            k *= 2;
+        }
+        double[] d2 = new double[k];
+        System.arraycopy(d, 0, d2, 0, l);
+        l = k;
+        d = d2;
+
+        //double[] tfd = new double[l];
+        //TFDModule(d, tfd, l);
+        Complex[] fft = FastFourierTransform.fft(d);
         int indiceDuMax = 0;
         double max = 0;
         for (int i = 1; i<l/2; i++) { // la valeur en 0 n'est  pas interessante
-            if (tfd[i] > max) {
+            if (fft[i].abs() > max) {
                 indiceDuMax = i;
-                max = tfd[i];
+                max = fft[i].abs();
             }
         }
         Log.i("lucas", "l : " + String.valueOf(l));

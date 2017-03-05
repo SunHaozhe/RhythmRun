@@ -21,20 +21,16 @@
 
         <activity android:name=".music.MainActivity" />
         <activity android:name=".music.Main2Activity" />
+
         <activity
             android:name=".Android_activities.HomeActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
-            android:name=".Android_activities.NewRunActivity"
+            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.NewRunActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_new_run"
             android:parentActivityName=".Android_activities.HomeActivity"
@@ -95,7 +91,15 @@
             android:label="@string/title_activity_history_run"
             android:parentActivityName=".Android_activities.HistoryActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Android_activities.account.LoginActivity"></activity>
+
+        <activity android:name=".Android_activities.account.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
         <activity android:name=".Android_activities.account.RegisterActivity" />
         <activity
             android:name=".Client_serveur.FtpServeur"
