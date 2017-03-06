@@ -371,7 +371,7 @@ public class RunActivity extends AppCompatActivity {
          */
         if(podometer == null)
             return -1;
-        return podometer.getRunningPaceFrequency();
+        return podometer.getRunningPaceFrequency()*60;
     }
 
     private String getCurrentSong(){
