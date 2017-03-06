@@ -29,12 +29,15 @@ import com.telecom_paristech.pact25.rhythmrun.Android_activities.test.AudioTestA
 import com.telecom_paristech.pact25.rhythmrun.Client_serveur.login.SQLLiteUser;
 import com.telecom_paristech.pact25.rhythmrun.Client_serveur.login.SessionConfiguration;
 import com.telecom_paristech.pact25.rhythmrun.R;
+import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private DataManager dataManager;
     private SessionConfiguration session;
+
+    static private TempoDataBase db;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -76,7 +79,13 @@ public class HomeActivity extends AppCompatActivity
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 Macros.PERMISSION_GLOBAL_REQUEST);
+
+        db = new TempoDataBase(this);
    }
+
+    public static TempoDataBase getDB(){
+        return db;
+    }
 
     @Override
     public void onResume(){

@@ -39,7 +39,7 @@ public class TempoDataBase extends SQLiteOpenHelper {
 
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_TEMPO + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_PATH + " TEXT UNIQUE,"
-                + KEY_TEMPO + " DOUBLE,"
+                + KEY_TEMPO + " DOUBLE"
                 + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
     }

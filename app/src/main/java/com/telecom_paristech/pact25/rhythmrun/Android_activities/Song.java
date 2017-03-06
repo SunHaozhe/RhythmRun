@@ -12,6 +12,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
+import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +53,10 @@ public class Song implements Parcelable {
         album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
         genre = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
         duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+        double freq = Tempo.findTempoHzFast(path);
+
+        HomeActivity.getDB().addSongAndTempo(path, freq);
 
         if(duration != null)
             duration = Pace.fancyPace(Double.parseDouble(duration)/60000);
