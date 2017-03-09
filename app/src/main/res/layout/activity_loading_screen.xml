@@ -88,29 +88,8 @@
             android:fontFamily="@string/font_family_thin"
             android:textColor="@color/textSecondary"
             android:textSize="20sp"
-            android:text="Checking connectivity"/>
+            android:text=""/>
 
     </RelativeLayout>
-
-    <!--<android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/primary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="hello"/>
-
-        </android.support.v7.widget.Toolbar>
-
-    </android.support.design.widget.AppBarLayout>-->
 
 </android.support.design.widget.CoordinatorLayout>

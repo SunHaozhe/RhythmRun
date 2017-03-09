@@ -73,12 +73,7 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-        //Always requests permissions at the beginning
-        ActivityCompat.requestPermissions(this,
-                new String[] {Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                Macros.PERMISSION_GLOBAL_REQUEST);
+
 
         db = new TempoDataBase(this);
    }
