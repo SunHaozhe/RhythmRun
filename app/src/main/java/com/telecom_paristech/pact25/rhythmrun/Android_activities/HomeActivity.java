@@ -2,6 +2,7 @@ package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,14 +73,14 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
-
-
-        db = new TempoDataBase(this);
    }
 
     public static TempoDataBase getDB(){
         return db;
+    }
+
+    public static void initDB(Context context){
+        db = new TempoDataBase(context);
     }
 
     @Override
@@ -273,14 +274,6 @@ public class HomeActivity extends AppCompatActivity
             }
         });
         animator.start();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-        if(requestCode == Macros.PERMISSION_GLOBAL_REQUEST){
-            if(!MusicManager.areSongsLoaded())
-                MusicManager.init();
-        }
     }
 
 }

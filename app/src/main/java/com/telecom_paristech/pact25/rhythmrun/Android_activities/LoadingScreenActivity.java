@@ -1,6 +1,7 @@
 package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.telecom_paristech.pact25.rhythmrun.R;
+import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
 
 public class LoadingScreenActivity extends AppCompatActivity {
 
@@ -22,10 +24,37 @@ public class LoadingScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loading_screen);
 
         loadingLabel = (TextView) findViewById(R.id.loadingTextView);
-        requestPermissions();
+
     }
 
-    private void requestPermissions(){
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            requestPermissions();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }).start();
+
+    }
+
+    private void requestPermissions() throws InterruptedException {
         //Always requests permissions at the beginning
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
@@ -59,14 +88,47 @@ public class LoadingScreenActivity extends AppCompatActivity {
         runOnUiThread(new Thread(new Runnable() {
             @Override
             public void run() {
-                load();
+                try {
+                    load();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }));
     }
 
-    private void load(){
+    private void load() throws InterruptedException {
         Log.i("Loading","Initiating loading.");
+
+        final Context context = this;
+
+        Thread initMusicManager = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MusicManager.init();
+            }
+        });
+
+
+        Thread initMusicDatabase = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HomeActivity.initDB(context);
+            }
+        });
+
+        loadingLabel.setText("Loading songs database...");
+        initMusicDatabase.start();
+        initMusicDatabase.join();
+
+        //HomeActivity.initDB(context);
+
+        loadingLabel.setText("Loading music files...");
+        initMusicManager.start();
+        initMusicManager.join();
+
         goToHome();
+
     }
 
 
