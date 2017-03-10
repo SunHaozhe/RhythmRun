@@ -24,6 +24,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
     private boolean isTempoDatabaseLoaded = false;
     private boolean areMusicFilesLoaded = false;
     private boolean isConnectionChecked = false;
+    private boolean areRunsLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,13 +109,14 @@ public class LoadingScreenActivity extends AppCompatActivity {
         Log.i("Loading","Initiating loading.");
 
         new TaskLoadTempoDatabase().execute(this);
+        new TaskLoadRuns().execute(this);
         new TaskCheckIfConnected().execute(this);
 
     }
 
 
     public void goToHome(){
-        if(isTempoDatabaseLoaded && areMusicFilesLoaded && isConnectionChecked){
+        if(isTempoDatabaseLoaded && areMusicFilesLoaded && isConnectionChecked && areRunsLoaded){
             Log.i("Loading","Done loading. Going to home.");
             startActivity(new Intent(this, HomeActivity.class));
         }
@@ -202,9 +204,31 @@ public class LoadingScreenActivity extends AppCompatActivity {
             super.onPostExecute(bool);
             isConnectionChecked = true;
             goToHome();
-            //TODO : Handle the result
         }
     }
+
+    private class TaskLoadRuns extends LoadingTask<Context, Void, Void>{
+        TaskLoadRuns(){
+            super("Loading runs...");
+        }
+
+        @Override
+        protected Void doInBackground(Context... contexts){
+            new DataManager(contexts[0]); //Automatically loads runs and weekly runs
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void voids){
+            super.onPostExecute(voids);
+            areRunsLoaded = true;
+            goToHome();
+        }
+
+    }
+
+    //TODO: load podometer
+    //TODO : Handle connection result
 
 
 }

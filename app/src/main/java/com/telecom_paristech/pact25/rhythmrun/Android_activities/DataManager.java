@@ -24,14 +24,17 @@ import java.util.Locale;
 class DataManager {
 
     private static List<HistoryItem> runs;
+    private static List<HistoryItem> lastWeekRuns;
 
     private OnRunsLoadedListener onRunsLoadedListener;
     private final Context context;
 
     DataManager(Context context){
         this.context = context;
-        if(runs==null)
+        if(runs==null){
             loadRuns();
+            getLastWeekRuns();
+        }
     }
 
     List<HistoryItem> getRuns(){
@@ -212,26 +215,28 @@ class DataManager {
     }
 
     private List<HistoryItem> getLastWeekRuns(){
-        List<HistoryItem> weekRuns = new ArrayList<>();
-        Log.d("DataManager","Getting last week runs.");
+        if(lastWeekRuns == null){
+            lastWeekRuns = new ArrayList<>();
+            Log.d("DataManager","Getting last week runs.");
 
-        java.util.Calendar calendar;
-        calendar = java.util.Calendar.getInstance();
+            java.util.Calendar calendar;
+            calendar = java.util.Calendar.getInstance();
 
-        calendar.add(java.util.Calendar.DAY_OF_MONTH, -7);
-        Date weekStart = calendar.getTime();
-        java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
-        String weekStartString = df.format(weekStart)+".run";
+            calendar.add(java.util.Calendar.DAY_OF_MONTH, -7);
+            Date weekStart = calendar.getTime();
+            java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
+            String weekStartString = df.format(weekStart)+".run";
 
-        Log.d("DataManager","Week start string: "+weekStartString);
+            Log.d("DataManager","Week start string: "+weekStartString);
 
-        for(HistoryItem run: runs){
-            if(run.getFilename().compareTo(weekStartString)>0){
-                Log.v("DataManager","Run in last week: "+run.getFilename());
-                weekRuns.add(run);
+            for(HistoryItem run: runs){
+                if(run.getFilename().compareTo(weekStartString)>0){
+                    Log.v("DataManager","Run in last week: "+run.getFilename());
+                    lastWeekRuns.add(run);
+                }
             }
         }
-        return weekRuns;
+        return lastWeekRuns;
     }
 
     Distance getLastWeekDistance(){
