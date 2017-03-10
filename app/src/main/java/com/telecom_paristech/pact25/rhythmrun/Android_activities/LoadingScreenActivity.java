@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -100,32 +101,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
     private void load() throws InterruptedException {
         Log.i("Loading","Initiating loading.");
 
-        final Context context = this;
-
-        Thread initMusicManager = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                MusicManager.init();
-            }
-        });
-
-
-        Thread initMusicDatabase = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HomeActivity.initDB(context);
-            }
-        });
-
-        loadingLabel.setText("Loading songs database...");
-        initMusicDatabase.start();
-        initMusicDatabase.join();
-
-        //HomeActivity.initDB(context);
-
-        loadingLabel.setText("Loading music files...");
-        initMusicManager.start();
-        initMusicManager.join();
+        new TaskLoadTempoDatabase().execute(this);
 
         goToHome();
 
@@ -135,6 +111,45 @@ public class LoadingScreenActivity extends AppCompatActivity {
     public void goToHome(){
         Log.i("Loading","Done loading. Going to home.");
         startActivity(new Intent(this, HomeActivity.class));
+    }
+
+    private class TaskLoadTempoDatabase extends AsyncTask<Context, Void, Void> {
+        @Override
+        protected void onPreExecute(){
+            loadingLabel.setText("Loading tempo database...");
+        }
+
+        @Override
+        protected Void doInBackground(Context... contexts) {
+            HomeActivity.initDB(contexts[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void voids){
+            loadingLabel.setText("Loading tempo database... Done.");
+            new TaskLoadMusicFiles().execute();
+        }
+
+    }
+
+    private class TaskLoadMusicFiles extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected void onPreExecute(){
+            loadingLabel.setText("Loading music files...");
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            MusicManager.init();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void voids){
+            loadingLabel.setText("Loading music files... Done.");
+        }
+
     }
 
 
