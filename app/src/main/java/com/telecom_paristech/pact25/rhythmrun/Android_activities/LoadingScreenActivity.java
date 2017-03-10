@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -119,13 +120,33 @@ public class LoadingScreenActivity extends AppCompatActivity {
         }
     }
 
-    private class TaskLoadTempoDatabase extends AsyncTask<Context, Void, Void> {
+    private abstract class LoadingTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result>{
         private long t;
+        private String text;
+
+        public LoadingTask(String text){
+            this.text = text;
+        }
 
         @Override
-        protected void onPreExecute(){
+        protected  void onPreExecute(){
             t = System.currentTimeMillis();
-            loadingLabel.setText("Loading tempo database...");
+            loadingLabel.setText(text);
+        }
+
+        @Override
+        protected void onPostExecute(Result result){
+            t = System.currentTimeMillis() - t;
+            loadingLabel.setText(text+" Done.");
+            Log.d("Loading",text+" finished in "+t+" ms.");
+        }
+
+    }
+
+    private class TaskLoadTempoDatabase extends LoadingTask<Context, Void, Void> {
+
+        TaskLoadTempoDatabase(){
+            super("Loading tempo database...");
         }
 
         @Override
@@ -136,22 +157,17 @@ public class LoadingScreenActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void voids){
-            t = System.currentTimeMillis() - t;
-            Log.d("Loading","Done loading tempo database in "+t+" ms.");
-            loadingLabel.setText("Loading tempo database... Done.");
+            super.onPostExecute(voids);
             isTempoDatabaseLoaded = true;
             new TaskLoadMusicFiles().execute();
         }
 
     }
 
-    private class TaskLoadMusicFiles extends AsyncTask<Void, Void, Void>{
-        private long t;
+    private class TaskLoadMusicFiles extends LoadingTask<Void, Void, Void>{
 
-        @Override
-        protected void onPreExecute(){
-            t = System.currentTimeMillis();
-            loadingLabel.setText("Loading music files...");
+        TaskLoadMusicFiles(){
+            super("Loading music files...");
         }
 
         @Override
@@ -162,22 +178,17 @@ public class LoadingScreenActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void voids){
-            t = System.currentTimeMillis() - t;
-            Log.d("Loading","Done loading music files in "+t+" ms.");
+            super.onPostExecute(voids);
             areMusicFilesLoaded = true;
-            loadingLabel.setText("Loading music files... Done.");
             goToHome();
         }
 
     }
 
-    private class TaskCheckIfConnected extends AsyncTask<Context, Void, Boolean>{
-        private long t;
+    private class TaskCheckIfConnected extends LoadingTask<Context, Void, Boolean>{
 
-        @Override
-        protected void onPreExecute(){
-            t = System.currentTimeMillis();
-            loadingLabel.setText("Checking if already logged in...");
+        TaskCheckIfConnected(){
+            super("Checking connection...");
         }
 
         @Override
@@ -188,12 +199,10 @@ public class LoadingScreenActivity extends AppCompatActivity {
 
         @Override
         protected  void onPostExecute(Boolean bool){
-            Log.d("Loading","Session connection is "+bool);
-            t = System.currentTimeMillis() - t;
-            Log.d("Loading","Done checking connection in "+t+" ms.");
+            super.onPostExecute(bool);
             isConnectionChecked = true;
-            loadingLabel.setText("Checking if already logged in... Done.");
             goToHome();
+            //TODO : Handle the result
         }
     }
 
