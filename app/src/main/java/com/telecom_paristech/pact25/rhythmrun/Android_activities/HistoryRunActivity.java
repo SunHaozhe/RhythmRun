@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.telecom_paristech.pact25.rhythmrun.R;
 
 import java.io.File;
+import java.util.ArrayList;
 
 //TODO: implement share feature
 
@@ -31,6 +32,8 @@ public class HistoryRunActivity extends AppCompatActivity {
         TextView tvDistance = (TextView) findViewById(R.id.historyRunDistance);
         TextView tvPace = (TextView) findViewById(R.id.historyRunPace);
         TextView tvTime = (TextView) findViewById(R.id.historyRunTime);
+
+        TextView tvHistoryRun = (TextView) findViewById(R.id.tvHistoryRunDebug);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String unit = sharedPreferences.getString("unit_list","km");
@@ -70,6 +73,9 @@ public class HistoryRunActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //TODO: put this in a AsyncTask
+        ArrayList<RunStatus> runData = dataManager.getRunData(historyItem.getFilename());
 
     }
 
