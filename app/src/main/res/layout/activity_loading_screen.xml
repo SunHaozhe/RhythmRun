@@ -23,16 +23,16 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <!--<fragment
+    <fragment
         android:id="@+id/loadingDummyMap"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="0dp"
-        android:layout_height="0dp" />-->
-    <fragment
+        android:layout_height="0dp" />
+    <!--<fragment
         android:id="@+id/loadingDummyMap"
         android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.ItineraryFragment"
         android:layout_width="0dp"
-        android:layout_height="0dp" />
+        android:layout_height="0dp" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
