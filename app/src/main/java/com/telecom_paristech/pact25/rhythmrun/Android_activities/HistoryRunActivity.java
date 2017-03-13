@@ -2,18 +2,22 @@ package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.Series;
 import com.telecom_paristech.pact25.rhythmrun.R;
 
 import java.io.File;
@@ -25,6 +29,19 @@ public class HistoryRunActivity extends AppCompatActivity {
 
     HistoryItem historyItem;
     DataManager dataManager;
+
+    ArrayList<DataPoint> seriesDistanceList = new ArrayList<>();
+    ArrayList<DataPoint> seriesPaceList = new ArrayList<>();
+    ArrayList<DataPoint> seriesHeartRateList = new ArrayList<>();
+
+    LineGraphSeries<DataPoint> seriesDistance;
+    LineGraphSeries<DataPoint> seriesPace;
+    LineGraphSeries<DataPoint> seriesHeartRate;
+
+    Series mainSeries;
+    Series secondSeries;
+
+    GraphView graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,19 +92,115 @@ public class HistoryRunActivity extends AppCompatActivity {
             }
         });
 
-        //TODO: put this in a AsyncTask
         ArrayList<RunStatus> runData = dataManager.getRunData(historyItem.getFilename());
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        graph = (GraphView) findViewById(R.id.graph);
 
-        ArrayList<DataPoint> dataDistanceOverTime = new ArrayList<>();
-        for(RunStatus runStatus : runData){
-            dataDistanceOverTime.add(new DataPoint(runStatus.time, runStatus.distance.getValue()));
+        new TaskLoadRunData().execute(runData);
+
+        final CheckBox cbDistance = (CheckBox) findViewById(R.id.cbDistance);
+        final CheckBox cbPace = (CheckBox) findViewById(R.id.cbPace);
+        final CheckBox cbHeart = (CheckBox) findViewById(R.id.cbHeartRate);
+
+        cbDistance.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    if(!displaySeries(seriesDistance, getMinMax(seriesDistanceList))){
+                        cbDistance.setChecked(false);
+                    }
+                } else {
+                    deleteSeries(seriesDistance);
+                }
+            }
+        });
+
+        cbPace.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    if(!displaySeries(seriesPace, getMinMax(seriesPaceList))){
+                        cbPace.setChecked(false);
+                    }
+                } else {
+                    deleteSeries(seriesPace);
+                }
+            }
+        });
+
+        cbHeart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    if(!displaySeries(seriesHeartRate, getMinMax(seriesHeartRateList))){
+                        cbHeart.setChecked(false);
+                    }
+                } else {
+                    deleteSeries(seriesHeartRate);
+                }
+            }
+        });
+
+        /*graph.addSeries(seriesPace);
+        graph.getSecondScale().addSeries(seriesHeartRate);
+        int[] minMax = getMinMax(seriesHeartRateList);
+        graph.getSecondScale().setMinY(minMax[0]);
+        graph.getSecondScale().setMaxY(minMax[1]);*/
+
+    }
+
+    private class TaskLoadRunData extends AsyncTask<ArrayList<RunStatus>, Void, Void>{
+
+        @Override
+        protected Void doInBackground(ArrayList<RunStatus>... runData) {
+            for(RunStatus runStatus : runData[0]){
+                seriesDistanceList.add(new DataPoint(runStatus.time/1000, runStatus.distance.getValue()));
+                seriesPaceList.add(new DataPoint(runStatus.time/1000, runStatus.pace.getValue()));
+                seriesHeartRateList.add(new DataPoint(runStatus.time/1000, runStatus.heartRate));
+            }
+
+            seriesDistance = new LineGraphSeries<>(seriesDistanceList.toArray(new DataPoint[seriesDistanceList.size()]));
+            seriesPace = new LineGraphSeries<>(seriesPaceList.toArray(new DataPoint[seriesPaceList.size()]));
+            seriesHeartRate = new LineGraphSeries<>(seriesHeartRateList.toArray(new DataPoint[seriesHeartRateList.size()]));
+
+            return null;
         }
+    }
 
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataDistanceOverTime.toArray(new DataPoint[dataDistanceOverTime.size()]));
-        //LineGraphSeries<DataPoint> series = new LineGraphSeries<>((DataPoint[]) dataDistanceOverTime.toArray() );
-        graph.addSeries(series);
+    private int[] getMinMax(ArrayList<DataPoint> series){
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for(DataPoint dataPoint : series){
+            if((int) dataPoint.getY() < min)
+                min = (int) dataPoint.getY();
+            if((int) dataPoint.getY() > max)
+                max = (int) dataPoint.getY();
+        }
+        return new int[]{min,max+1};
+    }
 
+    private boolean displaySeries(Series series, int[] minMax){
+        if(mainSeries == null){
+            graph.addSeries(series);
+            mainSeries = series;
+            return true;
+        } else if (secondSeries == null){
+            graph.getSecondScale().addSeries(series);
+            graph.getSecondScale().setMinY(minMax[0]);
+            graph.getSecondScale().setMaxY(minMax[1]);
+            secondSeries = series;
+            return true;
+        }
+        return false;
+    }
+
+    private void deleteSeries(Series series){
+        if(series == mainSeries) {
+            graph.removeSeries(series);
+            mainSeries = null;
+        } else if (series == secondSeries){
+            graph.getSecondScale().removeSeries(series);
+            secondSeries = null;
+        }
     }
 
     @Override
