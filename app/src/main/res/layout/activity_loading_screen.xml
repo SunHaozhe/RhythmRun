@@ -23,6 +23,12 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <fragment
+        android:id="@+id/loadingDummyMap"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

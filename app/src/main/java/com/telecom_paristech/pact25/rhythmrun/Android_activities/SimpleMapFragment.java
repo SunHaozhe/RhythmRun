@@ -9,6 +9,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -73,51 +74,22 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        long t0 = System.currentTimeMillis();
         Log.i("SimpleMap","Initialization of SimpleMapFragment.");
 
+        long t1 = System.currentTimeMillis();
         final View rootView = initView(inflater, container);
+        t1 = System.currentTimeMillis() - t1;
+        Log.d("SimpleMap","End of initView. Took "+t1+" ms.");
 
-        //Initialization of location handling.
-        Criteria criteria = new Criteria();
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        provider = locationManager.getBestProvider(criteria, false);
-        Log.d("SimpleMap","Location initialized with provider "+provider+".");
+        new TaskLoadLocalisation().execute(this);
 
-        boolean gps_enabled = false;
-        boolean network_enabled = false;
-
-        try {
-            gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch(Exception ex) {}
-
-        try {
-            network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {}
-
-        if(!gps_enabled && !network_enabled) {
-            // notify user
-            final Context context = getContext();
-            AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-            dialog.setMessage("Location services are not enabled.");
-            dialog.setPositiveButton("Open location settings", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    context.startActivity(myIntent);
-                }
-            });
-            /*dialog.setNegativeButton(context.getString(R.string.Cancel), new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-
-                }
-            });*/
-            dialog.show();
-        }
-
+        long t2 = System.currentTimeMillis();
         mapView.onCreate(savedInstanceState);
-        mapView.onResume(); //Needed to get the map to display immediately
+        t2 = System.currentTimeMillis() - t2;
+        Log.d("SimpleMap","End of mapView create. Took "+t2+" ms.");
+
+        //mapView.onResume(); //Needed to get the map to display immediately
 
         try {
             Log.d("SimpleMap","Initializing the map.");
@@ -126,9 +98,53 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
             e.printStackTrace();
         }
 
+        long t3 = System.currentTimeMillis();
         mapView.getMapAsync(this);
+        t3 = System.currentTimeMillis() - t3;
+        Log.d("SimpleMap","End of getMapASync. Took "+t3+" ms.");
+
+        long t = System.currentTimeMillis() - t0;
+        Log.d("SimpleMap","End of SimpleMapFragment initialization. Elapsed time: "+t+" ms.");
 
         return rootView;
+    }
+
+    private class TaskLoadLocalisation extends AsyncTask<SimpleMapFragment, Void, Void> {
+
+        @Override
+        protected Void doInBackground(SimpleMapFragment... fragments) {
+            Criteria criteria = new Criteria();
+            fragments[0].locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            fragments[0].provider = locationManager.getBestProvider(criteria, false);
+            Log.d("SimpleMap","Location initialized with provider "+provider+".");
+
+            boolean gps_enabled = false;
+            boolean network_enabled = false;
+
+            try {
+                gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            } catch(Exception ex) {}
+
+            try {
+                network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            } catch(Exception ex) {}
+
+            if(!gps_enabled && !network_enabled) {
+                // notify user
+                final Context context = getContext();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setMessage("Location services are not enabled.");
+                dialog.setPositiveButton("Open location settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        context.startActivity(myIntent);
+                    }
+                });
+                dialog.show();
+            }
+            return null;
+        }
     }
 
     public View initView(LayoutInflater inflater, ViewGroup container){

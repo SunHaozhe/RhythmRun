@@ -13,6 +13,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.telecom_paristech.pact25.rhythmrun.Client_serveur.login.SessionConfiguration;
 import com.telecom_paristech.pact25.rhythmrun.R;
 import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
@@ -25,6 +28,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
     private boolean areMusicFilesLoaded = false;
     private boolean isConnectionChecked = false;
     private boolean areRunsLoaded = false;
+    private boolean isDummyMapLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,11 +116,29 @@ public class LoadingScreenActivity extends AppCompatActivity {
         new TaskLoadRuns().execute(this);
         new TaskCheckIfConnected().execute(this);
 
+        /*
+            INITIALIZATION OF A DUMMY MAP
+            =============================
+            The Play Service APIs have to load a client service and a package service.
+            Unfortunately, the "package" one takes about a second to load and using the
+            MapsInitializer only will get us the "client".
+            So here we init a dummy map, so that maps created later load faster.
+         */
+        MapFragment dummyMapInitializer = (MapFragment) getFragmentManager().findFragmentById(R.id.loadingDummyMap);
+        dummyMapInitializer.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                Log.d("Loading", "Dummy map loaded.");
+                isDummyMapLoaded = true;
+                goToHome();
+            }
+        });
+
     }
 
 
     public void goToHome(){
-        if(isTempoDatabaseLoaded && areMusicFilesLoaded && isConnectionChecked && areRunsLoaded){
+        if(isTempoDatabaseLoaded && areMusicFilesLoaded && isConnectionChecked && areRunsLoaded && isDummyMapLoaded){
             Log.i("Loading","Done loading. Going to home.");
             startActivity(new Intent(this, HomeActivity.class));
         }
