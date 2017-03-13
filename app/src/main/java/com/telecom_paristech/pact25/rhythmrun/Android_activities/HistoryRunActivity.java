@@ -36,8 +36,6 @@ public class HistoryRunActivity extends AppCompatActivity {
         TextView tvPace = (TextView) findViewById(R.id.historyRunPace);
         TextView tvTime = (TextView) findViewById(R.id.historyRunTime);
 
-        TextView tvHistoryRun = (TextView) findViewById(R.id.tvHistoryRunDebug);
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String unit = sharedPreferences.getString("unit_list","km");
         String paceMode = sharedPreferences.getString("pace","p");
@@ -85,11 +83,8 @@ public class HistoryRunActivity extends AppCompatActivity {
         for(RunStatus runStatus : runData){
             dataDistanceOverTime.add(new DataPoint(runStatus.time, runStatus.distance.getValue()));
         }
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3)
-        });
+
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataDistanceOverTime.toArray(new DataPoint[dataDistanceOverTime.size()]));
         //LineGraphSeries<DataPoint> series = new LineGraphSeries<>((DataPoint[]) dataDistanceOverTime.toArray() );
         graph.addSeries(series);
 
