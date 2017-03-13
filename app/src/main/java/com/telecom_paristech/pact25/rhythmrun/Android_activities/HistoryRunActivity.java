@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 import com.telecom_paristech.pact25.rhythmrun.R;
 
 import java.io.File;
@@ -76,6 +79,19 @@ public class HistoryRunActivity extends AppCompatActivity {
 
         //TODO: put this in a AsyncTask
         ArrayList<RunStatus> runData = dataManager.getRunData(historyItem.getFilename());
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+
+        ArrayList<DataPoint> dataDistanceOverTime = new ArrayList<>();
+        for(RunStatus runStatus : runData){
+            dataDistanceOverTime.add(new DataPoint(runStatus.time, runStatus.distance.getValue()));
+        }
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
+                new DataPoint(0, 1),
+                new DataPoint(1, 5),
+                new DataPoint(2, 3)
+        });
+        //LineGraphSeries<DataPoint> series = new LineGraphSeries<>((DataPoint[]) dataDistanceOverTime.toArray() );
+        graph.addSeries(series);
 
     }
 
