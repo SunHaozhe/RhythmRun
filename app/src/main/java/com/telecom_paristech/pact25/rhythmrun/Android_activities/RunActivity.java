@@ -53,6 +53,7 @@ public class RunActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("Run","Creating activity Run.");
+        long t = System.currentTimeMillis();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
@@ -265,6 +266,10 @@ public class RunActivity extends AppCompatActivity {
         }).start();
 
         musicManagerInterface = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager();
+
+        t = System.currentTimeMillis() - t;
+        Log.d("Run","End of RunActivity creation. Took "+t+" ms.");
+
     }
 
     @Override

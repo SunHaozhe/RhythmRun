@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_loading_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.telecom_paristech.pact25.rhythmrun.Android_activities.LoadingScreenActivity"
+
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimaryDark"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <!--<fragment
+        android:id="@+id/loadingDummyMap"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />-->
+    <fragment
+        android:id="@+id/loadingDummyMap"
+        android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.ItineraryFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:background="@color/secondary">
+
+        <ProgressBar
+            android:id="@+id/loadingCircle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminate="true" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="30dp">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:fontFamily="@string/font_family_condensed"
+                android:textSize="40sp"
+                android:textColor="@color/textSecondary"
+                android:text="@string/app_name"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="@color/textSecondary"
+                android:fontFamily="@string/font_family_thin"
+                android:textSize="30sp"
+                android:text="@string/app_subtitle"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/loadingLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loadingCircle"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@string/font_family_condensed"
+            android:textColor="@color/textSecondary"
+            android:textSize="30sp"
+            android:text="Loading"/>
+
+        <TextView
+            android:id="@+id/loadingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loadingLabel"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@string/font_family_thin"
+            android:textColor="@color/textSecondary"
+            android:textSize="20sp"
+            android:text=""/>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
