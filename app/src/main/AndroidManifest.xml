@@ -22,7 +22,13 @@
 
         <!-- Mains -->
         <activity android:name=".music.MainActivity" />
-        <activity android:name=".music.Main2Activity" />
+        <activity android:name=".music.Main2Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <!-- Home -->
         <activity
@@ -119,11 +125,6 @@
 
         <!-- Login / register -->
         <activity android:name=".Android_activities.account.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".Android_activities.account.RegisterActivity" />
