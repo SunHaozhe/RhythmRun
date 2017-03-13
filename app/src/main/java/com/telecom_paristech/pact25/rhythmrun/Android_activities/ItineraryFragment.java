@@ -71,6 +71,7 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        long t = System.currentTimeMillis();
         Log.i("Itinerary","Initialization of ItineraryFragment.");
 
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
@@ -87,6 +88,9 @@ public class ItineraryFragment extends SimpleMapFragment implements OnMapReadyCa
         } else {
             Log.e("Itinerary","Error while creating TouchableWrapper, rootView is null.");
         }
+
+        t = System.currentTimeMillis() - t;
+        Log.d("Itinerary","End of itinerary fragment creation. Took "+t+" ms.");
 
         return rootView;
     }
