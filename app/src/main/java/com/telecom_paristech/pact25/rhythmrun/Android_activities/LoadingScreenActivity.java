@@ -124,15 +124,17 @@ public class LoadingScreenActivity extends AppCompatActivity {
             MapsInitializer only will get us the "client".
             So here we init a dummy map, so that maps created later load faster.
          */
-        //ItineraryFragment dummyMapInitializer = (ItineraryFragment) getFragmentManager().findFragmentById(R.id.loadingDummyMap);
-        /*dummyMapInitializer.getMapAsync(new OnMapReadyCallback() {
+        MapFragment dummyMapInitializer = (MapFragment) getFragmentManager().findFragmentById(R.id.loadingDummyMap);
+        dummyMapInitializer.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 Log.d("Loading", "Dummy map loaded.");
                 isDummyMapLoaded = true;
                 goToHome();
             }
-        });*/
+        });
+
+        //TODO : init location provider here
 
     }
 
