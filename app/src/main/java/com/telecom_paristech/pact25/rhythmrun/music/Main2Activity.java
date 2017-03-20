@@ -21,7 +21,10 @@ import com.google.android.gms.appindexing.Thing;
 */
 import com.telecom_paristech.pact25.rhythmrun.R;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.FastFourierTransform;
+import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
 import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFile;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 import com.telecom_paristech.pact25.rhythmrun.sensors.Accelerometer;
 import com.telecom_paristech.pact25.rhythmrun.sensors.Podometer;
 
@@ -54,11 +57,13 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        int optionsDeDebug = 1;
+        int optionsDeDebug = 5;
         //0 : ecrit les releves de l'accelerometre dans Downloads/donnees.csv
         //1 : affiche la frequence de pas calculee par le podometre
         //2 : calcule le tempo de la musique specifiee dans le thread
         //3 : joue beep sur les pas
+        //4 : test de l'interpolation
+        //5 : interpolation propre
 
         test_button = (Button) findViewById(R.id.test_button);
         test_button.setText("L'accelerometre s'allume...");
@@ -278,10 +283,104 @@ public class Main2Activity extends AppCompatActivity {
             });
             thread3.start();
         }
+
+        if (optionsDeDebug == 4) {
+            int dureeBuffer = 1;
+            int bufferSize = 44100*dureeBuffer;
+            String waveFilePath = "/storage/emulated/0/Download/guitare_mono_66bpm.wav";
+            MusicReader musicReader = new MusicReader(bufferSize);
+            WavFile waveFile = null;
+            try {
+                waveFile = WavFile.openWavFile(new File(waveFilePath));
+                long numberOfFrames = waveFile.getNumFrames(), framesRemaining = numberOfFrames;
+
+                float interpolationRatio = 1f;
+                int numberOfFramesToReadAtATime = (int) (bufferSize/interpolationRatio);
+                double[] bufferIn = new double[numberOfFramesToReadAtATime];
+                boolean isPlaying = false;
+
+                while (framesRemaining > 0) {
+                    Log.i("lucas", "Tour de boucle.");
+                    if (numberOfFramesToReadAtATime < framesRemaining) {
+                        waveFile.readFrames(bufferIn, numberOfFramesToReadAtATime);
+                        framesRemaining -= numberOfFramesToReadAtATime;
+                        Log.i("lucas", "Une lecture.");
+                    } else {
+                        waveFile.readFrames(bufferIn, (int)framesRemaining);
+                        Log.i("lucas", "Une derniere lecture.");
+                        for (int i = (int)framesRemaining; i < numberOfFramesToReadAtATime; i++) {
+                            bufferIn[i] = 0;
+                        }
+                        framesRemaining = 0;
+                    }
+                    musicReader.addBuffer(SongSpeedChanger.identity(bufferIn, bufferSize));
+                    if (!isPlaying) {
+                        musicReader.play();
+                        isPlaying = true;
+                        Log.i("lucas", "play");
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (WavFileException e) {
+                e.printStackTrace();
+            }
+            try {
+                waveFile.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (optionsDeDebug == 5) {
+            (new Thread (new Runnable() {
+                @Override
+                        public void run() {
+                    int dureeBuffer = 1;
+                    int bufferSize = 44100 * dureeBuffer;
+                    String waveFilePath = "/storage/emulated/0/Download/guitare_mono_66bpm.wav";
+                    MusicReader musicReader = new MusicReader(bufferSize);
+                    SongSpeedChanger songSpeedChanger = null;
+                    try {
+                        boolean first = true;
+                        songSpeedChanger = new SongSpeedChanger(waveFilePath, bufferSize, 0.5);
+                        while ((!songSpeedChanger.songEnded())) {
+                            if (musicReader.getNumberOfBuffers() < 2) {
+                                musicReader.addBuffer(songSpeedChanger.getNextBuffer());
+                            }
+                            if (first) {
+                                first = false;
+                                musicReader.play();
+                            }
+                            try {
+                                Thread.sleep(20);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        Log.i("lucas", "stopAtTheEnd Main2");
+                        musicReader.stopAtTheEnd();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (WavFileException e) {
+                        e.printStackTrace();
+                    }
+                }
+            })).start();
+        }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
+
+
+    /*public int min(int a, long b) {
+        if (a < b) {
+            return a;
+        }
+        return (int)b;
+    }*/
 
 
     /**
