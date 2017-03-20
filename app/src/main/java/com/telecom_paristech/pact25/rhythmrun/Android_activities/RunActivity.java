@@ -23,8 +23,12 @@ import com.telecom_paristech.pact25.rhythmrun.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
+import com.telecom_paristech.pact25.rhythmrun.music.MusicReader;
+import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 import com.telecom_paristech.pact25.rhythmrun.sensors.Podometer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -78,7 +82,7 @@ public class RunActivity extends AppCompatActivity {
                 Log.d("Run","Found an itinerary in the intent.");
                 runMapFragment.drawnPolyline(itinerary.getPolylineOptions());
             }
-            MusicManager.playCurrentSong();
+            //MusicManager.playCurrentSong();
         }
 
         //Setting up the play/pause button
@@ -266,6 +270,41 @@ public class RunActivity extends AppCompatActivity {
         }).start();
 
         musicManagerInterface = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager();
+
+        (new Thread (new Runnable() {
+            @Override
+            public void run() {
+            int dureeBuffer = 1;
+            int bufferSize = 44100 * dureeBuffer;
+            String waveFilePath = "/storage/emulated/0/Music/wav/wall_mono.wav";
+            MusicReader musicReader = new MusicReader(bufferSize);
+            SongSpeedChanger songSpeedChanger = null;
+            try {
+                boolean first = true;
+                songSpeedChanger = new SongSpeedChanger(waveFilePath, bufferSize, 1);
+                while ((!songSpeedChanger.songEnded())) {
+                    if (musicReader.getNumberOfBuffers() < 2) {
+                        musicReader.addBuffer(songSpeedChanger.getNextBuffer());
+                    }
+                    if (first) {
+                        first = false;
+                        musicReader.play();
+                    }
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.i("lucas", "stopAtTheEnd Main2");
+                musicReader.stopAtTheEnd();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (WavFileException e) {
+                e.printStackTrace();
+            }
+            }
+        })).start();
 
         t = System.currentTimeMillis() - t;
         Log.d("Run","End of RunActivity creation. Took "+t+" ms.");
