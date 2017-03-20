@@ -1,10 +1,14 @@
 package com.telecom_paristech.pact25.rhythmrun.music;
 
+import android.media.MediaPlayer;
+import android.os.Environment;
 import android.util.Log;
 
+import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavProcess;
 
 import java.io.File;
+import java.io.IOException;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
@@ -93,8 +97,28 @@ public class MusicManager {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                WavProcess.wavRead(path);
+                int compteur = new WavProcess(path).wavRead();
                 Log.i("READ","Fin de la procédure");
+
+                MediaPlayer player = new MediaPlayer();
+                for (int i = 0; i<compteur;i++) {
+                    try {
+                        player.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() +
+                                "/Rhythm Run Samples/modified sample "
+                                + String.valueOf(i) + ".wav");
+                        player.prepare();
+                        player.start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        Thread.sleep(25000/441);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    player.stop();
+                    player.release();
+                }
             }
         }).start();
 

@@ -4,6 +4,9 @@ import android.media.MediaPlayer;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.telecom_paristech.pact25.rhythmrun.Android_activities.MusicManager;
 import com.telecom_paristech.pact25.rhythmrun.Android_activities.Song;
@@ -28,8 +31,15 @@ public class AudioTestActivity extends AppCompatActivity {
             e.printStackTrace();
         }*/
 
+        Button button = (Button)findViewById(R.id.button_launch_audio_test);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                com.telecom_paristech.pact25.rhythmrun.music.MusicManager.readMusic(path);
+                Toast.makeText(AudioTestActivity.this, "Test lancé\nAvancement disponible dans les fichiers", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        com.telecom_paristech.pact25.rhythmrun.music.MusicManager.readMusic(path);
 
     }
 

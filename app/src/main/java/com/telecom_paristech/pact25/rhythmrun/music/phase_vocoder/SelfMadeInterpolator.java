@@ -6,6 +6,8 @@ package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
  * Project RythmRun
  */
 
+import android.util.Log;
+
 import java.util.Arrays;
 
 /**
@@ -38,8 +40,8 @@ public class SelfMadeInterpolator {
         // Calcul de l'équation de la ligne entre 2 points
         for (int i = 0; i < abscisses.length - 1; i++) {
             dx[i] = abscisses[i + 1] - abscisses[i];
-            if (dx[i] <= 0) {
-                throw new IllegalArgumentException("Le tableau d'abscisse ne convient pas");
+            if (dx[i] < 0) {
+                throw new IllegalArgumentException("Le tableau d'abscisse ne convient pas, dx = "+String.valueOf(dx[i]));
             }
             
             dy[i] = ordonnees[i + 1] - ordonnees[i];
@@ -65,6 +67,7 @@ public class SelfMadeInterpolator {
             }
         }
 
+        Log.d("TEST",String.valueOf(yInterpole.length));
         return yInterpole;
     }
 
@@ -85,12 +88,7 @@ public class SelfMadeInterpolator {
     }
 
     public static double[] getIndexesInterpTab(int N, double coef) {
-        double[] ti = new double[N];
-
-        for (int i=0 ; i<N ; i++){
-            ti[i] = i/N*coef;
-        }
-
-        return ti;
+        int M = (int) (N*coef);
+        return getIndexesTab(M);
     }
 }

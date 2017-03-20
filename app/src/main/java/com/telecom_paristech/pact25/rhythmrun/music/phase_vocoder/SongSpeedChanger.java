@@ -7,9 +7,12 @@ package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
  */
 
 
+import android.util.Log;
+
 import com.telecom_paristech.pact25.rhythmrun.Android_activities.Song;
 import com.telecom_paristech.pact25.rhythmrun.music.Music;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFile;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavProcess;
 
 import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
@@ -19,9 +22,25 @@ import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
  * les différences de vitesse sont de plus de 20-30%
  */
 public class SongSpeedChanger {
+        String songPath;
+    float songTempoHz;
+    public SongSpeedChanger(String songPath, float songTempoHz) {
+        this.songPath = songPath;
+        this.songTempoHz = songTempoHz;
+    }
+
+    public static double[] modifyBufferSpeed(double[] buffer, double coef){
+
+        Log.i("PROCESSING", "Interpolation en cours ...");
+        int N = buffer.length;
+
+        return SelfMadeInterpolator.interp1(
+                SelfMadeInterpolator.getIndexesTab(N),
+                buffer,
+                SelfMadeInterpolator.getIndexesInterpTab(N,coef));
+    }
 
 
-    WavFile file;
 
     public double[] modifyMusicToFitTempo(Song song, float tempo) {
 
@@ -34,7 +53,7 @@ public class SongSpeedChanger {
 
         // t = (0:N-1)/N
         double[] t = SelfMadeInterpolator.getIndexesTab(N);
-
+//TODO : a compléter avec les données SQLlite
         double coef = tempo;// /freq;
 
 
