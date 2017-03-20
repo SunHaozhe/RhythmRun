@@ -2,6 +2,7 @@ package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,12 +30,15 @@ import com.telecom_paristech.pact25.rhythmrun.Android_activities.test.AudioTestA
 import com.telecom_paristech.pact25.rhythmrun.Client_serveur.login.SQLLiteUser;
 import com.telecom_paristech.pact25.rhythmrun.Client_serveur.login.SessionConfiguration;
 import com.telecom_paristech.pact25.rhythmrun.R;
+import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private DataManager dataManager;
     private SessionConfiguration session;
+
+    static private TempoDataBase db;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -69,14 +73,15 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
-        //Always requests permissions at the beginning
-        ActivityCompat.requestPermissions(this,
-                new String[] {Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                Macros.PERMISSION_GLOBAL_REQUEST);
    }
+
+    public static TempoDataBase getDB(){
+        return db;
+    }
+
+    public static void initDB(Context context){
+        db = new TempoDataBase(context);
+    }
 
     @Override
     public void onResume(){
@@ -269,14 +274,6 @@ public class HomeActivity extends AppCompatActivity
             }
         });
         animator.start();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-        if(requestCode == Macros.PERMISSION_GLOBAL_REQUEST){
-            if(!MusicManager.areSongsLoaded())
-                MusicManager.init();
-        }
     }
 
 }

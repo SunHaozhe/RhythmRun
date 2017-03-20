@@ -38,8 +38,8 @@ public class TempoDataBase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_TEMPO + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_PATH + " TEXT UNIQUE,"
-                + KEY_TEMPO + " DOUBLE,"
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_PATH + " TEXT," // UNIQUE,"
+                + KEY_TEMPO + " DOUBLE"
                 + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
     }
@@ -51,6 +51,8 @@ public class TempoDataBase extends SQLiteOpenHelper {
 
     public void addSongAndTempo(String path, double freq) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        //Log.d("TempoDataBase","Adding tempo to db for file path: "+path);
 
         ContentValues values = new ContentValues();
         values.put(KEY_PATH, path); // chemin d'acces

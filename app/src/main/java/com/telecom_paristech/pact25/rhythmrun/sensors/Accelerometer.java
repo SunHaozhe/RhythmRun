@@ -67,9 +67,9 @@ public class Accelerometer implements SensorEventListener {
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
         if (sensor == null) {
-            Log.i("lucas", "pas d'accelerometre");
+            Log.i("lucas-Accelerometer", "pas d'accelerometre");
         }
-        Log.d("lucas", "min delay : " + String.valueOf(sensor.getMinDelay()));
+        Log.d("lucas-Accelorometer", "min delay : " + String.valueOf(sensor.getMinDelay()));
         active = false;
         this.periode = periode;
         frequenceEchantillonage = 1/periode;
@@ -158,7 +158,8 @@ public class Accelerometer implements SensorEventListener {
             this.tempsDebut = tempsDebut;
         }
         @Override
-        public void run() {
+        public void run()
+        {
             dernierTemps = SystemClock.elapsedRealtime();
             if (firstRun) {
                 tempsDebut = dernierTemps;
@@ -171,7 +172,9 @@ public class Accelerometer implements SensorEventListener {
             }
             if (k==nombreEchantillons-1) auMoinsUnTour = true;
             k = (k+1)%nombreEchantillons;
+            Log.i("Lucas-Accelerometer","Run execution");
         }
+
 
     }
 }

@@ -4,6 +4,8 @@ package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
  * Created by Raphael Attali on 07/12/2016.
  */
 
+import android.util.Log;
+
 /**
  * Onde sinusoïdale, de fréquence f, d'amplitude A et avec un certain dephasage.
  * Objet idéal pour une transformée de Fourier.
@@ -61,6 +63,7 @@ public class SinusWave extends PeriodicWave{
     public SinusWave(double frequency, double amplitude, double phaseAtZero){
         super(frequency, amplitude);
         this.phaseAtZero = phaseAtZero;
+        Log.i("SinusWave","Set of phaseAtZero");
     }
 
     /**
@@ -71,11 +74,13 @@ public class SinusWave extends PeriodicWave{
      * @return
      *      La valeur A*sin(2*pi*f*t + phi)
      */
-    public double valuation(double t){
-
+    public double valuation(double t)
+    {
+        Log.i("SinusWave","return valuation");
         double parameterInSinus = 2*Math.PI*getFrequency()*t + phaseAtZero;
         // A * sin( 2*pi*f*t + phi)
         return getAmplitude()*Math.sin(parameterInSinus);
+
     }
 
 
