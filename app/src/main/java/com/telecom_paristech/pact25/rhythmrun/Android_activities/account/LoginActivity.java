@@ -175,8 +175,6 @@ public class LoginActivity extends AppCompatActivity {
 
         };
 
-
-
         dismissProgressing();
 
         // Finalement on ajoute la requête à la file de requêtes à traiter

@@ -52,16 +52,27 @@ public class TempoDataBase extends SQLiteOpenHelper {
     public void addSongAndTempo(String path, double freq) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        //Log.d("TempoDataBase","Adding tempo to db for file path: "+path);
+        Log.d("TempoDataBase","Checking file: "+path);
 
-        ContentValues values = new ContentValues();
-        values.put(KEY_PATH, path); // chemin d'acces
-        values.put(KEY_TEMPO, freq); // tempo
+        String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + " WHERE " + KEY_PATH + "=\"" + path + "\"";
+        SQLiteDatabase db2 = this.getReadableDatabase();
+        Cursor cursor = db2.rawQuery(selectQuery, null);
+        Log.d("TempoDataBase", "Found file: "+cursor.getCount());
 
-        // Inserting Row
-        long id = db.insert(TABLE_TEMPO, null, values);
+        if(cursor.getCount() == 0){
+            Log.d("TempoDataBase", "Inserting file in database.");
+            ContentValues values = new ContentValues();
+            values.put(KEY_PATH, path); // chemin d'acces
+            values.put(KEY_TEMPO, freq); // tempo
+
+            // Inserting Row
+            long id = db.insert(TABLE_TEMPO, null, values);
+        } else {
+            Log.d("TempoDataBase", "File already in database");
+        }
+
         db.close(); // Closing database connection
-
+        db2.close();
     }
 
     public double getTempo(String songPath) {
