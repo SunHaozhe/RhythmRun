@@ -121,9 +121,10 @@
             android:screenOrientation="portrait" />
 
         <!-- Login / register -->
-        <activity android:name=".Android_activities.account.LoginActivity">
+        <activity
+            android:name=".Android_activities.account.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        </activity>
         <activity android:name=".Android_activities.account.RegisterActivity" />
         <activity
             android:name=".Client_serveur.FtpServeur"
