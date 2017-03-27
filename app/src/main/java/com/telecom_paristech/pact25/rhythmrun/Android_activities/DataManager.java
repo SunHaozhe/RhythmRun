@@ -137,11 +137,11 @@ class DataManager {
             e.printStackTrace();
         }
 
-        if(distance==null){
+        if(distance == null){
             distance = new Distance(0);
             Log.w("DataManager","Distance of "+filename+" is null.");
         }
-        if(pace==null){
+        if(pace == null){
             pace = new Pace(0);
             Log.w("DataManager","Pace of "+filename+" is null.");
         }
@@ -152,6 +152,51 @@ class DataManager {
                 distance,
                 pace,
                 location);
+    }
+
+    public ArrayList<RunStatus> getRunData(String filename){
+        ArrayList<RunStatus> runData = new ArrayList<>();
+        //A string builder to create the string that contains the file text.
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            //Opening a reader input stream to read the run file.
+            FileInputStream fileInputStream = context.openFileInput(filename);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+            Log.v("DataManager","Reading "+filename+" with input stream "+reader);
+
+            String line;
+            while((line=reader.readLine()) != null){ //While there is a line
+                stringBuilder.append(line).append("\n");
+            }
+            fileInputStream.close();
+            Log.v("DataManager","Closing the input stream.");
+
+            String result = stringBuilder.toString();
+
+            String[] splitResult = result.split("\n");
+            int i;
+            for(i=5; i < splitResult.length; i++){
+                String[] localSplit = splitResult[i].split(";");
+                if(localSplit.length != 4){
+                    Log.e("DataManager","Wrong run data line. Found "+localSplit.length+" parts.");
+                } else {
+                    double time = Double.parseDouble(localSplit[0]);
+                    String[] split = localSplit[1].split(",");
+                    LatLng location = new LatLng(Double.parseDouble(split[0]),Double.parseDouble(split[1]));
+                    Distance distance = new Distance(Double.parseDouble(split[2]));
+                    Pace pace = new Pace(Double.parseDouble(localSplit[2]));
+                    double heartRate = Double.parseDouble(localSplit[3]);
+                    runData.add(new RunStatus(time,location,distance,heartRate));
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e("DataManager","Failed to load the run file "+filename+".");
+            e.printStackTrace();
+        }
+
+        return runData;
     }
 
     private PolylineOptions getPolylineFromString(String string){
@@ -293,7 +338,7 @@ class DataManager {
                     printStream.print("\n"+
                             status.time+";"+
                             "0,"+
-                            "O,"+
+                            "0,"+
                             status.distance.getValue()+";"+
                             status.pace.getValue()+";"+
                             status.heartRate
