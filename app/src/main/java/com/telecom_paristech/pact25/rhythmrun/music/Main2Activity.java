@@ -361,9 +361,7 @@ public class Main2Activity extends AppCompatActivity {
                         }
                         Log.i("lucas", "stopAtTheEnd Main2");
                         musicReader.stopAtTheEnd();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (WavFileException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }

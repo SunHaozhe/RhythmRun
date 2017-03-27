@@ -13,7 +13,9 @@ import static android.media.AudioManager.STREAM_MUSIC;
 import static android.media.AudioTrack.MODE_STREAM;
 
 /**
- * Created by lucas on 13/03/17.
+ * Permet de lire de la musique (format WAV)
+ *
+ *  Créé par Lucas, rectifications le 27/03 par Raphael
  */
 
 public class MusicReader {
@@ -24,7 +26,7 @@ public class MusicReader {
 
     public MusicReader(int bufferSize) {
         this.bufferSize = bufferSize;
-        file = new ArrayList<float[]>();
+        file = new ArrayList<>();
         threadRunnable = new ThreadRunnable(bufferSize, file);
         thread = new Thread(threadRunnable);
     }
