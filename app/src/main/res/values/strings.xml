@@ -83,6 +83,12 @@
         that follows your own rhythm.</string>
 
     <string name="title_activity_login">Sign in</string>
+    <string name="sign_in">Sign in</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="log_in">Log in</string>
+    <string name="when_you_sign_in">When you sign in, you can check your previous records and save your current run.</string>
 
     <string name="title_activity_historique">Activity</string>
 
