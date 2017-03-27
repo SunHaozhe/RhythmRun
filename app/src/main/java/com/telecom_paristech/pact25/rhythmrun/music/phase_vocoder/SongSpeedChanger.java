@@ -84,7 +84,6 @@ public class SongSpeedChanger {
             Log.i("lucas", "on lit " + String.valueOf((float)numberOfFramesToRead/(float)44100) + "s");
             framesRemainingToBeRead -= numberOfFramesToRead;
             if (framesRemainingToBeRead == 0) {
-                Log.i("lucas", "songEnded");
                 songEnded = true;
             }
         } catch (IOException e) {

@@ -4,12 +4,9 @@ import android.media.MediaPlayer;
 import android.os.Environment;
 import android.util.Log;
 
-<<<<<<< HEAD
-import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
-=======
 
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
->>>>>>> distant_server/master
+
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavProcess;
 
 

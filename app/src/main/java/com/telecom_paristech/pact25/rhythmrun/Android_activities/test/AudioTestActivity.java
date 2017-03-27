@@ -22,21 +22,13 @@ public class AudioTestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_test);
 
-       /* MediaPlayer player = new MediaPlayer();
-        try {
-            player.setDataSource(path);
-            player.prepare();
-            player.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
 
         Button button = (Button)findViewById(R.id.button_launch_audio_test);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                com.telecom_paristech.pact25.rhythmrun.music.MusicManager.readMusic(path);
-                Toast.makeText(AudioTestActivity.this, "Test lancé\nAvancement disponible dans les fichiers", Toast.LENGTH_SHORT).show();
+               // com.telecom_paristech.pact25.rhythmrun.music.MusicManager.readMusic(path);
+               // Toast.makeText(AudioTestActivity.this, "Test lancé\nAvancement disponible dans les fichiers", Toast.LENGTH_SHORT).show();
             }
         });
 
