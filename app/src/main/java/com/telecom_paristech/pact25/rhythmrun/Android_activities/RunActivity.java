@@ -271,7 +271,7 @@ public class RunActivity extends AppCompatActivity {
 
         musicManagerInterface = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager();
 
-        (new Thread (new Runnable() {
+        /*(new Thread (new Runnable() {
             @Override
             public void run() {
             int dureeBuffer = 1;
@@ -304,7 +304,7 @@ public class RunActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             }
-        })).start();
+        })).start();*/
 
         t = System.currentTimeMillis() - t;
         Log.d("Run","End of RunActivity creation. Took "+t+" ms.");

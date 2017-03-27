@@ -111,15 +111,15 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
 
     private class TaskLoadLocalisation extends AsyncTask<SimpleMapFragment, Void, Void> {
 
+        private boolean gps_enabled = false;
+        private boolean network_enabled = false;
+
         @Override
         protected Void doInBackground(SimpleMapFragment... fragments) {
             Criteria criteria = new Criteria();
             fragments[0].locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             fragments[0].provider = locationManager.getBestProvider(criteria, false);
             Log.d("SimpleMap","Location initialized with provider "+provider+".");
-
-            boolean gps_enabled = false;
-            boolean network_enabled = false;
 
             try {
                 gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -128,7 +128,11 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
             try {
                 network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
             } catch(Exception ex) {}
+            return null;
+        }
 
+        @Override
+        protected void onPostExecute(Void result){
             if(!gps_enabled && !network_enabled) {
                 // notify user
                 final Context context = getContext();
@@ -143,7 +147,6 @@ public class SimpleMapFragment extends Fragment implements OnMapReadyCallback {
                 });
                 dialog.show();
             }
-            return null;
         }
     }
 
