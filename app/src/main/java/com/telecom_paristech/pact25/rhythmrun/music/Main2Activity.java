@@ -57,13 +57,14 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        int optionsDeDebug = 5;
+        int optionsDeDebug = 6;
         //0 : ecrit les releves de l'accelerometre dans Downloads/donnees.csv
         //1 : affiche la frequence de pas calculee par le podometre
         //2 : calcule le tempo de la musique specifiee dans le thread
         //3 : joue beep sur les pas
         //4 : test de l'interpolation
         //5 : interpolation propre
+        //6 : podometre + interpolation avec MusicManager
 
         test_button = (Button) findViewById(R.id.test_button);
         test_button.setText("L'accelerometre s'allume...");
@@ -344,7 +345,7 @@ public class Main2Activity extends AppCompatActivity {
                     SongSpeedChanger songSpeedChanger = null;
                     try {
                         boolean first = true;
-                        songSpeedChanger = new SongSpeedChanger(waveFilePath, bufferSize, 0.5);
+                        songSpeedChanger = new SongSpeedChanger(waveFilePath, bufferSize, 1.1);
                         while ((!songSpeedChanger.songEnded())) {
                             if (musicReader.getNumberOfBuffers() < 2) {
                                 musicReader.addBuffer(songSpeedChanger.getNextBuffer());
@@ -367,6 +368,35 @@ public class Main2Activity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
+            })).start();
+        }
+
+        if (optionsDeDebug == 6) {
+            (new Thread (new Runnable() {
+                @Override
+                public void run() {
+                    Podometer pod = new Podometer(context);
+                    while (!pod.isActive()) {
+                        try {
+                            Thread.sleep(30);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    MusicManager musicManager = new MusicManager();
+                    musicManager.play();
+                    float f;
+                    while(true) {
+                        f = pod.getRunningPaceFrequency();
+                        musicManager.updateRythm(f);
+                        setTextViewToString(String.valueOf(musicManager.getWantedTempoHz()*60));
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    }
             })).start();
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.

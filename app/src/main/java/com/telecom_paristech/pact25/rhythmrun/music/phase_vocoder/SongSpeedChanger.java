@@ -9,13 +9,9 @@ package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
 
 import android.util.Log;
 
-import com.telecom_paristech.pact25.rhythmrun.Android_activities.Song;
-import com.telecom_paristech.pact25.rhythmrun.music.Music;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.BufferSupplier;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFile;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
-
-import org.apache.commons.math3.analysis.interpolation.LinearInterpolator;
-import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +20,7 @@ import java.io.IOException;
  * Classe permettant d'accélérer/de ralentir une chanson. Attention, le résultat ne sera pas agréable à l'oreille si
  * les différences de vitesse sont de plus de 20-30%
  */
-public class SongSpeedChanger {
+public class SongSpeedChanger implements BufferSupplier {
 
     WavFile waveFile;
     int bufferSize;

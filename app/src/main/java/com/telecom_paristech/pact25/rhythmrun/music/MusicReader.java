@@ -52,6 +52,10 @@ public class MusicReader {
         threadRunnable.stopReadingMusic();
     }
 
+    public void pause() {
+
+    }
+
     public void stopAtTheEnd() {
         threadRunnable.stopAtTheEnd();
     }
@@ -61,12 +65,15 @@ public class MusicReader {
         int bufferSize;
         float[] buffer;
         boolean pasFiniLaBoucle, pasFiniDeLire;
+        boolean pause;
+        AudioTrack audioTrack;
 
         public ThreadRunnable(int bufferSize, ArrayList<float[]> file) {
             this.bufferSize = bufferSize;
             this.file = file;
             pasFiniLaBoucle = true;
             pasFiniDeLire = true;
+            audioTrack = new AudioTrack(STREAM_MUSIC, 44100, CHANNEL_OUT_MONO, ENCODING_PCM_FLOAT, bufferSize, MODE_STREAM);
         }
 
         public void stopReadingMusic() {
@@ -77,15 +84,18 @@ public class MusicReader {
             pasFiniDeLire = false;
         }
 
+        public void pause() {
+            audioTrack.pause();
+        }
+
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void run() {
             Log.i("lucas", "bufferSize : " + String.valueOf(bufferSize));
-            AudioTrack audioTrack = new AudioTrack(STREAM_MUSIC, 44100, CHANNEL_OUT_MONO, ENCODING_PCM_FLOAT, bufferSize, MODE_STREAM);
             audioTrack.setVolume(1.0f);
             Log.i("lucas", "on a write, on va play");
             boolean first = true;
-            while(pasFiniLaBoucle && ((pasFiniDeLire) || (file.size() > 0))) {
+            while(pasFiniLaBoucle && ((pasFiniDeLire) || (file.size() > 0))) { // faire quelque chose pour une file de taille nulle
                 synchronized (file) {
                     if (file.size() > 0) {
                         buffer = file.get(0);

@@ -3,11 +3,14 @@ package com.telecom_paristech.pact25.rhythmrun.music;
 import android.util.Log;
 
 
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.BufferSupplier;
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
+import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavProcess;
 
 
-import java.io.File;
+import java.io.IOException;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
@@ -21,27 +24,45 @@ import static java.lang.Math.sqrt;
 public class MusicManager implements MusicManagerInterface {
 
     private float[] paceFrequency;
-    private final int l = 5; //longueur de paceFrequency
-    int indice; //indice courant dans le tableau circulaire paceFrequency
-    boolean premierTour;
-    String songPath;
-    float wantedTempoHz, songTempoHz;
-    boolean trackPlaying;
+    private final int l = 2; //longueur de paceFrequency
+    private int indice; //indice courant dans le tableau circulaire paceFrequency
+    private boolean premierTour;
+    private String songPath;
+    private float wantedTempoHz, songTempoHz;
+    private boolean aSongIsSelected, playing;
+    private Thread thread;
+    private MusicReader musicReader;
+    private final int dureeBuffer = 1;
+    private final int bufferSize = 44100 * dureeBuffer;
+    private Player player;
 
     public MusicManager() {
         paceFrequency = new float[l];
         indice = 0;
         premierTour = true;
         wantedTempoHz = -1;
-        trackPlaying = false;
+        aSongIsSelected = false;
+        playing = false;
+        musicReader = new MusicReader(bufferSize);
     }
 
     private final void loadNewTrack() {
-        float[][] tempoIntervalsHz = {{wantedTempoHz*0.9f, wantedTempoHz*1.1f}, {2*wantedTempoHz*0.9f, 2*wantedTempoHz*1.1f}};
+        while(wantedTempoHz<0) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        float[][] tempoIntervalsHz = {{wantedTempoHz*0.9f, wantedTempoHz*1.1f}, {2*wantedTempoHz*0.9f, 2*wantedTempoHz*1.1f}}; //par ex
         //TODO :
-        String songPath = ""; //a completer avec la BDD en utilisant la ligne precedente si possible
+        //tenir une liste des moreaux deja joues
+        songPath = ""; //a completer avec la BDD en utilisant la ligne precedente si possible
         //(on veut le chemin d'acces d'une musique de la bdd avec un tempo dans les intervalles de tempoIntervalsHz)
         songTempoHz = -1; //pareil
+
+        songPath = "/storage/emulated/0/Download/guitare_mono_66bpm.wav"; // pour tester
+        songTempoHz = 1.1f;
     }
 
     private void computeTempo()
@@ -53,7 +74,7 @@ public class MusicManager implements MusicManagerInterface {
         }
         moyenne /= l;
         for (int i = 0; i<l; i++) {
-            variance += pow((double)(paceFrequency[i]-moyenne), 2);
+            variance += pow((paceFrequency[i]-moyenne), 2);
         }
         variance /= l;
         ecartType = sqrt(variance);
@@ -61,10 +82,10 @@ public class MusicManager implements MusicManagerInterface {
         if (ecartType <= moyenne / 10) {
             wantedTempoHz = (float)moyenne;
         }
-        if (!trackPlaying) {
+        if (!aSongIsSelected) {
             loadNewTrack();
         }
-        Log.i("ComputeTempo classe", "Sortie de la classe");
+        //Log.i("ComputeTempo classe", "Sortie de la classe");
     }
 
     public void updateRythm(float paceFrequency)
@@ -75,19 +96,34 @@ public class MusicManager implements MusicManagerInterface {
             premierTour = false;
         }
         indice = (indice +1)%l;
-        if (premierTour)
+        if (!premierTour)
         {
             computeTempo();
-            Log.i("MusicManager","premier tour in the updateRythm");
         }
     }
 
-
-    public float getWantedTempo()
+    public float getWantedTempoHz()
     {
-        Log.i("MusicManager","retour du tempo voulu");
+        //Log.i("MusicManager","retour du tempo voulu");
 
         return wantedTempoHz;
+    }
+
+    public void play() {
+        if (!playing) {
+            player = new Player();
+            thread = new Thread(player);
+            thread.start();
+        }
+        playing = true;
+    }
+
+    public void pause() {
+        player.pause();
+    }
+
+    public void stop() {
+        playing = false;
     }
 
     public String getSongPath()
@@ -96,7 +132,7 @@ public class MusicManager implements MusicManagerInterface {
     }
 
     public void songEnded() {
-        trackPlaying = false;
+        aSongIsSelected = false;
     }
 
 
@@ -113,6 +149,52 @@ public class MusicManager implements MusicManagerInterface {
         }).start();
 
 
+    }
+
+    private final BufferSupplier getNewBufferSupplier() {
+        loadNewTrack();
+        try {
+            return new SongSpeedChanger(songPath, bufferSize, 1);//wantedTempoHz/songTempoHz
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WavFileException e) { //faire quelque chose si on ne peut pas ouvrir le fichier
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private class Player implements Runnable {
+        MusicReader musicReader;
+        BufferSupplier bufferSupplier;
+        public Player() {
+            musicReader = new MusicReader(bufferSize);
+        }
+
+        @Override
+        public void run() {
+            bufferSupplier = getNewBufferSupplier();
+            Log.i("lucas", "buferSupplier loaded");
+            musicReader.play();
+            while(playing) {
+                if(!bufferSupplier.songEnded()) {
+                    if (musicReader.getNumberOfBuffers() < 2) {
+                        musicReader.addBuffer(bufferSupplier.getNextBuffer());
+                    }
+                } else {
+                    bufferSupplier = getNewBufferSupplier();
+                }
+                try {
+                    Thread.sleep(30);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            musicReader.stop();
+        }
+
+        public void pause() {
+            musicReader.pause();
+        }
     }
 
 }
