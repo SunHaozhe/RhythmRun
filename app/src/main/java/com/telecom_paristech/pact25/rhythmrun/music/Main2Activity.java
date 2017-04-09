@@ -38,6 +38,12 @@ import java.io.PrintWriter;
 
 public class Main2Activity extends AppCompatActivity {
 
+    static {
+        System.loadLibrary("vocoder");
+        Log.i("lucas", "lib chargee");
+    }
+    private native String nativeTest();
+
     Button test_button = null;
     Button button2 = null;
     Button button3 = null;
@@ -57,7 +63,7 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        int optionsDeDebug = 6;
+        int optionsDeDebug = 7;
         //0 : ecrit les releves de l'accelerometre dans Downloads/donnees.csv
         //1 : affiche la frequence de pas calculee par le podometre
         //2 : calcule le tempo de la musique specifiee dans le thread
@@ -65,6 +71,7 @@ public class Main2Activity extends AppCompatActivity {
         //4 : test de l'interpolation
         //5 : interpolation propre
         //6 : podometre + interpolation avec MusicManager
+        //7 : native vocoder
 
         test_button = (Button) findViewById(R.id.test_button);
         test_button.setText("L'accelerometre s'allume...");
@@ -399,6 +406,11 @@ public class Main2Activity extends AppCompatActivity {
                     }
             })).start();
         }
+
+        if(optionsDeDebug == 7) {
+            setTextViewToString(nativeTest());
+        }
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
