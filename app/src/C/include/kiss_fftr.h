@@ -6,6 +6,15 @@
 extern "C" {
 #endif
 
+
+struct kiss_fftr_state{
+    kiss_fft_cfg substate;
+    kiss_fft_cpx * tmpbuf;
+    kiss_fft_cpx * super_twiddles;
+#ifdef USE_SIMD
+    void * pad;
+#endif
+};
     
 /* 
  

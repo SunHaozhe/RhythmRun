@@ -21,6 +21,7 @@ import com.google.android.gms.appindexing.Thing;
 */
 import com.telecom_paristech.pact25.rhythmrun.R;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.FastFourierTransform;
+import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.NativeVocoder;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
 import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFile;
@@ -34,15 +35,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 
 
 public class Main2Activity extends AppCompatActivity {
-
-    static {
-        System.loadLibrary("vocoder");
-        Log.i("lucas", "lib chargee");
-    }
-    private native String nativeTest();
 
     Button test_button = null;
     Button button2 = null;
@@ -408,7 +406,28 @@ public class Main2Activity extends AppCompatActivity {
         }
 
         if(optionsDeDebug == 7) {
-            setTextViewToString(nativeTest());
+            String songPath = "/storage/emulated/0/Download/guitare_mono_66bpm.wav";
+            NativeVocoder nativeVocoder = null;
+            try {
+                nativeVocoder = new NativeVocoder(songPath, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (WavFileException e) {
+                e.printStackTrace();
+            }
+            if (nativeVocoder != null) {
+                long time = SystemClock.elapsedRealtime();
+                Log.i("lucas", "on va demander le next buffer");
+                nativeVocoder.returnBuffer(nativeVocoder.getNextBuffer());
+                Log.i("lucas", "ca a pris : " + String.valueOf(SystemClock.elapsedRealtime() - time) + "ms");
+                time = SystemClock.elapsedRealtime();
+                Log.i("lucas", "on va demander le next buffer");
+                nativeVocoder.setRatio(2.0f);
+                nativeVocoder.returnBuffer(nativeVocoder.getNextBuffer());
+                Log.i("lucas", "ca a pris : " + String.valueOf(SystemClock.elapsedRealtime() - time) + "ms");
+                nativeVocoder.stop();
+            }
+            Log.i("lucas", "vocoder ok");
         }
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.

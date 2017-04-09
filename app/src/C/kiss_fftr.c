@@ -15,14 +15,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include "kiss_fftr.h"
 #include "_kiss_fft_guts.h"
 
-struct kiss_fftr_state{
-    kiss_fft_cfg substate;
-    kiss_fft_cpx * tmpbuf;
-    kiss_fft_cpx * super_twiddles;
-#ifdef USE_SIMD
-    void * pad;
-#endif
-};
 
 kiss_fftr_cfg kiss_fftr_alloc(int nfft,int inverse_fft,void * mem,size_t * lenmem)
 {
@@ -79,6 +71,7 @@ void kiss_fftr(kiss_fftr_cfg st,const kiss_fft_scalar *timedata,kiss_fft_cpx *fr
 
     /*perform the parallel fft of two real signals packed in real,imag*/
     kiss_fft( st->substate , (const kiss_fft_cpx*)timedata, st->tmpbuf );
+    return;
     /* The real part of the DC element of the frequency spectrum in st->tmpbuf
      * contains the sum of the even-numbered elements of the input time sequence
      * The imag part is the sum of the odd-numbered elements
@@ -88,7 +81,7 @@ void kiss_fftr(kiss_fftr_cfg st,const kiss_fft_scalar *timedata,kiss_fft_cpx *fr
      * The difference of tdc.r - tdc.i is the sum of the input (dot product) [1,-1,1,-1... 
      *      yielding Nyquist bin of input time sequence
      */
- 
+
     tdc.r = st->tmpbuf[0].r;
     tdc.i = st->tmpbuf[0].i;
     C_FIXDIV(tdc,2);

@@ -12,6 +12,7 @@ package com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib;
 import android.util.Log;
 
 import java.io.*;
+import java.nio.FloatBuffer;
 
 public class WavFile
 {
@@ -589,6 +590,33 @@ public class WavFile
 			for (int c=0 ; c<numChannels ; c++)
 			{
 				sampleBuffer[offset] = floatOffset + (double) readSample() / floatScale;
+				offset ++;
+			}
+
+			frameCounter ++;
+		}
+
+		return numFramesToRead;
+	}
+
+	public int readFrames(FloatBuffer sampleBuffer, int numFramesToRead) throws IOException, WavFileException
+	{
+		return readFrames(sampleBuffer, 0, numFramesToRead);
+	}
+
+	public int readFrames(FloatBuffer sampleBuffer, int offset, int numFramesToRead) throws IOException, WavFileException
+	{
+		if (ioState != IOState.READING) throw new IOException("Cannot read from WavFile instance");
+
+		sampleBuffer.clear();
+		sampleBuffer.position(offset);
+		for (int f=0 ; f<numFramesToRead ; f++)
+		{
+			if (frameCounter == numFrames) return f;
+
+			for (int c=0 ; c<numChannels ; c++)
+			{
+				sampleBuffer.put( (float)floatOffset + (float) readSample() / (float)floatScale);
 				offset ++;
 			}
 
