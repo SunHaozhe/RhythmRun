@@ -608,7 +608,6 @@ public class WavFile
 	{
 		if (ioState != IOState.READING) throw new IOException("Cannot read from WavFile instance");
 
-		sampleBuffer.clear();
 		sampleBuffer.position(offset);
 		for (int f=0 ; f<numFramesToRead ; f++)
 		{

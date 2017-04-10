@@ -26,10 +26,10 @@ int len_signal_in;
 float *signal_in;
 float *last_phase_in;
 float *last_phase_out;
-float *fenetre_in;
+kiss_fft_cpx *fenetre_in;
 kiss_fft_cpx *tf_fenetre_in;
 kiss_fft_cpx *tf_fenetre_out;
-float *fenetre_out;
+kiss_fft_cpx *fenetre_out;
 float Q, nu, f, phi, m;
 int fenetres_requises;
 kiss_fftr_cfg fft_directe;
@@ -46,7 +46,7 @@ JNIEXPORT void JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_
     ta = 0;
     buffer_size = (int)jbuffer_size;
     taille_fenetre = (int)jtaille_fenetre;
-    decalage_in = (int)decalage_in;
+    decalage_in = (int)jdecalage_in;
     int k;
     wa = malloc(taille_fenetre*sizeof(float));
 	    for(k=0; k<taille_fenetre; k++)	wa[k] = 0.5*(1-cos((2*M_PI*k)/((float)taille_fenetre)));
@@ -57,8 +57,6 @@ JNIEXPORT void JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_
 	fenetre_in = malloc(taille_fenetre*sizeof(float));
 	tf_fenetre_in = malloc(taille_fenetre*sizeof(kiss_fft_cpx));
     tf_fenetre_out = malloc(taille_fenetre*sizeof(kiss_fft_cpx));
-	/*tf_fenetre_in = malloc((taille_fenetre/2+1)*sizeof(kiss_fft_cpx)); //tf reelle => demi-tf
-	tf_fenetre_out = malloc((taille_fenetre/2+1)*sizeof(kiss_fft_cpx));*/
 	fenetre_out = malloc(taille_fenetre*sizeof(float));
 	buffer_temp = malloc(taille_fenetre*sizeof(float));
 	    for(k=0; k<taille_fenetre; k++)	buffer_temp[k] = 0;
@@ -71,8 +69,8 @@ JNIEXPORT void JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_
 	fft_directe = kiss_fftr_alloc(taille_fenetre, 0, mem, &memneeded);
 	if (fft_directe == NULL) return 42;
 	fft_inverse = kiss_fftr_alloc(taille_fenetre, 1, mem, &memneeded);*/
-	fft_directe = kiss_fftr_alloc(taille_fenetre, 0, NULL, NULL);
-	fft_inverse = kiss_fftr_alloc(taille_fenetre, 1, NULL, NULL);
+	fft_directe = kiss_fft_alloc(taille_fenetre, 0, NULL, NULL);
+	fft_inverse = kiss_fft_alloc(taille_fenetre, 1, NULL, NULL);
 }
 
 JNIEXPORT void JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_1vocoder_NativeVocoder_freeVocoder(JNIEnv* env, jobject thiz)
@@ -101,18 +99,19 @@ JNIEXPORT jint JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_
     		{
     			buffer_synthese[k] = buffer_temp[k];
     		}
-    		for(k=taille_fenetre; k<buffer_size+taille_fenetre; k++)
+    for(k=taille_fenetre; k<buffer_size+taille_fenetre; k++)
     		{
     			buffer_synthese[k] = 0;
     		}
     		ta = 0;
-    		for(k=0;k<fenetres_requises;k++)
-    			{
+    for(k=0;k<fenetres_requises;k++)
+    {
     			for(i=0; i<taille_fenetre; i++)
     			{
-    				fenetre_in[i] = wa[i]*(signal_in[ta+i]);
+    				fenetre_in[i].r = wa[i]*(signal_in[ta+i]);
+    				fenetre_in[i].i = 0;
     			}
-    			kiss_fftr(fft_directe, fenetre_in, tf_fenetre_in);
+    			kiss_fft(fft_directe, fenetre_in, tf_fenetre_in);
 
     			for(i=0;i<taille_fenetre;i++)
     			{
@@ -128,14 +127,14 @@ JNIEXPORT jint JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_
     				tf_fenetre_out[i].i = m*(float)sin((double)last_phase_out[i]);
     				last_phase_in[i] = phi;
     			}
-    			kiss_fftri(fft_inverse, tf_fenetre_out, fenetre_out);
+    			kiss_fft(fft_inverse, tf_fenetre_out, fenetre_out);
     			for(i=0; i<taille_fenetre; i++)
     			{
-    				buffer_synthese[ts+i] += fenetre_out[i]*wa[i]/taille_fenetre;
+    				buffer_synthese[ts+i] += (fenetre_out[i].r*wa[i])/taille_fenetre;
     			}
     			ta += decalage_in;
     			ts += decalage_out;
-    		}
+    	}
     		ts %= buffer_size;
     		for(k=0;k<taille_fenetre-decalage_in;k++)
     		{
@@ -163,4 +162,12 @@ float angle(kiss_fft_cpx x)
 		return (float)atan((double)(x.i/x.r));
 	}
 	return M_PI+(float)atan((double)(x.i/x.r));
+}
+
+JNIEXPORT void JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_1vocoder_NativeVocoder_test(JNIEnv* env, jobject thiz,
+    jobject jbuffer_out)//, jobject jbuffer_in
+{
+    //float *buffer_in = (float*)(*env)->GetDirectBufferAddress(env, jbuffer_in);
+    float *buffer_out = (float*)(*env)->GetDirectBufferAddress(env, jbuffer_out);
+    buffer_out[0] = signal_in[0];//buffer_in[0];
 }

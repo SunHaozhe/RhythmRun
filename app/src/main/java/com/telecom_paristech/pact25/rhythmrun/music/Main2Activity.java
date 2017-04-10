@@ -49,7 +49,11 @@ import static android.media.AudioTrack.MODE_STREAM;
 
 
 public class Main2Activity extends AppCompatActivity {
-
+    /*static {
+        System.loadLibrary("vocoder");
+        Log.i("lucas", "lib chargee");
+    }
+    private native void test(FloatBuffer bufferIn, FloatBuffer bufferOut);*/
     Button test_button = null;
     Button button2 = null;
     Button button3 = null;
@@ -445,11 +449,12 @@ public class Main2Activity extends AppCompatActivity {
         }
 
         if (optionsDeDebug == 8) {
+            final int bytesPerFloat = 4;
             (new Thread (new Runnable() {
                 @Override
                 public void run() {
             int bufferSize = 44100;
-            AudioTrack audioTrack = new AudioTrack(STREAM_MUSIC, 44100, CHANNEL_OUT_MONO, ENCODING_PCM_FLOAT, bufferSize, MODE_STREAM);
+            AudioTrack audioTrack = new AudioTrack(STREAM_MUSIC, 44100, CHANNEL_OUT_MONO, ENCODING_PCM_FLOAT, bufferSize*bytesPerFloat*2, MODE_STREAM);
             NativeVocoder nativeVocoder = null;
             try {
                 nativeVocoder = new NativeVocoder("/storage/emulated/0/Download/guitare_mono_66bpm.wav", bufferSize, 1);
@@ -458,26 +463,67 @@ public class Main2Activity extends AppCompatActivity {
             } catch (WavFileException e) {
                 e.printStackTrace();
             }
-            if (nativeVocoder != null) {
+            if (nativeVocoder != null && audioTrack != null) {
                 boolean premierTour = true;
                 ByteBuffer byteBuffer;
+                int numberOfBuffersGiven = 0;
+                nativeVocoder.setRatio(2.0f);
                 while (!nativeVocoder.songEnded()) {
-                    byteBuffer = nativeVocoder.getNextBuffer();
-                    audioTrack.write(byteBuffer, bufferSize, AudioTrack.WRITE_BLOCKING);
-                    nativeVocoder.returnBuffer(byteBuffer);
+                    //if (numberOfBuffersGiven*bufferSize-audioTrack.getPlaybackHeadPosition() < bufferSize) {
+                        Log.i("lucas", "on write un buffer");
+                        byteBuffer = nativeVocoder.getNextBuffer();
+                        audioTrack.write(byteBuffer, bufferSize*bytesPerFloat, AudioTrack.WRITE_BLOCKING);
+                        nativeVocoder.returnBuffer(byteBuffer);
+                        //numberOfBuffersGiven++;
+                    //} else {
+                    //    Log.i("lucas", String.valueOf(audioTrack.getPlaybackHeadPosition() + " et " + String.valueOf(numberOfBuffersGiven)));
+                    //}
+                    /*byteBuffer = ByteBuffer.allocateDirect(bytesPerFloat*bufferSize).order(ByteOrder.nativeOrder());
+                    audioTrack.write(byteBuffer, bufferSize*bytesPerFloat, AudioTrack.WRITE_BLOCKING);*/
+                    //Log.i("lucas", String.valueOf(audioTrack.getPlaybackHeadPosition()));
+
                     if (premierTour) {
                         audioTrack.play();
+                        Log.i("lucas", "play");
                         premierTour = false;
                     }
                     try {
-                        Thread.sleep(30);
+                        Thread.sleep(300);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
+                Log.i("lucas", "morceau fini");
+                /*//byteBuffer = nativeVocoder.getNextBuffer();
+                byteBuffer = ByteBuffer.allocateDirect(bytesPerFloat*bufferSize).order(ByteOrder.nativeOrder());
+                audioTrack.write(byteBuffer, bufferSize, AudioTrack.WRITE_BLOCKING);
+                nativeVocoder.returnBuffer(byteBuffer);
+                for(int i=0;i<12;i++) {
+                    Log.i("lucas", "tete : " + String.valueOf(audioTrack.getPlaybackHeadPosition()));
+                    if(i==0) {
+                        audioTrack.play();
+                    }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }*/
             }
 
                 }})).start();
+            /*int bufferSize = 4;
+            int bytesPerFloat = 4;
+            ByteBuffer byteIn = ByteBuffer.allocateDirect(bytesPerFloat*bufferSize).order(ByteOrder.nativeOrder());
+            ByteBuffer byteOut = ByteBuffer.allocateDirect(bytesPerFloat*bufferSize).order(ByteOrder.nativeOrder());
+            FloatBuffer bufferIn = byteIn.asFloatBuffer();
+            FloatBuffer bufferOut = byteOut.asFloatBuffer();
+
+            bufferIn.position(0);
+            bufferIn.put(42f);
+            test(bufferIn, bufferOut);
+            bufferOut.position(0);
+            Log.i("lucas", "test : " + String.valueOf(bufferOut.get()));*/
         }
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
