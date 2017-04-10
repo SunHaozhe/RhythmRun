@@ -31,8 +31,7 @@ public class NativeVocoder { //n'y acceder que depuis un seul thread (ou rajoute
     private ArrayList<ByteBuffer> byteBuffers;
     private ByteBuffer byteBuffer;
     private FloatBuffer floatBuffer;
-    private final int bufferTime = 1;
-    private final int bufferSize = 44100*bufferTime;
+    private int bufferSize;
     private final int bytesPerFloat = 4;
     private final int tailleFenetre = 1024, decalageIn = tailleFenetre/4;
     private int lenSignal;
@@ -46,7 +45,8 @@ public class NativeVocoder { //n'y acceder que depuis un seul thread (ou rajoute
     private float ratio, ratio_max; //mettre un ratio_min
     private int decalageOut, ts, fenetresRequises;
 
-    public NativeVocoder(String songPath, int numberOfBuffersToHold) throws IOException, WavFileException {
+    public NativeVocoder(String songPath, int bufferSize, int numberOfBuffersToHold) throws IOException, WavFileException {
+        this.bufferSize = bufferSize;
         this.songPath = songPath;
         byteBuffers = new ArrayList<ByteBuffer>();
         for(int k=0; k<numberOfBuffersToHold; k++) {
@@ -111,6 +111,7 @@ public class NativeVocoder { //n'y acceder que depuis un seul thread (ou rajoute
                 e.printStackTrace();
             }
         }
+        byteBuffer.position(0);
         return byteBuffer;
     }
 

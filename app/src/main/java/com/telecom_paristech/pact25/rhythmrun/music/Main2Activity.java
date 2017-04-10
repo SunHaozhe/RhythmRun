@@ -3,10 +3,13 @@ package com.telecom_paristech.pact25.rhythmrun.music;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,6 +42,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+import static android.media.AudioFormat.CHANNEL_OUT_MONO;
+import static android.media.AudioFormat.ENCODING_PCM_FLOAT;
+import static android.media.AudioManager.STREAM_MUSIC;
+import static android.media.AudioTrack.MODE_STREAM;
+
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -56,12 +64,13 @@ public class Main2Activity extends AppCompatActivity {
      */
     private GoogleApiClient client;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        int optionsDeDebug = 7;
+        int optionsDeDebug = 8;
         //0 : ecrit les releves de l'accelerometre dans Downloads/donnees.csv
         //1 : affiche la frequence de pas calculee par le podometre
         //2 : calcule le tempo de la musique specifiee dans le thread
@@ -69,7 +78,8 @@ public class Main2Activity extends AppCompatActivity {
         //4 : test de l'interpolation
         //5 : interpolation propre
         //6 : podometre + interpolation avec MusicManager
-        //7 : native vocoder
+        //7 : native vocoder speed test
+        //8 : native vocoder test
 
         test_button = (Button) findViewById(R.id.test_button);
         test_button.setText("L'accelerometre s'allume...");
@@ -406,28 +416,68 @@ public class Main2Activity extends AppCompatActivity {
         }
 
         if(optionsDeDebug == 7) {
-            String songPath = "/storage/emulated/0/Download/guitare_mono_66bpm.wav";
+            (new Thread (new Runnable() {
+                @Override
+                public void run() {
+                    String songPath = "/storage/emulated/0/Download/guitare_mono_66bpm.wav";
+                    NativeVocoder nativeVocoder = null;
+                    try {
+                        nativeVocoder = new NativeVocoder(songPath, 44100, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (WavFileException e) {
+                        e.printStackTrace();
+                    }
+                    if (nativeVocoder != null) {
+                        long time = SystemClock.elapsedRealtime();
+                        Log.i("lucas", "on va demander le next buffer");
+                        nativeVocoder.returnBuffer(nativeVocoder.getNextBuffer());
+                        Log.i("lucas", "ca a pris : " + String.valueOf(SystemClock.elapsedRealtime() - time) + "ms");
+                        time = SystemClock.elapsedRealtime();
+                        Log.i("lucas", "on va demander le next buffer");
+                        nativeVocoder.setRatio(2.0f);
+                        nativeVocoder.returnBuffer(nativeVocoder.getNextBuffer());
+                        Log.i("lucas", "ca a pris : " + String.valueOf(SystemClock.elapsedRealtime() - time) + "ms");
+                        nativeVocoder.stop();
+                    }
+                    Log.i("lucas", "vocoder ok");
+                }})).start();
+        }
+
+        if (optionsDeDebug == 8) {
+            (new Thread (new Runnable() {
+                @Override
+                public void run() {
+            int bufferSize = 44100;
+            AudioTrack audioTrack = new AudioTrack(STREAM_MUSIC, 44100, CHANNEL_OUT_MONO, ENCODING_PCM_FLOAT, bufferSize, MODE_STREAM);
             NativeVocoder nativeVocoder = null;
             try {
-                nativeVocoder = new NativeVocoder(songPath, 1);
+                nativeVocoder = new NativeVocoder("/storage/emulated/0/Download/guitare_mono_66bpm.wav", bufferSize, 1);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (WavFileException e) {
                 e.printStackTrace();
             }
             if (nativeVocoder != null) {
-                long time = SystemClock.elapsedRealtime();
-                Log.i("lucas", "on va demander le next buffer");
-                nativeVocoder.returnBuffer(nativeVocoder.getNextBuffer());
-                Log.i("lucas", "ca a pris : " + String.valueOf(SystemClock.elapsedRealtime() - time) + "ms");
-                time = SystemClock.elapsedRealtime();
-                Log.i("lucas", "on va demander le next buffer");
-                nativeVocoder.setRatio(2.0f);
-                nativeVocoder.returnBuffer(nativeVocoder.getNextBuffer());
-                Log.i("lucas", "ca a pris : " + String.valueOf(SystemClock.elapsedRealtime() - time) + "ms");
-                nativeVocoder.stop();
+                boolean premierTour = true;
+                ByteBuffer byteBuffer;
+                while (!nativeVocoder.songEnded()) {
+                    byteBuffer = nativeVocoder.getNextBuffer();
+                    audioTrack.write(byteBuffer, bufferSize, AudioTrack.WRITE_BLOCKING);
+                    nativeVocoder.returnBuffer(byteBuffer);
+                    if (premierTour) {
+                        audioTrack.play();
+                        premierTour = false;
+                    }
+                    try {
+                        Thread.sleep(30);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            Log.i("lucas", "vocoder ok");
+
+                }})).start();
         }
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
