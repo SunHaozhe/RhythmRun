@@ -20,6 +20,7 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 */
 import com.telecom_paristech.pact25.rhythmrun.R;
+import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.FastFourierTransform;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
 import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
@@ -57,7 +58,7 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        int optionsDeDebug = 6;
+        int optionsDeDebug = 7;
         //0 : ecrit les releves de l'accelerometre dans Downloads/donnees.csv
         //1 : affiche la frequence de pas calculee par le podometre
         //2 : calcule le tempo de la musique specifiee dans le thread
@@ -65,6 +66,7 @@ public class Main2Activity extends AppCompatActivity {
         //4 : test de l'interpolation
         //5 : interpolation propre
         //6 : podometre + interpolation avec MusicManager
+        //7 : database test
 
         test_button = (Button) findViewById(R.id.test_button);
         test_button.setText("L'accelerometre s'allume...");
@@ -397,6 +399,21 @@ public class Main2Activity extends AppCompatActivity {
                         }
                     }
                     }
+            })).start();
+        }
+
+        if (optionsDeDebug == 7) {
+            (new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    TempoDataBase tempoDataBase = new TempoDataBase(context);
+                    Log.i("lucas", "database cree");
+                    double tempo = Tempo.findTempoHzFast("/storage/emulated/0/Download/guitare_mono_66bpm.wav");
+                    Log.i("lucas", "tempo trouve : " + String.valueOf(tempo));
+                    tempoDataBase.addSongAndTempo("/storage/emulated/0/Download/guitare_mono_66bpm.wav", tempo);
+                    Log.i("lucas", "tempo ajoute");
+                    Log.i("lucas", String.valueOf(tempoDataBase.getTempo("/storage/emulated/0/Download/guitare_mono_66bpm.wav")));
+                }
             })).start();
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.

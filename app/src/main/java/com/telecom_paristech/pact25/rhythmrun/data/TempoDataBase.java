@@ -76,10 +76,11 @@ public class TempoDataBase extends SQLiteOpenHelper {
     }
 
     public double getTempo(String songPath) {
-        String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + "WHERE" + KEY_PATH + "=" + songPath  ;
+        String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + " WHERE " + KEY_PATH + "=\"" + songPath + "\"" ;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToNext();
         double tempo = cursor.getDouble(2);
 
         return tempo;
