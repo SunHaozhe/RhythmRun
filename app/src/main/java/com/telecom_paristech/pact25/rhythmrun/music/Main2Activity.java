@@ -385,7 +385,7 @@ public class Main2Activity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    MusicManager musicManager = new MusicManager();
+                    MusicManager musicManager = new MusicManager(null);
                     musicManager.play();
                     float f;
                     while(true) {
@@ -407,12 +407,39 @@ public class Main2Activity extends AppCompatActivity {
                 @Override
                 public void run() {
                     TempoDataBase tempoDataBase = new TempoDataBase(context);
-                    Log.i("lucas", "database cree");
+                    tempoDataBase.clear();
+                    /*Log.i("lucas", "database cree");
                     double tempo = Tempo.findTempoHzFast("/storage/emulated/0/Download/guitare_mono_66bpm.wav");
                     Log.i("lucas", "tempo trouve : " + String.valueOf(tempo));
                     tempoDataBase.addSongAndTempo("/storage/emulated/0/Download/guitare_mono_66bpm.wav", tempo);
                     Log.i("lucas", "tempo ajoute");
-                    Log.i("lucas", String.valueOf(tempoDataBase.getTempo("/storage/emulated/0/Download/guitare_mono_66bpm.wav")));
+                    Log.i("lucas", String.valueOf(tempoDataBase.getTempo("/storage/emulated/0/Download/guitare_mono_66bpm.wav")));*/
+
+                    tempoDataBase.addSongAndTempo("a", 1.7);
+                    tempoDataBase.addSongAndTempo("b", 1.9);
+                    tempoDataBase.addSongAndTempo("c", 2.11);
+                    tempoDataBase.addSongAndTempo("d", 4.0);
+                    float wantedTempoHz = 2.0f;
+                    float minRatioStep = 0.05f, maxRatioStep = 0.1f; // a expliquer
+                    int kmax = 5;
+                    PathAndTempo song = null;
+
+                    for(int k=0;k<kmax; k++) {
+                        if ((song = tempoDataBase.getSongThatFit((double)(wantedTempoHz-k*minRatioStep), (double)(wantedTempoHz+k*maxRatioStep))) != null) {
+                            break;
+                        }
+                        if ((song = tempoDataBase.getSongThatFit((double)(wantedTempoHz-k*minRatioStep)*2, (double)(wantedTempoHz+k*maxRatioStep)*2)) != null) {
+                            song.tempoHz /= 2;
+                            break;
+                        }
+                    }
+                    if (song == null) {
+                        song = tempoDataBase.getASong();
+                    }
+                    if (song != null) {
+                        Log.i("lucas", String.valueOf(song.tempoHz) + " et " + song.path);
+                    }
+
                 }
             })).start();
         }
