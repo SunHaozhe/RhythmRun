@@ -3,8 +3,12 @@ package com.telecom_paristech.pact25.rhythmrun.music;
 import android.util.Log;
 
 
-import com.telecom_paristech.pact25.rhythmrun.interfaces.music.BufferSupplier;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.ByteBufferPool;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.ByteBufferSupplier;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.FloatArrayPool;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.FloatArraySupplier;
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
+import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.NativeVocoder;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavProcess;
@@ -24,26 +28,28 @@ import static java.lang.Math.sqrt;
 public class MusicManager implements MusicManagerInterface {
 
     private float[] paceFrequency;
-    private final int l = 2; //longueur de paceFrequency
+    private final int l = 2; //longueur de paceFrequency, i.e. le nombre de valeurs prises en compte pour le calcul du tempo voulu
     private int indice; //indice courant dans le tableau circulaire paceFrequency
     private boolean premierTour;
     private String songPath;
     private float wantedTempoHz, songTempoHz;
     private boolean aSongIsSelected, playing;
     private Thread thread;
-    private MusicReader musicReader;
+    //private MusicReader musicReader;
     private final int dureeBuffer = 1;
     private final int bufferSize = 44100 * dureeBuffer;
     private Player player;
+    private boolean CVocoder = true;
 
-    public MusicManager() {
+    public MusicManager(boolean CVocoder) {
         paceFrequency = new float[l];
         indice = 0;
         premierTour = true;
         wantedTempoHz = -1;
         aSongIsSelected = false;
         playing = false;
-        musicReader = new MusicReader(bufferSize);
+        this.CVocoder = CVocoder;
+        //musicReader = new MusicReader(bufferSize, 0);
     }
 
     private final void loadNewTrack() {
@@ -61,7 +67,7 @@ public class MusicManager implements MusicManagerInterface {
         //(on veut le chemin d'acces d'une musique de la bdd avec un tempo dans les intervalles de tempoIntervalsHz)
         songTempoHz = -1; //pareil
 
-        songPath = "/storage/emulated/0/Download/guitare_mono_66bpm.wav"; // pour tester
+        songPath = "/storage/emulated/0/Download/guitare_mono_70bpm.wav"; // pour tester
         songTempoHz = 1.1f;
     }
 
@@ -151,7 +157,7 @@ public class MusicManager implements MusicManagerInterface {
 
     }
 
-    private final BufferSupplier getNewBufferSupplier() {
+    private final FloatArraySupplier getNewFloatArraySupplier() {
         loadNewTrack();
         try {
             return new SongSpeedChanger(songPath, bufferSize, 1);//wantedTempoHz/songTempoHz
@@ -163,30 +169,77 @@ public class MusicManager implements MusicManagerInterface {
         return null;
     }
 
+    private final ByteBufferSupplier getNewByteBufferSupplier() {
+        loadNewTrack();
+        try {
+            return new NativeVocoder(songPath, bufferSize, 3);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (WavFileException e) { //faire quelque chose si on ne peut pas ouvrir le fichier
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private class Player implements Runnable {
         MusicReader musicReader;
-        BufferSupplier bufferSupplier;
+        FloatArraySupplier floatArraySupplier = null;
+        ByteBufferSupplier byteBufferSupplier = null;
         public Player() {
-            musicReader = new MusicReader(bufferSize);
+            if (CVocoder) {
+                musicReader = new MusicReader(bufferSize, 1);
+            } else {
+                musicReader = new MusicReader(bufferSize, 0);
+            }
         }
 
         @Override
         public void run() {
-            bufferSupplier = getNewBufferSupplier();
-            Log.i("lucas", "buferSupplier loaded");
+            if (CVocoder) {
+                byteBufferSupplier = getNewByteBufferSupplier();
+                musicReader.setByteBufferPool((ByteBufferPool)byteBufferSupplier); //pour retourner les buffers, pour ne pas en allouer d'autres
+            } else {
+                floatArraySupplier = getNewFloatArraySupplier();
+                musicReader.setFloatArrayPool((FloatArrayPool)floatArraySupplier); //pour retourner les buffers, pour ne pas en allouer d'autres
+            }
+            Log.i("lucas", "bufferSupplier loaded");
             musicReader.play();
             while(playing) {
-                if(!bufferSupplier.songEnded()) {
-                    if (musicReader.getNumberOfBuffers() < 2) {
-                        musicReader.addBuffer(bufferSupplier.getNextBuffer());
+                if (CVocoder) {
+                    if (!byteBufferSupplier.songEnded()) {
+                        if (musicReader.getNumberOfBuffers() < 2) {
+                            musicReader.addBuffer(byteBufferSupplier.getNextBuffer());
+                        }
+                    } else {
+                        while (musicReader.getNumberOfBuffers() > 0) { //on attend que tous les buffers aient ete retournes (sinon fuite de memoire...)
+                            try {
+                                Thread.sleep(30);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        byteBufferSupplier = getNewByteBufferSupplier();
+                        musicReader.setByteBufferPool((ByteBufferPool)byteBufferSupplier);
+                    }
+                    try {
+                        Thread.sleep(30);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 } else {
-                    bufferSupplier = getNewBufferSupplier();
-                }
-                try {
-                    Thread.sleep(30);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    if (!floatArraySupplier.songEnded()) {
+                        if (musicReader.getNumberOfBuffers() < 2) {
+                            musicReader.addBuffer(floatArraySupplier.getNextBuffer());
+                        }
+                    } else {
+                        floatArraySupplier = getNewFloatArraySupplier();
+                        musicReader.setFloatArrayPool((FloatArrayPool)floatArraySupplier);
+                    }
+                    try {
+                        Thread.sleep(30);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             musicReader.stop();

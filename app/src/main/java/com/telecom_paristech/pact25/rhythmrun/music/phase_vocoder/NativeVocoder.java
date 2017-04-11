@@ -2,6 +2,8 @@ package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder;
 
 import android.util.Log;
 
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.ByteBufferPool;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.ByteBufferSupplier;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFile;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 
@@ -16,7 +18,7 @@ import java.util.ArrayList;
  * Created by lucas on 09/04/17.
  */
 
-public class NativeVocoder { //n'y acceder que depuis un seul thread (ou rajouter un flag pour le stop)
+public class NativeVocoder implements ByteBufferSupplier, ByteBufferPool{ //n'y acceder que depuis un seul thread (ou rajouter un flag pour le stop)
 
     static {
         System.loadLibrary("vocoder");

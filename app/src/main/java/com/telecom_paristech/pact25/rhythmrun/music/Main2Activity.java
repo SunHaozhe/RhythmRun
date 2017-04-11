@@ -74,7 +74,7 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        int optionsDeDebug = 8;
+        int optionsDeDebug = 9;
         //0 : ecrit les releves de l'accelerometre dans Downloads/donnees.csv
         //1 : affiche la frequence de pas calculee par le podometre
         //2 : calcule le tempo de la musique specifiee dans le thread
@@ -84,6 +84,7 @@ public class Main2Activity extends AppCompatActivity {
         //6 : podometre + interpolation avec MusicManager
         //7 : native vocoder speed test
         //8 : native vocoder test
+        //9 : music manager + native vocoder
 
         test_button = (Button) findViewById(R.id.test_button);
         test_button.setText("L'accelerometre s'allume...");
@@ -308,7 +309,7 @@ public class Main2Activity extends AppCompatActivity {
             int dureeBuffer = 1;
             int bufferSize = 44100*dureeBuffer;
             String waveFilePath = "/storage/emulated/0/Download/guitare_mono_66bpm.wav";
-            MusicReader musicReader = new MusicReader(bufferSize);
+            MusicReader musicReader = new MusicReader(bufferSize, 0);
             WavFile waveFile = null;
             try {
                 waveFile = WavFile.openWavFile(new File(waveFilePath));
@@ -360,7 +361,7 @@ public class Main2Activity extends AppCompatActivity {
                     int dureeBuffer = 1;
                     int bufferSize = 44100 * dureeBuffer;
                     String waveFilePath = "/storage/emulated/0/Download/guitare_mono_66bpm.wav";
-                    MusicReader musicReader = new MusicReader(bufferSize);
+                    MusicReader musicReader = new MusicReader(bufferSize, 0);
                     SongSpeedChanger songSpeedChanger = null;
                     try {
                         boolean first = true;
@@ -402,7 +403,7 @@ public class Main2Activity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    MusicManager musicManager = new MusicManager();
+                    MusicManager musicManager = new MusicManager(false);
                     musicManager.play();
                     float f;
                     while(true) {
@@ -457,7 +458,7 @@ public class Main2Activity extends AppCompatActivity {
             AudioTrack audioTrack = new AudioTrack(STREAM_MUSIC, 44100, CHANNEL_OUT_MONO, ENCODING_PCM_FLOAT, bufferSize*bytesPerFloat*2, MODE_STREAM);
             NativeVocoder nativeVocoder = null;
             try {
-                nativeVocoder = new NativeVocoder("/storage/emulated/0/Download/guitare_mono_66bpm.wav", bufferSize, 1);
+                nativeVocoder = new NativeVocoder("/storage/emulated/0/Download/guitare_mono_70bpm.wav", bufferSize, 1);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (WavFileException e) {
@@ -467,7 +468,7 @@ public class Main2Activity extends AppCompatActivity {
                 boolean premierTour = true;
                 ByteBuffer byteBuffer;
                 int numberOfBuffersGiven = 0;
-                nativeVocoder.setRatio(2.0f);
+                nativeVocoder.setRatio(1.5f);
                 while (!nativeVocoder.songEnded()) {
                     //if (numberOfBuffersGiven*bufferSize-audioTrack.getPlaybackHeadPosition() < bufferSize) {
                         Log.i("lucas", "on write un buffer");
@@ -487,13 +488,14 @@ public class Main2Activity extends AppCompatActivity {
                         Log.i("lucas", "play");
                         premierTour = false;
                     }
-                    try {
+                    /*try {
                         Thread.sleep(300);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 }
                 Log.i("lucas", "morceau fini");
+                audioTrack.stop();
                 /*//byteBuffer = nativeVocoder.getNextBuffer();
                 byteBuffer = ByteBuffer.allocateDirect(bytesPerFloat*bufferSize).order(ByteOrder.nativeOrder());
                 audioTrack.write(byteBuffer, bufferSize, AudioTrack.WRITE_BLOCKING);
@@ -524,6 +526,25 @@ public class Main2Activity extends AppCompatActivity {
             test(bufferIn, bufferOut);
             bufferOut.position(0);
             Log.i("lucas", "test : " + String.valueOf(bufferOut.get()));*/
+        }
+
+        if (optionsDeDebug == 9) {
+            (new Thread (new Runnable() {
+                @Override
+                public void run() {
+                    MusicManager musicManager = new MusicManager(true);
+                    musicManager.updateRythm(1.1f);
+                    musicManager.updateRythm(1.1f);
+                    musicManager.play();
+                    while (true) {
+                        try {
+                            Thread.sleep(30);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            })).start();
         }
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
