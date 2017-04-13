@@ -42,6 +42,7 @@ import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 import static android.media.AudioFormat.CHANNEL_OUT_MONO;
 import static android.media.AudioFormat.ENCODING_PCM_FLOAT;
@@ -75,7 +76,7 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        int optionsDeDebug = 9;
+        int optionsDeDebug = 11;
         //0 : ecrit les releves de l'accelerometre dans Downloads/donnees.csv
         //1 : affiche la frequence de pas calculee par le podometre
         //2 : calcule le tempo de la musique specifiee dans le thread
@@ -87,6 +88,7 @@ public class Main2Activity extends AppCompatActivity {
         //8 : native vocoder test
         //9 : music manager + native vocoder
         //10 : database test
+        //11 : podometre + database + vovoder
 
         test_button = (Button) findViewById(R.id.test_button);
         test_button.setText("L'accelerometre s'allume...");
@@ -534,15 +536,18 @@ public class Main2Activity extends AppCompatActivity {
             (new Thread (new Runnable() {
                 @Override
                 public void run() {
-                    MusicManager musicManager = new MusicManager(null, true);
-                    float f = 0.5f;
+                    TempoDataBase tempoDataBase = new TempoDataBase(context);
+                    tempoDataBase.clear();
+                    tempoDataBase.addSongAndTempo("/storage/emulated/0/Music/sound/107bpm.wav", 1.1);
+                    MusicManager musicManager = new MusicManager(tempoDataBase, true);
+                    float f = 1.0f;
                     musicManager.updateRythm(f);
                     musicManager.updateRythm(f);
                     musicManager.play();
                     while (true) {
                         try {
                             Thread.sleep(100);
-                            f += 0.005;
+                            //f += 0.005;
                             musicManager.updateRythm(f);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -590,6 +595,62 @@ public class Main2Activity extends AppCompatActivity {
                         Log.i("lucas", String.valueOf(song.tempoHz) + " et " + song.path);
                     }
 
+                }
+            })).start();
+        }
+
+        if (optionsDeDebug == 11) {
+            (new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // partie bdd
+                    TempoDataBase tempoDataBase = new TempoDataBase(context);
+                    Log.i("lucas", "database creee");
+                    tempoDataBase.clear();
+                    Log.i("lucas", "database videe");
+                    ArrayList<String> songList = new ArrayList<String>();
+                    //songList.add("100bpm.wav"); mauvais exemple :)
+                    songList.add("107bpm.wav");
+                    //songList.add("118bpm.wav"); mauvais exemple
+                    songList.add("124bpm.wav");
+                    songList.add("138bpm.wav");
+                    songList.add("150bpm.wav");
+                    songList.add("160bpm.wav");
+                    songList.add("172bpm.wav");
+                    String folder = "/storage/emulated/0/Music/wav/";
+                    int i = 1;
+                    float tempo;
+                    for (String song : songList) {
+                        tempo = (float)Tempo.findTempoHzFast(folder+song);
+                        tempoDataBase.addSongAndTempo(folder+song, tempo);
+                        Log.i("lucas", "tempo ajoute " + song + " : " + String.valueOf(tempo*60));
+                        i++;
+                    }
+                    //partie musique
+                    MusicManager musicManager = new MusicManager(tempoDataBase, true);
+                    Log.i("lucas", "music manager cree");
+                    //partie podometre
+                    Podometer pod = new Podometer(context);
+                    Log.i("lucas", "podometre cree");
+                    while (!pod.isActive()) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Log.i("lucas", "podometre actif");
+                    musicManager.play();
+                    Log.i("lucas", "music manager play");
+                    while (true) {
+                        try {
+                            Thread.sleep(500);
+                            musicManager.updateRythm(pod.getRunningPaceFrequency());//pas dans le bon intervalle
+                            setTextViewToString(String.valueOf(musicManager.getWantedTempoHz()));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             })).start();
         }

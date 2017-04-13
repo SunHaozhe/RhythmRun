@@ -44,8 +44,8 @@ public class MusicManager implements MusicManagerInterface {
 
     TempoDataBase tempoDataBase;
 
-    final float minRatioStep = 0.05f;
-    final float maxRatioStep = 0.1f;
+    final float minRatioStep = 0.05f; // voir loadNewTrack
+    final float maxRatioStep = 0.1f; // voir loadNewTrack
     final int kmax = 5; // voir loadNewTrack
 
     public MusicManager(TempoDataBase tempoDataBase, boolean CVocoder) {
@@ -220,7 +220,7 @@ public class MusicManager implements MusicManagerInterface {
                 floatArraySupplier = getNewFloatArraySupplier();
                 musicReader.setFloatArrayPool((FloatArrayPool)floatArraySupplier); //pour retourner les buffers, pour ne pas en allouer d'autres
             }
-            Log.i("lucas", "bufferSupplier loaded");
+            //Log.i("lucas", "bufferSupplier loaded");
             musicReader.play();
             while(playing) {
                 if (CVocoder) {
@@ -228,11 +228,11 @@ public class MusicManager implements MusicManagerInterface {
                         if (musicReader.getNumberOfBuffers() < 2) {
                             //Log.i("lucas", "on charge un buffer");
                             byteBufferSupplier.setRatio(wantedTempoHz/songTempoHz);
-                            Log.i("lucas", "ratio : " + String .valueOf(wantedTempoHz/songTempoHz));
+                            //Log.i("lucas", "ratio : " + String .valueOf(wantedTempoHz/songTempoHz));
                             musicReader.addBuffer(byteBufferSupplier.getNextBuffer());
                         }
                     } else {
-                        Log.i("lucas", "vocoder a fini");
+                        //Log.i("lucas", "vocoder a fini");
                         musicReader.stopAtTheEnd();
                         while (!musicReader.songEnded()) { //on attend que tous les buffers aient ete retournes (sinon fuite de memoire...)
                             try {

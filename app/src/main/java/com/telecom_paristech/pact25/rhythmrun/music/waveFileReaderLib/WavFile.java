@@ -581,6 +581,7 @@ public class WavFile
 
 	public int readFrames(double[] sampleBuffer, int offset, int numFramesToRead) throws IOException, WavFileException
 	{
+		//Log.i("lucas", "wavfile va lire : " + String.valueOf(numFramesToRead));
 		if (ioState != IOState.READING) throw new IOException("Cannot read from WavFile instance");
 
 		for (int f=0 ; f<numFramesToRead ; f++)

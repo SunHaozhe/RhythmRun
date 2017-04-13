@@ -278,7 +278,7 @@ public class RunActivity extends AppCompatActivity {
             }
         }).start();
 
-        musicManagerInterface = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager(false);
+        musicManagerInterface = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager(null, false);
 
         /*(new Thread (new Runnable() {
             @Override

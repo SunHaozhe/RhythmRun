@@ -63,7 +63,7 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.i("Podomètre", "on est rentrés dans le thread du podometre");
+                //Log.i("Podomètre", "on est rentrés dans le thread du podometre");
                 while (!fini) {
                     if (acc.isActive()) {
                         computePacePeriod();
@@ -114,7 +114,7 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         }
         computeTFD(0);
         //Log.i("lucas", "on va calculer l'indice max");
-        Log.i("Podomètre","Calcul de l'indice max");
+        //Log.i("Podomètre","Calcul de l'indice max");
         int indice = indiceMaxiEntre(tfd, (int)(minPaceFrequency*tempsRelevesApresZeroPadding), (int)(maxPaceFrequency*tempsRelevesApresZeroPadding));
         lastPaceFrequency = paceFrequency;
         paceFrequency = indice/tempsRelevesApresZeroPadding;
@@ -134,7 +134,7 @@ public class Podometer implements PodometerInterface, SensorEventListener {
             computeOneStepTime2(0);
         }
         //Log.i("lucas", "on a calcule une frequence de " + String.valueOf(paceFrequency));
-        Log.i("Podomètre","on a calcule une frequence de " + String.valueOf(paceFrequency));
+        //Log.i("Podomètre","on a calcule une frequence de " + String.valueOf(paceFrequency));
     }
 
     private final void computeTFD(int index) { //index : 0 pour x, 1 pour y ou 2 pour z, a remplacer par une fft
@@ -150,7 +150,7 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         }
         //Log.i("lucas", "on a calcule une tfd");
         //Log.i("lucas", "numberOfValues : " + String.valueOf(numberOfValues));
-        Log.i("Podomètre","Calcul de la TFD");
+        //Log.i("Podomètre","Calcul de la TFD");
     }
 
     private final int indiceMaxiEntre(float t[][], int mini, int maxi) {
