@@ -533,12 +533,15 @@ public class Main2Activity extends AppCompatActivity {
                 @Override
                 public void run() {
                     MusicManager musicManager = new MusicManager(true);
-                    musicManager.updateRythm(1.1f);
-                    musicManager.updateRythm(1.1f);
+                    float f = 0.5f;
+                    musicManager.updateRythm(f);
+                    musicManager.updateRythm(f);
                     musicManager.play();
                     while (true) {
                         try {
-                            Thread.sleep(30);
+                            Thread.sleep(100);
+                            f += 0.005;
+                            musicManager.updateRythm(f);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

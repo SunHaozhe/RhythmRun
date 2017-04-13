@@ -6,6 +6,7 @@
 #include "_kiss_fft_guts.h"
 
 #define module(x) sqrt(x.r*x.r+x.i*x.i)
+#define carre(x) (x*x)
 
 float angle(kiss_fft_cpx x);
 
@@ -35,6 +36,7 @@ int fenetres_requises;
 kiss_fftr_cfg fft_directe;
 kiss_fftr_cfg fft_inverse;
 int k, i;
+float amp;
 /*size_t memneeded;
 void *mem;*/
 
@@ -105,6 +107,8 @@ JNIEXPORT jint JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_
     buffer_synthese = (float*)(*env)->GetDirectBufferAddress(env, jbuffer_synthese);
     ts = (int)jts;
     decalage_out = (int)jdecalage_out;
+    for(amp=0,k=0;k<taille_fenetre;k+=decalage_out) amp += carre(wa[k]);
+    if(amp==0) amp=1;//theoriquement inutile mais comme on va diviser par amp...
     fenetres_requises = (int) jfenetres_requises;
     for(k=0; k<taille_fenetre; k++)
     		{
@@ -141,7 +145,7 @@ JNIEXPORT jint JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_
     			kiss_fft(fft_inverse, tf_fenetre_out, fenetre_out);
     			for(i=0; i<taille_fenetre; i++)
     			{
-    				buffer_synthese[ts+i] += (fenetre_out[i].r*wa[i])/taille_fenetre;
+    				buffer_synthese[ts+i] += (fenetre_out[i].r*wa[i])/(taille_fenetre*amp);
     			}
     			ta += decalage_in;
     			ts += decalage_out;

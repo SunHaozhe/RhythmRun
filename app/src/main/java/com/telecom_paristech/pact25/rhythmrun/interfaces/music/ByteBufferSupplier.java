@@ -9,4 +9,5 @@ import java.nio.ByteBuffer;
 public interface ByteBufferSupplier {
     ByteBuffer getNextBuffer();
     boolean songEnded();
+    void setRatio(float ratio);
 }

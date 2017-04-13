@@ -44,7 +44,9 @@ public class NativeVocoder implements ByteBufferSupplier, ByteBufferPool{ //n'y 
     private boolean songEnded;
     private long framesRemainingToBeRead;
 
-    private float ratio, ratio_max; //mettre un ratio_min
+    private float ratio;
+    private final float ratio_max = 3.0f;
+    private final float ratio_min = 0.6f;
     private int decalageOut, ts, fenetresRequises;
 
     public NativeVocoder(String songPath, int bufferSize, int numberOfBuffersToHold) throws IOException, WavFileException {
@@ -55,7 +57,6 @@ public class NativeVocoder implements ByteBufferSupplier, ByteBufferPool{ //n'y 
             byteBuffers.add(ByteBuffer.allocateDirect(bytesPerFloat*(bufferSize+tailleFenetre)).order(ByteOrder.nativeOrder())); //les bits d'un float sont a l'envers en C;
         }
         ratio = 1.0f;
-        ratio_max = 2.0f;
 
         int decalageOutMin = (int)((float)decalageIn/ratio_max);
         lenSignal = ((bufferSize-1)/decalageOutMin)*decalageIn+tailleFenetre;
@@ -156,7 +157,16 @@ public class NativeVocoder implements ByteBufferSupplier, ByteBufferPool{ //n'y 
     }
 
     public void setRatio(float ratio) {
-        this.ratio = ratio;//attention a ratio_max
+        if (ratio <= ratio_max && ratio >= ratio_min) {
+            this.ratio = ratio;
+        }
+        else {
+            if(ratio > ratio_max) {
+                this.ratio = ratio_max;
+            } else {
+                this.ratio = ratio_min;
+            }
+        }
     }
 
     public void stop() {

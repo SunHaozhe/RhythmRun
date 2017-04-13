@@ -209,6 +209,8 @@ public class MusicManager implements MusicManagerInterface {
                     if (!byteBufferSupplier.songEnded()) {
                         if (musicReader.getNumberOfBuffers() < 2) {
                             //Log.i("lucas", "on charge un buffer");
+                            byteBufferSupplier.setRatio(wantedTempoHz/songTempoHz);
+                            Log.i("lucas", "ratio : " + String .valueOf(wantedTempoHz/songTempoHz));
                             musicReader.addBuffer(byteBufferSupplier.getNextBuffer());
                         }
                     } else {
