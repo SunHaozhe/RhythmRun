@@ -25,8 +25,8 @@ public class NativeVocoder implements ByteBufferSupplier, ByteBufferPool{ //n'y 
         Log.i("lucas", "lib chargee");
     }
     private native void freeVocoder();
-    private native int nextVocoder(FloatBuffer floatBuffer, int decalageOut, int ts, int fenetresRequises);
-    private native void initVocoder(FloatBuffer floatBuffer, int bufferSize, int tailleFenetre, int tagada);
+    private native int nextVocoder(FloatBuffer floatBuffer, int decalageOut, int fenetresRequises, int ts);
+    private native int initVocoder(FloatBuffer floatSignal, int lenSignal, int bufferSize, int tailleFenetre, int tagada);
     private native void test(FloatBuffer bufferOut);//, FloatBuffer bufferOut
 
     private String songPath;
@@ -66,10 +66,11 @@ public class NativeVocoder implements ByteBufferSupplier, ByteBufferPool{ //n'y 
         //Log.i("lucas","capacity : " + String.valueOf(floatSignal.capacity()));
         //Log.i("lucas","limit : " + String.valueOf(floatSignal.limit()));
         //Log.i("lucas","position : " + String.valueOf(floatSignal.position()));
-        //Log.i("lucas","on va init");
+        Log.i("lucas","on va init");
         //initVocoder(floatSignal, bufferSize, tailleFenetre, decalageIn);
-        initVocoder(floatSignal, bufferSize, tailleFenetre, decalageIn);
-        //Log.i("lucas", "on a init");
+        int i = initVocoder(floatSignal, lenSignal, bufferSize, tailleFenetre, decalageIn);
+        Log.i("lucas", "init : " + String.valueOf(i));
+        Log.i("lucas", "on a init");
         waveFile = WavFile.openWavFile(new File(songPath));
         //Log.i("lucas", "wav ouvert");
         framesRemainingToBeRead = waveFile.getNumFrames();
@@ -92,6 +93,7 @@ public class NativeVocoder implements ByteBufferSupplier, ByteBufferPool{ //n'y 
                     byteBuffer.position(0);
                     floatBuffer = byteBuffer.asFloatBuffer(); //est-ce bien necessaire ?
                 } else {
+                    Log.i("lucas", "mais ou sont les buffers");
                     try {
                         Thread.sleep(30);
                     } catch (InterruptedException e) {
@@ -104,13 +106,15 @@ public class NativeVocoder implements ByteBufferSupplier, ByteBufferPool{ //n'y 
         fenetresRequises = (bufferSize+decalageOut-1-ts)/decalageOut;
         //Log.i("lucas", "on va faire fill signal et nenetresRequises = " + String.valueOf(fenetresRequises));
         fillSignal(fenetresRequises*decalageIn, tailleFenetre-decalageIn);
-        //Log.i("lucas", "on va faire next vocoder");
-        ts = nextVocoder(floatBuffer, decalageOut, ts, fenetresRequises);
+        Log.i("lucas", "on va faire next vocoder");
+        nextVocoder(floatBuffer, decalageOut, fenetresRequises, ts);
+        Log.i("lucas", "on a fait next vocoder");
         //floatBuffer.position(0);
         //Log.i("lucas", "floatBuffer[0] : " + String.valueOf(floatBuffer.get()));
         //Log.i("lucas", "on a fait next vocoder et ts = " + String.valueOf(ts));
         if (songEnded) {
             freeVocoder();
+            Log.i("lucas", "vocoder libere");
             try {
                 waveFile.close();
             } catch (IOException e) {
@@ -131,8 +135,8 @@ public class NativeVocoder implements ByteBufferSupplier, ByteBufferPool{ //n'y 
                 numberOfFrames = (int)framesRemainingToBeRead;
             }
             //Log.i("lucas", "float signal : " + String.valueOf(floatSignal));
-            waveFile.readFrames(floatSignal, offset, numberOfFrames);
-            framesRemainingToBeRead -= numberOfFrames;
+                waveFile.readFrames(floatSignal, offset, numberOfFrames);
+                framesRemainingToBeRead -= numberOfFrames;
             //Log.i("lucas", "lu");
         } catch (IOException e) {
             e.printStackTrace();

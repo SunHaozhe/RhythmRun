@@ -38,27 +38,35 @@ int k, i;
 /*size_t memneeded;
 void *mem;*/
 
-JNIEXPORT void JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_1vocoder_NativeVocoder_initVocoder(JNIEnv* env, jobject thiz,
-    jobject jsignal, jint jbuffer_size, jint jtaille_fenetre, jint jdecalage_in)
+JNIEXPORT jint JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_1vocoder_NativeVocoder_initVocoder(JNIEnv* env, jobject thiz,
+    jobject jsignal, jint jlen_signal, jint jbuffer_size, jint jtaille_fenetre, jint jdecalage_in)
 {
     signal_in = (float*)(*env)->GetDirectBufferAddress(env, jsignal);
-
-    ta = 0;
+    len_signal_in = (int)jlen_signal;
+    ta = 0, ts = 0;
     buffer_size = (int)jbuffer_size;
     taille_fenetre = (int)jtaille_fenetre;
     decalage_in = (int)jdecalage_in;
     int k;
     wa = malloc(taille_fenetre*sizeof(float));
+    if(wa==NULL) return (jint)1;
 	    for(k=0; k<taille_fenetre; k++)	wa[k] = 0.5*(1-cos((2*M_PI*k)/((float)taille_fenetre)));
 	last_phase_in = malloc(taille_fenetre*sizeof(float));
+    if(last_phase_in==NULL) return (jint)1;
 	    for(k=0; k<taille_fenetre; k++)	last_phase_in[k] = 0;
 	last_phase_out = malloc(taille_fenetre*sizeof(float));
+    if(last_phase_out==NULL) return (jint)1;
 	    for(k=0; k<taille_fenetre; k++)	last_phase_out[k] = 0;
-	fenetre_in = malloc(taille_fenetre*sizeof(float));
+	fenetre_in = malloc(taille_fenetre*sizeof(kiss_fft_cpx));
+    if(fenetre_in==NULL) return (jint)1;
 	tf_fenetre_in = malloc(taille_fenetre*sizeof(kiss_fft_cpx));
+    if(tf_fenetre_in==NULL) return (jint)1;
     tf_fenetre_out = malloc(taille_fenetre*sizeof(kiss_fft_cpx));
-	fenetre_out = malloc(taille_fenetre*sizeof(float));
+    if(tf_fenetre_out==NULL) return (jint)1;
+	fenetre_out = malloc(taille_fenetre*sizeof(kiss_fft_cpx));
+    if(fenetre_out==NULL) return (jint)1;
 	buffer_temp = malloc(taille_fenetre*sizeof(float));
+    if(buffer_temp==NULL) return (jint)1;
 	    for(k=0; k<taille_fenetre; k++)	buffer_temp[k] = 0;
 
     /*size_t subsize;
@@ -70,7 +78,10 @@ JNIEXPORT void JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_
 	if (fft_directe == NULL) return 42;
 	fft_inverse = kiss_fftr_alloc(taille_fenetre, 1, mem, &memneeded);*/
 	fft_directe = kiss_fft_alloc(taille_fenetre, 0, NULL, NULL);
+	if(fft_directe == NULL) return 1;
 	fft_inverse = kiss_fft_alloc(taille_fenetre, 1, NULL, NULL);
+	if(fft_inverse == NULL) return 1;
+	return 0;
 }
 
 JNIEXPORT void JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_1vocoder_NativeVocoder_freeVocoder(JNIEnv* env, jobject thiz)
@@ -89,8 +100,8 @@ JNIEXPORT void JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_
 }
 
 JNIEXPORT jint JNICALL Java_com_telecom_1paristech_pact25_rhythmrun_music_phase_1vocoder_NativeVocoder_nextVocoder(JNIEnv* env, jobject thiz,
-    jobject jbuffer_synthese, jint jdecalage_out, jint jts, jint jfenetres_requises)
-{//retourne 1 si c'est fini
+    jobject jbuffer_synthese, jint jdecalage_out, jint jfenetres_requises, jint jts)
+{
     buffer_synthese = (float*)(*env)->GetDirectBufferAddress(env, jbuffer_synthese);
     ts = (int)jts;
     decalage_out = (int)jdecalage_out;

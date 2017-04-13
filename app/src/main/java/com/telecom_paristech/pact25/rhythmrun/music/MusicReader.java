@@ -30,12 +30,14 @@ public class MusicReader {
     ByteBufferThreadRunnable byteBufferThreadRunnable;
     FloatArrayPool floatArrayPool;
     ByteBufferPool byteBufferPool;
-    int bufferType;
+    private int bufferType;
+    private Boolean songEnded;
 
     public MusicReader(int bufferSize, int bufferType) { //bufferType : 0 pour float[], autre pour ByteBuffer
         this.bufferType = bufferType;
         this.bufferSize = bufferSize;
         byteBufferPool = null;
+        songEnded = false;
         if (bufferType == 0) {
             floatFile = new ArrayList<float[]>();
             floatArrayThreadRunnable = new FloatArrayThreadRunnable(bufferSize, floatFile);
@@ -44,6 +46,12 @@ public class MusicReader {
             byteBufferFile = new ArrayList<ByteBuffer>();
             byteBufferThreadRunnable = new ByteBufferThreadRunnable(bufferSize, byteBufferFile);
             thread = new Thread(byteBufferThreadRunnable);
+        }
+    }
+
+    public boolean songEnded() {
+        synchronized (songEnded) {
+            return songEnded;
         }
     }
 
@@ -74,7 +82,7 @@ public class MusicReader {
         if (bufferType != 0) {
             synchronized (byteBufferFile) {
                 byteBufferFile.add(buffer);
-                Log.i("lucas", "buffer added");
+                //Log.i("lucas", "buffer added");
             }
         }
     }
@@ -92,7 +100,16 @@ public class MusicReader {
     }
 
     public void play() {
-        thread.start();
+        if (!thread.isAlive()) { //on recree un thread
+            if (bufferType == 0) {
+                floatArrayThreadRunnable = new FloatArrayThreadRunnable(bufferSize, floatFile);
+                thread = new Thread(floatArrayThreadRunnable);
+            } else {
+                byteBufferThreadRunnable = new ByteBufferThreadRunnable(bufferSize, byteBufferFile);
+                thread = new Thread(byteBufferThreadRunnable);
+            }
+            thread.start();
+        }
     }
 
     public void stop() {
@@ -108,10 +125,22 @@ public class MusicReader {
     }
 
     public void stopAtTheEnd() {
+        Log.i("lucas", "stop at the end");
         if (bufferType == 0) {
             floatArrayThreadRunnable.stopAtTheEnd();
         } else {
             byteBufferThreadRunnable.stopAtTheEnd();
+        }
+    }
+
+    private int fileSize() {
+        if (bufferType == 0) {
+            synchronized (floatFile) {
+                return floatFile.size();
+            }
+        }
+        synchronized (byteBufferFile) {
+            return byteBufferFile.size();
         }
     }
 
@@ -150,12 +179,13 @@ public class MusicReader {
             audioTrack.setVolume(1.0f);
             Log.i("lucas", "on a write, on va play");
             boolean first = true;
-            while(pasFiniLaBoucle && ((pasFiniDeLire) || (file.size() > 0))) { // faire quelque chose pour une file de taille nulle
+            while(pasFiniLaBoucle && ((pasFiniDeLire) || (fileSize() > 0))) { // faire quelque chose pour une file de taille nulle
                 buffer = null;
                 synchronized (file) {
                     if (file.size() > 0) {
                         buffer = file.get(0);
                         Log.i("lucas", "buffer chargé");
+                        file.remove(0);
                     } else {
                         //Log.i("lucas", "Famine de buffer.");
                     }
@@ -165,7 +195,6 @@ public class MusicReader {
                     if (floatArrayPool != null) {
                         floatArrayPool.returnBuffer(buffer);
                     }
-                    file.remove(0);
                     if (first) {
                         first = false;
                         audioTrack.play();
@@ -176,6 +205,7 @@ public class MusicReader {
             }
             Log.i("lucas", "audioTrack.stop");
             audioTrack.stop();
+            songEnded = true;
         }
     }
 
@@ -214,24 +244,27 @@ public class MusicReader {
         public void run() {
             Log.i("lucas", "bufferSize : " + String.valueOf(bufferSize));
             audioTrack.setVolume(1.0f);
-            Log.i("lucas", "on a write, on va play");
+            Log.i("lucas", "on va play");
             boolean first = true;
-            while(pasFiniLaBoucle && ((pasFiniDeLire) || (file.size() > 0))) { // faire quelque chose pour une file de taille nulle
+            while(pasFiniLaBoucle && ((pasFiniDeLire) || (fileSize() > 0))) { // faire quelque chose pour une file de taille nulle
                 buffer = null;
                 synchronized (file) {
                     if (file.size() > 0) {
                         buffer = file.get(0);
-                        Log.i("lucas", "buffer chargé");
+                        //Log.i("lucas", "buffer chargé");
+                        file.remove(0);
                     } else {
                         //Log.i("lucas", "Famine de buffer.");
                     }
                 }
                 if (buffer != null) {
+                    //Log.i("lucas", "on va write");
                     audioTrack.write(buffer, bufferSize*bytesPerFloat, AudioTrack.WRITE_BLOCKING);
+                    //Log.i("lucas", "on a write");
                     if (byteBufferPool != null) {
                         byteBufferPool.returnBuffer(buffer);
+                        //Log.i("lucas", "buffer retourne");
                     }
-                    file.remove(0);
                     if (first) {
                         first = false;
                         audioTrack.play();
@@ -242,6 +275,7 @@ public class MusicReader {
             }
             Log.i("lucas", "audioTrack.stop");
             audioTrack.stop();
+            songEnded = true;
         }
     }
 }

@@ -208,10 +208,13 @@ public class MusicManager implements MusicManagerInterface {
                 if (CVocoder) {
                     if (!byteBufferSupplier.songEnded()) {
                         if (musicReader.getNumberOfBuffers() < 2) {
+                            //Log.i("lucas", "on charge un buffer");
                             musicReader.addBuffer(byteBufferSupplier.getNextBuffer());
                         }
                     } else {
-                        while (musicReader.getNumberOfBuffers() > 0) { //on attend que tous les buffers aient ete retournes (sinon fuite de memoire...)
+                        Log.i("lucas", "vocoder a fini");
+                        musicReader.stopAtTheEnd();
+                        while (!musicReader.songEnded()) { //on attend que tous les buffers aient ete retournes (sinon fuite de memoire...)
                             try {
                                 Thread.sleep(30);
                             } catch (InterruptedException e) {
@@ -220,13 +223,14 @@ public class MusicManager implements MusicManagerInterface {
                         }
                         byteBufferSupplier = getNewByteBufferSupplier();
                         musicReader.setByteBufferPool((ByteBufferPool)byteBufferSupplier);
+                        musicReader.play();
                     }
                     try {
                         Thread.sleep(30);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                } else {
+                } else { // faire pareil, a completer
                     if (!floatArraySupplier.songEnded()) {
                         if (musicReader.getNumberOfBuffers() < 2) {
                             musicReader.addBuffer(floatArraySupplier.getNextBuffer());
