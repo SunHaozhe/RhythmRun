@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.telecom_paristech.pact25.rhythmrun.music.PathAndTempo;
+
 /**
  * Created by ClemSurfaceBook on 30/01/2017.
  */
@@ -76,12 +78,47 @@ public class TempoDataBase extends SQLiteOpenHelper {
     }
 
     public double getTempo(String songPath) {
-        String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + "WHERE" + KEY_PATH + "=" + songPath  ;
+        String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + " WHERE " + KEY_PATH + "=\"" + songPath + "\"" ;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        double tempo = cursor.getDouble(2);
+        double tempo = -1;
+        if (cursor != null && cursor.moveToNext()) { //licite
+            tempo = cursor.getDouble(2);
+        }
 
         return tempo;
+    }
+
+    public PathAndTempo getSongThatFit(double tempoMin, double tempoMax) { //rajouter une liste de song a eviter (deja lues)
+        String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + " WHERE " + KEY_TEMPO + " BETWEEN '" + String.valueOf(tempoMin) + "' AND '" + String.valueOf(tempoMax) + "'" ;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        PathAndTempo song = null;
+        if (cursor != null && cursor.moveToNext()) {
+            song = new PathAndTempo();
+            song.path = cursor.getString(1);
+            song.tempoHz = (float)cursor.getDouble(2);
+        }
+
+        return song;
+    }
+
+    public PathAndTempo getASong() {
+        String selectQuery = "SELECT  * FROM " + TABLE_TEMPO;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        PathAndTempo song = null;
+        if (cursor != null && cursor.moveToNext()) {
+            song = new PathAndTempo();
+            song.path = cursor.getString(1);
+            song.tempoHz = (float)cursor.getDouble(2);
+        }
+
+        return song;
+    }
+
+    public void clear() { //pour les tests
+        this.getReadableDatabase().execSQL("DELETE FROM "+ TABLE_TEMPO);
     }
 }

@@ -7,6 +7,7 @@ import com.telecom_paristech.pact25.rhythmrun.interfaces.music.ByteBufferPool;
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.ByteBufferSupplier;
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.FloatArrayPool;
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.FloatArraySupplier;
+import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.NativeVocoder;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
@@ -41,7 +42,13 @@ public class MusicManager implements MusicManagerInterface {
     private Player player;
     private boolean CVocoder = true;
 
-    public MusicManager(boolean CVocoder) {
+    TempoDataBase tempoDataBase;
+
+    final float minRatioStep = 0.05f;
+    final float maxRatioStep = 0.1f;
+    final int kmax = 5; // voir loadNewTrack
+
+    public MusicManager(TempoDataBase tempoDataBase, boolean CVocoder) {
         paceFrequency = new float[l];
         indice = 0;
         premierTour = true;
@@ -50,6 +57,7 @@ public class MusicManager implements MusicManagerInterface {
         playing = false;
         this.CVocoder = CVocoder;
         //musicReader = new MusicReader(bufferSize, 0);
+        this.tempoDataBase = tempoDataBase;
     }
 
     private final void loadNewTrack() {
@@ -60,15 +68,25 @@ public class MusicManager implements MusicManagerInterface {
                 e.printStackTrace();
             }
         }
-        float[][] tempoIntervalsHz = {{wantedTempoHz*0.9f, wantedTempoHz*1.1f}, {2*wantedTempoHz*0.9f, 2*wantedTempoHz*1.1f}}; //par ex
-        //TODO :
-        //tenir une liste des moreaux deja joues
-        songPath = ""; //a completer avec la BDD en utilisant la ligne precedente si possible
-        //(on veut le chemin d'acces d'une musique de la bdd avec un tempo dans les intervalles de tempoIntervalsHz)
-        songTempoHz = -1; //pareil
+        //TODO : lucas va s'en occupper
+        //tenir une liste des moreaux deja joues (et penser a verifier les intervalles (je me comprends))
+        PathAndTempo song = null;
 
-        songPath = "/storage/emulated/0/Download/guitare_mono_70bpm.wav"; // pour tester
-        songTempoHz = 1.1f;
+        for(int k=0;k<kmax; k++) {
+            if ((song = tempoDataBase.getSongThatFit((double)(wantedTempoHz-k*minRatioStep), (double)(wantedTempoHz+k*maxRatioStep))) != null) {
+                break;
+            }
+            if ((song = tempoDataBase.getSongThatFit((double)(wantedTempoHz-k*minRatioStep)*2, (double)(wantedTempoHz+k*maxRatioStep)*2)) != null) {
+                song.tempoHz /= 2;
+                break;
+            }
+        }
+        if (song == null) {
+            song = tempoDataBase.getASong();
+        }
+        //lever une exception si la bdd est vide
+        songPath = song.path;
+        songTempoHz = song.tempoHz;
     }
 
     private void computeTempo()
