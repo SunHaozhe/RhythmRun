@@ -32,8 +32,13 @@ public class TempoDataBase extends SQLiteOpenHelper {
     private static final String KEY_PATH = "path";
     private static final String KEY_TEMPO = "tempo";
 
+    private SQLiteDatabase writableDataBase;
+    private SQLiteDatabase readableDatabase;
+
     public TempoDataBase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        writableDataBase = this.getWritableDatabase();
+        readableDatabase = this.getReadableDatabase();
     }
 
     @Override
@@ -52,13 +57,11 @@ public class TempoDataBase extends SQLiteOpenHelper {
     }
 
     public void addSongAndTempo(String path, double freq) {
-        SQLiteDatabase db = this.getWritableDatabase();
 
         Log.d("TempoDataBase","Checking file: "+path);
 
         String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + " WHERE " + KEY_PATH + "=\"" + path + "\"";
-        SQLiteDatabase db2 = this.getReadableDatabase();
-        Cursor cursor = db2.rawQuery(selectQuery, null);
+        Cursor cursor = readableDatabase.rawQuery(selectQuery, null);
         Log.d("TempoDataBase", "Found file: "+cursor.getCount());
 
         if(cursor.getCount() == 0){
@@ -68,20 +71,20 @@ public class TempoDataBase extends SQLiteOpenHelper {
             values.put(KEY_TEMPO, freq); // tempo
 
             // Inserting Row
-            long id = db.insert(TABLE_TEMPO, null, values);
+            long id = writableDataBase.insert(TABLE_TEMPO, null, values);
         } else {
             Log.d("TempoDataBase", "File already in database");
         }
 
-        db.close(); // Closing database connection
-        db2.close();
+        //db.close(); // Closing database connection
+        //db2.close();
     }
 
     public double getTempo(String songPath) {
         String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + " WHERE " + KEY_PATH + "=\"" + songPath + "\"" ;
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        //SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = readableDatabase.rawQuery(selectQuery, null);
         double tempo = -1;
         if (cursor != null && cursor.moveToNext()) { //licite
             tempo = cursor.getDouble(2);
@@ -89,15 +92,15 @@ public class TempoDataBase extends SQLiteOpenHelper {
         if (cursor != null) {
             cursor.close();
         }
-        //ne pas fermer db
+        // ne pas fermer db
 
         return tempo;
     }
 
     public PathAndTempo getSongThatFit(double tempoMin, double tempoMax) { //rajouter une liste de song a eviter (deja lues)
         String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + " WHERE " + KEY_TEMPO + " BETWEEN '" + String.valueOf(tempoMin) + "' AND '" + String.valueOf(tempoMax) + "'" ;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        //SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = readableDatabase.rawQuery(selectQuery, null);
         PathAndTempo song = null;
         if (cursor != null && cursor.moveToNext()) {
             song = new PathAndTempo();
@@ -107,15 +110,15 @@ public class TempoDataBase extends SQLiteOpenHelper {
         if (cursor != null) {
             cursor.close();
         }
-        //ne pas fermer db
+        // ne pas fermer db
 
         return song;
     }
 
     public PathAndTempo getASong() {
         String selectQuery = "SELECT  * FROM " + TABLE_TEMPO;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        //SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = readableDatabase.rawQuery(selectQuery, null);
         PathAndTempo song = null;
         if (cursor != null && cursor.moveToNext()) {
             song = new PathAndTempo();
@@ -125,12 +128,12 @@ public class TempoDataBase extends SQLiteOpenHelper {
         if (cursor != null) {
             cursor.close();
         }
-        //ne pas fermer db
+        // ne pas fermer db
 
         return song;
     }
 
     public void clear() { //pour les tests
-        this.getReadableDatabase().execSQL("DELETE FROM "+ TABLE_TEMPO);
+        readableDatabase.execSQL("DELETE FROM "+ TABLE_TEMPO);
     }
 }

@@ -642,7 +642,7 @@ public class Main2Activity extends AppCompatActivity {
                     Log.i("lucas", "podometre actif");
                     musicManager.play();
                     Log.i("lucas", "music manager play");
-                    while (true) {
+                    while (k==0) { //clic sur le bouton
                         try {
                             Thread.sleep(500);
                             musicManager.updateRythm(pod.getRunningPaceFrequency());//pas dans le bon intervalle
@@ -651,6 +651,7 @@ public class Main2Activity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
+                    tempoDataBase.close();
                 }
             })).start();
         }
