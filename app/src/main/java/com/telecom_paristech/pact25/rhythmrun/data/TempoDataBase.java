@@ -86,6 +86,10 @@ public class TempoDataBase extends SQLiteOpenHelper {
         if (cursor != null && cursor.moveToNext()) { //licite
             tempo = cursor.getDouble(2);
         }
+        if (cursor != null) {
+            cursor.close();
+        }
+        //ne pas fermer db
 
         return tempo;
     }
@@ -100,6 +104,10 @@ public class TempoDataBase extends SQLiteOpenHelper {
             song.path = cursor.getString(1);
             song.tempoHz = (float)cursor.getDouble(2);
         }
+        if (cursor != null) {
+            cursor.close();
+        }
+        //ne pas fermer db
 
         return song;
     }
@@ -114,6 +122,10 @@ public class TempoDataBase extends SQLiteOpenHelper {
             song.path = cursor.getString(1);
             song.tempoHz = (float)cursor.getDouble(2);
         }
+        if (cursor != null) {
+            cursor.close();
+        }
+        //ne pas fermer db
 
         return song;
     }
