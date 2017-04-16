@@ -284,43 +284,6 @@ public class RunActivity extends AppCompatActivity {
             }
         }).start();
 
-        //musicManagerInterface = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager(null, false);
-
-        /*(new Thread (new Runnable() {
-            @Override
-            public void run() {
-            int dureeBuffer = 1;
-            int bufferSize = 44100 * dureeBuffer;
-            String waveFilePath = "/storage/emulated/0/Music/wav/wall_mono.wav";
-            MusicReader musicReader = new MusicReader(bufferSize);
-            SongSpeedChanger songSpeedChanger = null;
-            try {
-                boolean first = true;
-                songSpeedChanger = new SongSpeedChanger(waveFilePath, bufferSize, 1);
-                while ((!songSpeedChanger.songEnded())) {
-                    if (musicReader.getNumberOfBuffers() < 2) {
-                        musicReader.addBuffer(songSpeedChanger.getNextBuffer());
-                    }
-                    if (first) {
-                        first = false;
-                        musicReader.play();
-                    }
-                    try {
-                        Thread.sleep(20);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Log.i("lucas", "stopAtTheEnd Main2");
-                musicReader.stopAtTheEnd();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (WavFileException e) {
-                e.printStackTrace();
-            }
-            }
-        })).start();*/
-
         t = System.currentTimeMillis() - t;
         Log.d("Run","End of RunActivity creation. Took "+t+" ms.");
 
@@ -370,8 +333,11 @@ public class RunActivity extends AppCompatActivity {
     @Override
     public void onStop(){
         runMapFragment.stopLocationUpdates(); //Stopping location updates.
-        //MusicManager.stopPlaying();
+
+        // Ending music playing
+        musicManager.stop();
         tempoDataBase.close();
+
         if(podometer != null)
             podometer.stop();
         super.onStop();
