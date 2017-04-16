@@ -439,7 +439,7 @@ public class Main2Activity extends AppCompatActivity {
                     if (song != null) {
                         Log.i("lucas", String.valueOf(song.tempoHz) + " et " + song.path);
                     }
-
+                    tempoDataBase.close();
                 }
             })).start();
         }
