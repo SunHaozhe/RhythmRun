@@ -82,7 +82,7 @@ public class HeartBeatCoach {
     }
 
     //Returns a message to the runner according to the accuracy of his run
-    public String messageCoaching()
+    public String messageDuringRun()
     {
         if (goodHeartBeatFrequency())
         {
@@ -95,6 +95,25 @@ public class HeartBeatCoach {
 
         }
 
+    }
+
+    //Says whether the rhythm at rest is good or not :
+    public String messageOneMinuteAfterRun()
+    {
+        if(getFC()-getFrequencyAfterRun()<20)
+        {
+            return "Still in the normal performance. Pay greater efforts to be an athlete. Good luck!";
+        }
+        else
+        {
+            if(getFC()-getFrequencyAfterRun()<30)
+            {
+                return "Good runner, congratulations! You're about to be an athlete.";
+            }
+            else{
+                return "Congratulations! You're an athlete.";
+            }
+        }
     }
 
 
