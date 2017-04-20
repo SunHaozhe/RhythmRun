@@ -32,7 +32,13 @@ public class HeartBeatCoach {
 
     }
 
-    
+    //Calculate the FC : critical frequency :
+
+    public float getFC()
+    {
+        return (float) (0.75*getFCM());
+
+    }
 
 
 }
