@@ -57,9 +57,9 @@ public class Vocoder {
     private String path;
     private int indexNumberInWav, windowSize, ta, ts, len_signal_in;
     private boolean song_ended;
-    private double[] wa, lastPhaseIn, lastPhaseOut, windowIn, signal_in, bufferSynthesis;
+    private double[] wa, lastPhaseIn, lastPhaseOut, windowIn, signal_in, bufferSynthesis, signal;
     private Complex[] tfWindowOut;
-    private int[] signal;
+
 
     /**
      * CONSTRUCTOR
@@ -74,20 +74,18 @@ public class Vocoder {
         this.path = path;
         indexNumberInWav = 0;
 
-        //TODO : gérer mieux le WavFile
+
         WavFile wav = null;
         try {
             wav = WavFile.openWavFile(new File(path));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        //TODO : gérer mieux le WavFile
         signal_in = wav.read(this.path);
         this.len_signal_in = signal_in.length;
 
         song_ended = false;
-
-
         windowSize = 1024; //puissance de 2 pour les fft, 1024 semble le mieux en qualite
 
         shiftIn = windowSize / 4; //au max 1/4 (1/8=>mieux mais plus de calculs; windowSize est un multiple de 4 donc pas besoin de reflechir a des problemes comme ca)
@@ -102,7 +100,7 @@ public class Vocoder {
 
         shiftOutMin = (int) (shiftIn / ratioMax); //variable temporaire pour le calcul de la ligne suivante
 
-        signal = new int[(((buffer_size - 1) / shiftOutMin) * shiftIn + windowSize)];
+        signal = new double[(((buffer_size - 1) / shiftOutMin) * shiftIn + windowSize)];
         //on y mettra le signal en entree. On met la taille maximale dont on peut avoir besoin en fonction du ratioMax.
 
         // TODO : modifier findNextSignal pour que ça marche
@@ -135,7 +133,7 @@ public class Vocoder {
     /**
      * Determine si le morceau est fini ou non
      *
-     * @return true si on a fini de jouer le morceau, false sinon
+     * @return boolean
      */
     private boolean hasSongEnded() {
         return song_ended;
@@ -207,7 +205,7 @@ public class Vocoder {
         for (int k = windowSize - shiftIn; k < signal.length; k++)
             signal[k] = 0;
 
-        return copie(this.bufferSynthesis) // TODO : à modifier pour qu'on puisse utiliser des buffers à la place
+        return copie(this.bufferSynthesis); // TODO : à modifier pour qu'on puisse utiliser des buffers à la place
         // on l'evitera en java (on utilisera plutot une poignee de buffers alloues pendant l'initialisation et on les fera tourner)
 
     }
@@ -226,4 +224,4 @@ public class Vocoder {
         return false;
     }
 }
-}
+
