@@ -58,7 +58,20 @@ public class HeartBeatCoach {
         }
     }
 
-    public 
+    public String messageCoaching()
+    {
+        if (goodHeartBeatFrequency())
+        {
+            return "Good job, you're running in an accurate way !";
+        }
+
+        else
+        {
+            return "High heartBeat. You'd rather run a bit lower to enhance your endurance! ";
+
+        }
+
+    }
 
 
 }
