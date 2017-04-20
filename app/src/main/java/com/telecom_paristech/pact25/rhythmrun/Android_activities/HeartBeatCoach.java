@@ -13,5 +13,18 @@ public class HeartBeatCoach {
         this.age = age;
         this.gender = gender;
     }
+
+    public int getAge()
+    {
+        return 20;
+    }
+
+    public int getGender()
+    {
+        return 220;
+    }
+
     
+
+
 }
