@@ -13,6 +13,15 @@
             android:title="Library" />
     </group>
 
+    <item android:title="Test">
+        <menu>
+            <item
+                android:id="@+id/audio_test"
+                android:title="Audio test"
+                />
+        </menu>
+    </item>
+
     <item android:title="Manage">
         <menu>
             <item

@@ -1,5 +1,6 @@
 package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
@@ -21,8 +22,15 @@ import android.widget.TextView;
 import com.telecom_paristech.pact25.rhythmrun.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
+import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
+import com.telecom_paristech.pact25.rhythmrun.music.MusicReader;
+import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
+import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 import com.telecom_paristech.pact25.rhythmrun.sensors.Podometer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,6 +49,13 @@ public class RunActivity extends AppCompatActivity {
     private TextView tvBPM;
     private TextView tvCurrentSong;
 
+    private Podometer podometer=null;
+
+    //private MusicManagerInterface musicManagerInterface;
+
+    private com.telecom_paristech.pact25.rhythmrun.music.MusicManager musicManager;
+    private TempoDataBase tempoDataBase;
+
     private Timer t;
 
     private ArrayList<RunStatus> runData;
@@ -48,6 +63,7 @@ public class RunActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("Run","Creating activity Run.");
+        long t = System.currentTimeMillis();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
@@ -59,6 +75,15 @@ public class RunActivity extends AppCompatActivity {
         tvHeartRate = (TextView) findViewById(R.id.runHeartRate);
         tvBPM = (TextView) findViewById(R.id.runBPM);
         tvCurrentSong = (TextView) findViewById(R.id.runCurrentSong);
+
+        //Initializing TextViews
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final String paceMode = sharedPreferences.getString("pace","p");
+        final String unit = sharedPreferences.getString("unit","km");
+        RunStatus lastStatus = new RunStatus(0, null, new Distance(0),0);
+        tvDistance.setText(lastStatus.distance.toStr(unit,true));
+        tvPace.setText(lastStatus.pace.toStr(unit,paceMode,true));
+        tvHeartRate.setText(String.format(getString(R.string.run_heart_rate),lastStatus.heartRate));
 
         final Chronometer chronometer = (Chronometer) findViewById(R.id.chronometer);
         final FloatingActionButton buttonStart = (FloatingActionButton) findViewById(R.id.runPlay);
@@ -72,7 +97,7 @@ public class RunActivity extends AppCompatActivity {
                 Log.d("Run","Found an itinerary in the intent.");
                 runMapFragment.drawnPolyline(itinerary.getPolylineOptions());
             }
-            MusicManager.playCurrentSong();
+            //MusicManager.playCurrentSong();
         }
 
         //Setting up the play/pause button
@@ -244,6 +269,61 @@ public class RunActivity extends AppCompatActivity {
         //Initialization of run data.
         runData = new ArrayList<>();
 
+        final Context context = this;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                podometer = new Podometer(context);
+                while(!podometer.isActive()){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+        //musicManagerInterface = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager(null, false);
+
+        /*(new Thread (new Runnable() {
+            @Override
+            public void run() {
+            int dureeBuffer = 1;
+            int bufferSize = 44100 * dureeBuffer;
+            String waveFilePath = "/storage/emulated/0/Music/wav/wall_mono.wav";
+            MusicReader musicReader = new MusicReader(bufferSize);
+            SongSpeedChanger songSpeedChanger = null;
+            try {
+                boolean first = true;
+                songSpeedChanger = new SongSpeedChanger(waveFilePath, bufferSize, 1);
+                while ((!songSpeedChanger.songEnded())) {
+                    if (musicReader.getNumberOfBuffers() < 2) {
+                        musicReader.addBuffer(songSpeedChanger.getNextBuffer());
+                    }
+                    if (first) {
+                        first = false;
+                        musicReader.play();
+                    }
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.i("lucas", "stopAtTheEnd Main2");
+                musicReader.stopAtTheEnd();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (WavFileException e) {
+                e.printStackTrace();
+            }
+            }
+        })).start();*/
+
+        t = System.currentTimeMillis() - t;
+        Log.d("Run","End of RunActivity creation. Took "+t+" ms.");
+
     }
 
     @Override
@@ -264,6 +344,21 @@ public class RunActivity extends AppCompatActivity {
                 });
             }
         },0,Macros.UPDATE_IDLE);
+
+
+        (new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // This database contains all songs in /storage/emulated/0/Music
+                tempoDataBase = HomeActivity.getDB();
+
+                musicManager = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager(tempoDataBase, true);
+                Log.i("RunActivity", "MusicManager created.");
+
+                musicManager.play();
+                Log.i("RunActivity", "MusicManager plays.");
+            }
+        })).start();
     }
 
     @Override
@@ -275,7 +370,10 @@ public class RunActivity extends AppCompatActivity {
     @Override
     public void onStop(){
         runMapFragment.stopLocationUpdates(); //Stopping location updates.
-        MusicManager.stopPlaying();
+        //MusicManager.stopPlaying();
+        tempoDataBase.close();
+        if(podometer != null)
+            podometer.stop();
         super.onStop();
     }
 
@@ -293,6 +391,8 @@ public class RunActivity extends AppCompatActivity {
                     getDistance(),
                     getHeartRate()
             ));
+            //musicManagerInterface.updateRythm(getHeartRate());
+            musicManager.updateRythm(podometer.getRunningPaceFrequency());
             Log.v("Run","Updating the run status while running is "+isRunning+" ("+runData.size()+" points collected).");
             updateDisplay();
         }
@@ -341,14 +441,13 @@ public class RunActivity extends AppCompatActivity {
         return SystemClock.elapsedRealtime() - chronometer.getBase();
     }
 
-    final Podometer pod= new Podometer(this);
-    float frequence = pod.getRunningPaceFrequency();
-
     private float getHeartRate(){
         /*
             Fetches the heart rate from the Bluetooth belt.
          */
-        return frequence;
+        if(podometer == null)
+            return -1;
+        return podometer.getRunningPaceFrequency()*60;
     }
 
     private String getCurrentSong(){

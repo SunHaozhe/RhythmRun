@@ -2,6 +2,7 @@ package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.renderscript.Double2;
 import android.util.Log;
 
 public class Pace implements Parcelable {
@@ -24,7 +25,7 @@ public class Pace implements Parcelable {
     };
 
     public static String fancyPace(double d){
-        if(Double.isNaN(d)){
+        if(Double.isNaN(d) || Double.isInfinite(d)){
             return "inf";
         }
         int sec;

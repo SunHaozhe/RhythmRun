@@ -1,110 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_history_run"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryRunActivity"
-    android:orientation="vertical">
+    tools:context="com.telecom_paristech.pact25.rhythmrun.Android_activities.HistoryRunActivity">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp">
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/historyRunDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textColor="@color/textPrimary"
-                android:text="mardi 14 février 2017"/>
-
-            <TextView
-                android:id="@+id/historyRunDistance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/historyRunDate"
-                android:textColor="@color/textPrimary"
-                android:text="12km" />
-
-            <TextView
-                android:id="@+id/historyRunTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/historyRunDistance"
-                android:layout_toRightOf="@id/historyRunDistance"
-                android:textColor="@color/textPrimary"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="45:17" />
-
-            <TextView
-                android:id="@+id/historyRunPace"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/textPrimary"
-                android:layout_alignBaseline="@id/historyRunDistance"
-                android:layout_toRightOf="@id/historyRunTime"
-                android:textStyle="italic"
-                android:text="16 km/h"/>
-
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/historyRunPace"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical"
-                android:weightSum="1">
-
-                <fragment
-                    android:id="@+id/historyRunMap"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_weight="1"
-                    android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SimpleMapFragment"/>
-
+                android:layout_height="420dp"
+                android:layout_margin="16dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/historyRunShareButton"
+                    <TextView
+                        android:id="@+id/historyRunDate"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:background="@drawable/flat_button"
-                        android:layout_alignParentRight="true"
-                        android:textColor="@color/primary"
-                        android:text="Share"/>
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="@color/textPrimary"
+                        android:text="mardi 14 février 2017"/>
 
-                    <Button
-                        android:id="@+id/historyRunDiscardButton"
+                    <TextView
+                        android:id="@+id/historyRunDistance"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:layout_gravity="right"
-                        android:layout_toLeftOf="@id/historyRunShareButton"
-                        android:background="@drawable/flat_button"
-                        android:textColor="@color/primary"
-                        android:text="Discard"/>
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/historyRunDate"
+                        android:textColor="@color/textPrimary"
+                        android:text="12km" />
+
+                    <TextView
+                        android:id="@+id/historyRunTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@id/historyRunDistance"
+                        android:layout_toRightOf="@id/historyRunDistance"
+                        android:textColor="@color/textPrimary"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="45:17" />
+
+                    <TextView
+                        android:id="@+id/historyRunPace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textPrimary"
+                        android:layout_alignBaseline="@id/historyRunDistance"
+                        android:layout_toRightOf="@id/historyRunTime"
+                        android:textStyle="italic"
+                        android:text="16 km/h"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/historyRunPace"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical"
+                        android:weightSum="1">
+
+                        <fragment
+                            android:id="@+id/historyRunMap"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="1"
+                            android:name="com.telecom_paristech.pact25.rhythmrun.Android_activities.SimpleMapFragment"/>
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <Button
+                                android:id="@+id/historyRunShareButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp"
+                                android:background="@drawable/flat_button"
+                                android:layout_alignParentRight="true"
+                                android:textColor="@color/primary"
+                                android:text="Share"/>
+
+                            <Button
+                                android:id="@+id/historyRunDiscardButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp"
+                                android:layout_gravity="right"
+                                android:layout_toLeftOf="@id/historyRunShareButton"
+                                android:background="@drawable/flat_button"
+                                android:textColor="@color/primary"
+                                android:text="Discard"/>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
 
                 </RelativeLayout>
 
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-        </RelativeLayout>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp">
 
-    </android.support.v7.widget.CardView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
 
-</LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <CheckBox
+                            android:id="@+id/cbDistance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Distance"/>
+
+                        <CheckBox
+                            android:id="@+id/cbPace"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Pace"/>
+
+                        <CheckBox
+                            android:id="@+id/cbHeartRate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Heart rate"/>
+
+                    </LinearLayout>
+
+                    <com.jjoe64.graphview.GraphView
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginLeft="-8dp"
+                        android:id="@+id/graph"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+    </LinearLayout>
+
+</ScrollView>

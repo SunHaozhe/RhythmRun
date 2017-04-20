@@ -172,7 +172,7 @@ public class Accelerometer implements SensorEventListener {
             }
             if (k==nombreEchantillons-1) auMoinsUnTour = true;
             k = (k+1)%nombreEchantillons;
-            Log.i("Lucas-Accelerometer","Run execution");
+            //Log.i("Lucas-Accelerometer","Run execution");
         }
 
 

@@ -5,6 +5,9 @@ package com.telecom_paristech.pact25.rhythmrun.interfaces.music;
  */
 
 public interface MusicManagerInterface {
-    public void updateRythm(float paceFrequency);   // methode a appeler avec la frequence donnee par le podometre,
+    void play();
+    void updateRythm(float paceFrequency);   // methode a appeler avec la frequence donnee par le podometre,
                                                     //toutes les demi-secondes par exemple
+    void pause();
+    void stop();
 }

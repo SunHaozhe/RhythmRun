@@ -65,7 +65,12 @@ public class FtpServeur extends AppCompatActivity {
             download_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    downloadFTP();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            downloadFTP();
+                        }
+                    }).start();
                 }
             });
         } catch (Exception e) {
@@ -86,10 +91,10 @@ public class FtpServeur extends AppCompatActivity {
                 ftpClient.enterLocalPassiveMode();
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
                 String data = Environment.getExternalStorageDirectory()+File.separator +"201700081700980.jpg"; //TODO chemin vers le fichier à upload
-                Log.i("FTP",data);
+                Log.i("FTP upload",data);
                 File file = new File(data);
-                if(!file.exists()) Log.e("FTP","File not Find");
-                 FileInputStream in = new FileInputStream(file);
+                if(!file.exists()) Log.e("FTP upload","File not Find");
+                FileInputStream in = new FileInputStream(file);
                 boolean result = ftpClient.storeFile("201700081700980.jpg", in);  //TODO   /name of the fichier
                 in.close();
                 if (result) Log.v("FTP upload result", "succeeded");
@@ -119,109 +124,23 @@ public class FtpServeur extends AppCompatActivity {
                 ftpClient.enterLocalPassiveMode();
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
                 String data = "XXXX"; //TODO chemin vers le fichier à download
-
-                OutputStream out = new FileOutputStream(new File(data));
+                Log.i("FTP download",data);
+                File file = new File(data);
+                if(!file.exists()) Log.e("FTP download","File not Find");
+                FileOutputStream out = new FileOutputStream(file);
                 boolean result = ftpClient.retrieveFile("XXXX", out);  //TODO   name of the fichier
                 out.close();
                 if (result) Log.v("FTP download result", "succeeded");
                 ftpClient.logout();
                 ftpClient.disconnect();
             }
-        }
-        catch (Exception e)
-        {
-            Log.v("download result","failed");
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
-
-/*
-    private void downloadStart() {
-        FTPClient ftp = new FTPClient();
-        try {
-            if (android.os.Build.VERSION.SDK_INT > 9) {
-                StrictMode.ThreadPolicy policy =
-                        new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy);
-            }
-            ftp.connect(FTP_HOST,FTP_Port);
-            ftp.login(FTP_USER, FTP_PASS);
-
-            //If change occurs in particular language then first delete folder from sdcard, also pass which language contains change.
-            File dirStructure = new File("PATH"); //TODO
-            deleteDirectory(dirStructure);
-
-            //cross check folder deleted or not, if not exist then create same folder at same location,
-            //So that entire new folder can be paste inside SWF_Content folder
-            if(!dirStructure.isDirectory()){
-                dirStructure.mkdirs();
-            }
-
-            //fetch file contents from ftp directory
-            FTPFile[] arrEnglishContent = ftp.list("PATH"); //TODO ftp file path. Example : FTPFile[] arrEnglishContent = ftp.list("FTPFolder/Sample/Main");
-
-            //as per requirement apply some cases to download single file at time
-            String fileName = null;
-            File fileDownload = null;
-
-            for (int i = 0; i < arrEnglishContent.length; i++) {
-                int indexOFEqual = arrEnglishContent[i].toString().indexOf("=");
-                int indexOfSWF = arrEnglishContent[i].toString().indexOf(".txt");
-                fileName = arrEnglishContent[i].toString().substring(indexOFEqual+1, indexOfSWF)+".txt";
-                //create file inside folder
-                fileDownload = new File(dirStructure+"/"+fileName);
-                fileDownload.createNewFile();
-                System.out.println(fileName);
-                startActualFileDownload(ftp+fileName,ftp,fileDownload);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                ftp.disconnect(true);
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
-        }
-    }
-
-    private void startActualFileDownload(String ftpFileDonwnloadPath,FTPClient ftp, File sdcardFileDownloadPath){
-        try {
-            ftp.download(ftpFileDonwnloadPath, sdcardFileDownloadPath,
-                    new FTPDataTransferListener() {
-
-                        public void transferred(int arg0) {
-                            download_btn.setVisibility(View.GONE);
-                            //Log.v("log_tag", "This is for tranfer");
-                            Toast.makeText(getBaseContext(), " transferred ..."+arg0 , Toast.LENGTH_SHORT).show();
-                        }
-
-                        public void started() {
-                            // TODO Auto-generated method stub
-                            Toast.makeText(getBaseContext(), " Upload Started ...", Toast.LENGTH_SHORT).show();
-                            //Log.v("log_tag", "This is for started");
-                        }
-
-                        public void failed() {
-                            download_btn.setVisibility(View.VISIBLE);
-                            Toast.makeText(getBaseContext(), "  failed ...", Toast.LENGTH_SHORT).show();
-                            System.out.println(" failed ..." );
-                        }
-
-                        public void completed() {
-                            download_btn.setVisibility(View.VISIBLE);
-                            Toast.makeText(getBaseContext(), " completed ...", Toast.LENGTH_SHORT).show();
-                            //Log.v("log_tag", "This is for completed");
-
-                        }public void aborted() {
-                            download_btn.setVisibility(View.VISIBLE);
-                            Toast.makeText(getBaseContext()," transfer aborted,please try again...", Toast.LENGTH_SHORT).show();
-                            //Log.v("log_tag", "This is for aborted");
-
-                        }
-                    });
-        } catch (Exception e) {
-            e.toString();
-        }
-    }*/
 }

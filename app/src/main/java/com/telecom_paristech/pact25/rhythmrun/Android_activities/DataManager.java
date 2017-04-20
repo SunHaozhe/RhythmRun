@@ -24,14 +24,17 @@ import java.util.Locale;
 class DataManager {
 
     private static List<HistoryItem> runs;
+    private static List<HistoryItem> lastWeekRuns;
 
     private OnRunsLoadedListener onRunsLoadedListener;
     private final Context context;
 
     DataManager(Context context){
         this.context = context;
-        if(runs==null)
+        if(runs==null){
             loadRuns();
+            getLastWeekRuns();
+        }
     }
 
     List<HistoryItem> getRuns(){
@@ -134,11 +137,11 @@ class DataManager {
             e.printStackTrace();
         }
 
-        if(distance==null){
+        if(distance == null){
             distance = new Distance(0);
             Log.w("DataManager","Distance of "+filename+" is null.");
         }
-        if(pace==null){
+        if(pace == null){
             pace = new Pace(0);
             Log.w("DataManager","Pace of "+filename+" is null.");
         }
@@ -149,6 +152,51 @@ class DataManager {
                 distance,
                 pace,
                 location);
+    }
+
+    public ArrayList<RunStatus> getRunData(String filename){
+        ArrayList<RunStatus> runData = new ArrayList<>();
+        //A string builder to create the string that contains the file text.
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            //Opening a reader input stream to read the run file.
+            FileInputStream fileInputStream = context.openFileInput(filename);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+            Log.v("DataManager","Reading "+filename+" with input stream "+reader);
+
+            String line;
+            while((line=reader.readLine()) != null){ //While there is a line
+                stringBuilder.append(line).append("\n");
+            }
+            fileInputStream.close();
+            Log.v("DataManager","Closing the input stream.");
+
+            String result = stringBuilder.toString();
+
+            String[] splitResult = result.split("\n");
+            int i;
+            for(i=5; i < splitResult.length; i++){
+                String[] localSplit = splitResult[i].split(";");
+                if(localSplit.length != 4){
+                    Log.e("DataManager","Wrong run data line. Found "+localSplit.length+" parts.");
+                } else {
+                    double time = Double.parseDouble(localSplit[0]);
+                    String[] split = localSplit[1].split(",");
+                    LatLng location = new LatLng(Double.parseDouble(split[0]),Double.parseDouble(split[1]));
+                    Distance distance = new Distance(Double.parseDouble(split[2]));
+                    Pace pace = new Pace(Double.parseDouble(localSplit[2]));
+                    double heartRate = Double.parseDouble(localSplit[3]);
+                    runData.add(new RunStatus(time,location,distance,heartRate));
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e("DataManager","Failed to load the run file "+filename+".");
+            e.printStackTrace();
+        }
+
+        return runData;
     }
 
     private PolylineOptions getPolylineFromString(String string){
@@ -212,26 +260,28 @@ class DataManager {
     }
 
     private List<HistoryItem> getLastWeekRuns(){
-        List<HistoryItem> weekRuns = new ArrayList<>();
-        Log.d("DataManager","Getting last week runs.");
+        if(lastWeekRuns == null){
+            lastWeekRuns = new ArrayList<>();
+            Log.d("DataManager","Getting last week runs.");
 
-        Calendar calendar;
-        calendar = Calendar.getInstance();
+            java.util.Calendar calendar;
+            calendar = java.util.Calendar.getInstance();
 
-        calendar.add(Calendar.DAY_OF_MONTH, -7);
-        Date weekStart = calendar.getTime();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
-        String weekStartString = df.format(weekStart)+".run";
+            calendar.add(java.util.Calendar.DAY_OF_MONTH, -7);
+            Date weekStart = calendar.getTime();
+            java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
+            String weekStartString = df.format(weekStart)+".run";
 
-        Log.d("DataManager","Week start string: "+weekStartString);
+            Log.d("DataManager","Week start string: "+weekStartString);
 
-        for(HistoryItem run: runs){
-            if(run.getFilename().compareTo(weekStartString)>0){
-                Log.v("DataManager","Run in last week: "+run.getFilename());
-                weekRuns.add(run);
+            for(HistoryItem run: runs){
+                if(run.getFilename().compareTo(weekStartString)>0){
+                    Log.v("DataManager","Run in last week: "+run.getFilename());
+                    lastWeekRuns.add(run);
+                }
             }
         }
-        return weekRuns;
+        return lastWeekRuns;
     }
 
     Distance getLastWeekDistance(){
@@ -288,7 +338,7 @@ class DataManager {
                     printStream.print("\n"+
                             status.time+";"+
                             "0,"+
-                            "O,"+
+                            "0,"+
                             status.distance.getValue()+";"+
                             status.pace.getValue()+";"+
                             status.heartRate
@@ -307,7 +357,7 @@ class DataManager {
             runs.add(new HistoryItem(
                     filename,
                     df2.format(java.util.Calendar.getInstance().getTime()),
-                    new Pace(elapsedTime/6000).toStr("km","p",false),
+                    new Pace(elapsedTime/60000).toStr("km","p",false),
                     distance,
                     pace,
                     route

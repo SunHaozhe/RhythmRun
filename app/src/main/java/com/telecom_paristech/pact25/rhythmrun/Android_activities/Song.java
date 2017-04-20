@@ -6,13 +6,18 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
+import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +32,15 @@ public class Song implements Parcelable {
     private String path;
     private String genre;
     private String duration;
+    private double[] values;
+
+    public double[] getValues() {
+        return values;
+    }
+
+    public void setValues(double[] values) {
+        this.values = values;
+    }
 
     public Song(File file) {
         path = file.getPath();
@@ -39,6 +53,10 @@ public class Song implements Parcelable {
         album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
         genre = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
         duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+        double freq = Tempo.findTempoHzFast(path);
+
+        HomeActivity.getDB().addSongAndTempo(path, freq);
 
         if(duration != null)
             duration = Pace.fancyPace(Double.parseDouble(duration)/60000);
@@ -133,5 +151,17 @@ public class Song implements Parcelable {
         parcel.writeString(path);
         parcel.writeString(genre);
         parcel.writeString(duration);
+    }
+
+    public void play(){
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
