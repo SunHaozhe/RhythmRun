@@ -24,7 +24,9 @@
 
         <!-- Mains -->
         <activity android:name=".music.MainActivity" />
-        <activity android:name=".music.Main2Activity" />
+        <activity android:name=".music.Main2Activity">
+
+        </activity>
 
         <!-- Home -->
         <activity
@@ -131,11 +133,14 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity android:name=".Android_activities.test.AudioTestActivity" />
+
+        <!-- Loading screen -->
         <activity
             android:name=".Android_activities.LoadingScreenActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

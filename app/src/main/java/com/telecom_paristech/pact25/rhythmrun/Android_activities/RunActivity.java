@@ -22,9 +22,11 @@ import android.widget.TextView;
 import com.telecom_paristech.pact25.rhythmrun.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
 import com.telecom_paristech.pact25.rhythmrun.music.MusicReader;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
+import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 import com.telecom_paristech.pact25.rhythmrun.sensors.Podometer;
 
@@ -48,7 +50,11 @@ public class RunActivity extends AppCompatActivity {
     private TextView tvCurrentSong;
 
     private Podometer podometer=null;
-    private MusicManagerInterface musicManagerInterface;
+
+    //private MusicManagerInterface musicManagerInterface;
+
+    private com.telecom_paristech.pact25.rhythmrun.music.MusicManager musicManager;
+    private TempoDataBase tempoDataBase;
 
     private Timer t;
 
@@ -69,6 +75,15 @@ public class RunActivity extends AppCompatActivity {
         tvHeartRate = (TextView) findViewById(R.id.runHeartRate);
         tvBPM = (TextView) findViewById(R.id.runBPM);
         tvCurrentSong = (TextView) findViewById(R.id.runCurrentSong);
+
+        //Initializing TextViews
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final String paceMode = sharedPreferences.getString("pace","p");
+        final String unit = sharedPreferences.getString("unit","km");
+        RunStatus lastStatus = new RunStatus(0, null, new Distance(0),0);
+        tvDistance.setText(lastStatus.distance.toStr(unit,true));
+        tvPace.setText(lastStatus.pace.toStr(unit,paceMode,true));
+        tvHeartRate.setText(String.format(getString(R.string.run_heart_rate),lastStatus.heartRate));
 
         final Chronometer chronometer = (Chronometer) findViewById(R.id.chronometer);
         final FloatingActionButton buttonStart = (FloatingActionButton) findViewById(R.id.runPlay);
@@ -269,7 +284,7 @@ public class RunActivity extends AppCompatActivity {
             }
         }).start();
 
-        musicManagerInterface = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager();
+        //musicManagerInterface = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager(null, false);
 
         /*(new Thread (new Runnable() {
             @Override
@@ -329,6 +344,21 @@ public class RunActivity extends AppCompatActivity {
                 });
             }
         },0,Macros.UPDATE_IDLE);
+
+
+        (new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // This database contains all songs in /storage/emulated/0/Music
+                tempoDataBase = HomeActivity.getDB();
+
+                musicManager = new com.telecom_paristech.pact25.rhythmrun.music.MusicManager(tempoDataBase, true);
+                Log.i("RunActivity", "MusicManager created.");
+
+                musicManager.play();
+                Log.i("RunActivity", "MusicManager plays.");
+            }
+        })).start();
     }
 
     @Override
@@ -340,7 +370,8 @@ public class RunActivity extends AppCompatActivity {
     @Override
     public void onStop(){
         runMapFragment.stopLocationUpdates(); //Stopping location updates.
-        MusicManager.stopPlaying();
+        //MusicManager.stopPlaying();
+        tempoDataBase.close();
         if(podometer != null)
             podometer.stop();
         super.onStop();
@@ -360,7 +391,8 @@ public class RunActivity extends AppCompatActivity {
                     getDistance(),
                     getHeartRate()
             ));
-            musicManagerInterface.updateRythm(getHeartRate());
+            //musicManagerInterface.updateRythm(getHeartRate());
+            musicManager.updateRythm(podometer.getRunningPaceFrequency());
             Log.v("Run","Updating the run status while running is "+isRunning+" ("+runData.size()+" points collected).");
             updateDisplay();
         }
