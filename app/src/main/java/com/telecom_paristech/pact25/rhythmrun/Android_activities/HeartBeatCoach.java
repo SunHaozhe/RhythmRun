@@ -24,6 +24,11 @@ public class HeartBeatCoach {
         return 220;
     }
 
+    public int getHeartBeatFrequency()
+    {
+        return 140;
+    }
+
     //Calculate the maximum value of Heartbeat
 
     public int getFCM()
@@ -39,6 +44,21 @@ public class HeartBeatCoach {
         return (float) (0.75*getFCM());
 
     }
+
+    public boolean goodHeartBeatFrequency()
+    {
+        if (getHeartBeatFrequency()<getFC())
+        {
+            return True;
+        }
+        else
+        {
+            return False;
+
+        }
+    }
+
+    public 
 
 
 }
