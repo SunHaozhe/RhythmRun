@@ -24,6 +24,14 @@ public class HeartBeatCoach {
         return 220;
     }
 
+    //Calculate the maximum value of Heartbeat
+
+    public int getFCM()
+    {
+        return gender-age;
+
+    }
+
     
 
 
