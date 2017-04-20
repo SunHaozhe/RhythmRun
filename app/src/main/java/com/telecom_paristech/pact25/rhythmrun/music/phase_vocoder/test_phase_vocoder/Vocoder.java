@@ -1,9 +1,13 @@
 package com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.test_phase_vocoder;
 
 import com.telecom_paristech.pact25.rhythmrun.Android_activities.Song;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFile;
+import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 
 import org.apache.commons.math3.complex.Complex;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.FastFourierTransform.fft;
@@ -62,7 +66,7 @@ public class Vocoder {
         private String path;
         private int indexNumberInWav, windowSize, ta, ts, len_signal_in;
         private boolean song_ended;
-        private double[] wa, lastPhaseIn, lastPhaseOut, windowIn;
+        private double[] wa, lastPhaseIn, lastPhaseOut, windowIn, signal_in;
         private Complex[] tfWindowOut;
         private int[] bufferSynthesis, signal;
 
@@ -80,7 +84,14 @@ public class Vocoder {
             this.indexNumberInWav =0;
 
         //TODO : gérer mieux le WavFile
-            (this.sr,this.signal_in)=wavfile.read(this.path);
+            WavFile wav = null;
+            try {
+                wav = WavFile.openWavFile(new File(path));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            this.signal_in = wav.read(this.path);
             this.len_signal_in =  this.signal_in.length;
 
             this.song_ended = false;
@@ -117,7 +128,7 @@ public class Vocoder {
         this.tfWindowOut = new Complex[this.windowSize];
     }
 
-        private void m_get_next_sig(int[] buffer, int n, int n0){
+        private void m_get_next_sig(float[] buffer, int n, int n0){
             if(this.indexNumberInWav+n >=this.len_signal_in) {
                 this.song_ended = true; //si on a tout lu
                 for (int i = this.indexNumberInWav ; i < this.len_signal_in ; i++)
