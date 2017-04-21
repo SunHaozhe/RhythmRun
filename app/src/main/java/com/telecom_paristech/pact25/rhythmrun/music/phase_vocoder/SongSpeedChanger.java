@@ -22,11 +22,11 @@ import java.io.IOException;
  */
 public class SongSpeedChanger implements FloatArraySupplier {
 
-    WavFile waveFile;
-    int bufferSize;
-    double y1, y2, f, r;
-    long framesRemainingToBeRead;
-    boolean songEnded;
+    private WavFile waveFile;
+    private int bufferSize;
+    private double y1, y2, f, r;
+    private long framesRemainingToBeRead;
+    private boolean songEnded;
 
     public SongSpeedChanger(String path, int bufferSize, double ratio) throws IOException, WavFileException {
         waveFile = WavFile.openWavFile(new File(path));
@@ -62,10 +62,9 @@ public class SongSpeedChanger implements FloatArraySupplier {
                 Log.i("lucas", "songEnded");
                 songEnded = true;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (WavFileException e) {
-            e.printStackTrace();
+
         }
         double fAuDebut = f;
         int indiceDey2 = -1;
@@ -88,9 +87,7 @@ public class SongSpeedChanger implements FloatArraySupplier {
                                 framesRemainingToBeRead --;
                                 y2 = temp[0];
                                 indiceDey2++;
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (WavFileException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -124,7 +121,7 @@ public class SongSpeedChanger implements FloatArraySupplier {
 
     public static float[] identity(double[] bufferIn, int sizeOut) {
         float[] bufferOut = new float[sizeOut];
-        float r = ((float) sizeOut)/((float)bufferIn.length);
+        //float r = ((float) sizeOut)/((float)bufferIn.length);
         for (int i = 0; i < sizeOut; i++) {
             bufferOut[i] = (float)bufferIn[i];
             //bufferOut[k] = (float)(bufferIn[(int)(k/r)]*( ((float) k)/r) - ((float)k/r) ) + (float)(bufferIn[(int)(k/r)+1]*( 1 - ((float) k)/r) + ((float)k/r) );
