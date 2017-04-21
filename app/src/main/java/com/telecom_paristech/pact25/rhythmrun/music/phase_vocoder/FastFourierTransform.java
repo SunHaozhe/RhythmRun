@@ -26,6 +26,14 @@ public class FastFourierTransform {
         return mFFT.transform(music, TransformType.FORWARD);
     }
 
+    public static Complex[] fft(Complex[] music){
+        return mFFT.transform(music, TransformType.FORWARD);
+    }
+
+    public static Complex[] fftReversed(double[] music){
+        return mFFT.transform(music,TransformType.INVERSE);
+    }
+
     public static Complex[] fftReversed(Complex[] music){
         return mFFT.transform(music,TransformType.INVERSE);
     }
