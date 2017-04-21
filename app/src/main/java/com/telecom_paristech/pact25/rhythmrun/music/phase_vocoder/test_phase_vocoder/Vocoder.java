@@ -82,7 +82,7 @@ public class Vocoder {
             e.printStackTrace();
         }
         //TODO : gérer mieux le WavFile
-        signal_in = wav.read(this.path);
+        //signal_in = wav.read(this.path);
         this.len_signal_in = signal_in.length;
 
         song_ended = false;
@@ -95,7 +95,7 @@ public class Vocoder {
         this.ts = 0;
         this.wa = hanning(windowSize); //tout le monde utilise hann
 
-        this.bufferSynthesis = new double[buffer_size + windowSize]; // Tous les éléments sont à 0
+        bufferSynthesis = new double[buffer_size + windowSize]; // Tous les éléments sont à 0
         //on prevoie windowSize en plus parce qu'on va depasser. A la fin du vocodage il faut donc recopier ce qui depasse au debut du prochain bufferSynthesis.
 
         shiftOutMin = (int) (shiftIn / ratioMax); //variable temporaire pour le calcul de la ligne suivante
@@ -154,10 +154,10 @@ public class Vocoder {
             return new double[buffer_size]; // Bien ?
         }
         for (int i = buffer_size; i < buffer_size + windowSize; i++)
-            this.bufferSynthesis[i - buffer_size] = this.bufferSynthesis[i];//on recopie le bout qui depassait au debut
+            bufferSynthesis[i - buffer_size] = bufferSynthesis[i];//on recopie le bout qui depassait au debut
 
         for (int i = windowSize; i < buffer_size + windowSize; i++)
-            this.bufferSynthesis[i] = 0; //Puis on met le reste à 0
+            bufferSynthesis[i] = 0; //Puis on met le reste à 0
         this.ta = 0;
 
         int fenetres_requises = (int) ((buffer_size + shiftOut - 1 - this.ts) / shiftOut); //de combien de fenetres a-t-on besoin
@@ -167,7 +167,7 @@ public class Vocoder {
         double Q = 0;
         for (int k = 0; k < fenetres_requises; k++) {
             for (int i = 0; i < windowSize; i++)
-                windowIn[i] = signal[this.ta + i] * this.wa[i] //fenetrage
+                windowIn[i] = signal[this.ta + i] * this.wa[i]; //fenetrage
 
 
             Complex[] tf_windowIn = fft(windowIn);
@@ -193,19 +193,19 @@ public class Vocoder {
             Complex[] windowOutComplex = fft(fftReversed(this.tfWindowOut)); // TODO : résoudre le problème de types
             double[] windowOut = new double[windowSize];
             for (int i = 0; i < windowSize; i++)
-                this.bufferSynthesis[this.ts + i] += this.wa[i] * windowOut[i];
+                bufferSynthesis[this.ts + i] += this.wa[i] * windowOut[i];
             this.ta += shiftIn;
             this.ts += shiftOut;
         }
 
         //on prepare le prochain traitement du signal
         this.ts %= buffer_size;
-        for (int k = this.ta; k < this.ta + windowSize - shiftIn)
+        for (int k = this.ta; k < this.ta + windowSize - shiftIn ; k++)
             signal[k - this.ta] = signal[k];
         for (int k = windowSize - shiftIn; k < signal.length; k++)
             signal[k] = 0;
 
-        return copie(this.bufferSynthesis); // TODO : à modifier pour qu'on puisse utiliser des buffers à la place
+        return bufferSynthesis; // TODO : à modifier pour qu'on puisse utiliser des buffers à la place
         // on l'evitera en java (on utilisera plutot une poignee de buffers alloues pendant l'initialisation et on les fera tourner)
 
     }

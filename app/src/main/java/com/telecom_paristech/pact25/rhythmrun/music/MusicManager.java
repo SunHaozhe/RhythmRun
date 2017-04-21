@@ -11,20 +11,17 @@ import com.telecom_paristech.pact25.rhythmrun.interfaces.music.FloatArrayPool;
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.FloatArraySupplier;
 import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
-<<<<<<< HEAD
 
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavProcess;
 
 
 import java.io.File;
-=======
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.NativeVocoder;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavProcess;
 
 
->>>>>>> distant_server/SaousanKad
 import java.io.IOException;
 
 import static java.lang.Math.abs;
@@ -207,14 +204,15 @@ public class MusicManager implements MusicManagerInterface {
 
     private final FloatArraySupplier getNewFloatArraySupplier() {
         loadNewTrack();
-        try {
+        return null;
+        /*try {
             return new SongSpeedChanger(songPath, bufferSize, 1);//wantedTempoHz/songTempoHz
         } catch (IOException e) {
             e.printStackTrace();
         } catch (WavFileException e) { //faire quelque chose si on ne peut pas ouvrir le fichier
             e.printStackTrace();
         }
-        return null;
+        return null;*/
     }
 
     private final ByteBufferSupplier getNewByteBufferSupplier() {
