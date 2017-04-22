@@ -18,7 +18,8 @@ import java.util.ArrayList;
 
 //TODO: implement the effort display
 
-public class SumUpActivity extends AppCompatActivity {
+public class SumUpActivity extends AppCompatActivity
+{
 
     private Distance distance; //km
     private double elapsedTime; //ms
