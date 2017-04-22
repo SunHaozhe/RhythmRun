@@ -15,7 +15,6 @@
     <header
         android:fragment="com.telecom_paristech.pact25.rhythmrun.Android_activities.SettingsActivity$UserInfoPreferenceFragment"
         android:icon="@drawable/ic_person_black_24dp"
-        android:title="User"
-        />
+        android:title="User" />
 
 </preference-headers>

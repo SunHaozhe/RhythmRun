@@ -3,8 +3,10 @@ package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -142,7 +144,16 @@ public class LoadingScreenActivity extends AppCompatActivity {
     public void goToHome(){
         if(isTempoDatabaseLoaded && areMusicFilesLoaded && isConnectionChecked && areRunsLoaded && isDummyMapLoaded){
             Log.i("Loading","Done loading. Going to home.");
-            startActivity(new Intent(this, HomeActivity.class));
+
+            startActivity(new Intent(this, UserInformationActivity.class));
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            if (prefs.getBoolean("firstrun", true)) {
+                prefs.edit().putBoolean("firstrun", false).commit();
+                startActivity(new Intent(this, UserInformationActivity.class));
+            } else {
+                startActivity(new Intent(this, HomeActivity.class));
+            }
         }
     }
 
