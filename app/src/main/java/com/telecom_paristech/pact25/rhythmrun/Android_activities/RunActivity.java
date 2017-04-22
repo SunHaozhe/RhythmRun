@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.location.Location;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -84,7 +85,7 @@ public class RunActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         final String paceMode = sharedPreferences.getString("pace","p");
         final String unit = sharedPreferences.getString("unit","km");
-        RunStatus lastStatus = new RunStatus(0, null, new Distance(0),0);
+        RunStatus lastStatus = new RunStatus(0, null, new Distance(0),0, new Pace(0));
         tvDistance.setText(lastStatus.distance.toStr(unit,true));
         tvPace.setText(lastStatus.pace.toStr(unit,paceMode,true));
         tvHeartRate.setText(String.format(getString(R.string.run_heart_rate),lastStatus.heartRate));
@@ -352,6 +353,38 @@ public class RunActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    private int max_int(int a, int b){
+        if(a>=b)
+            return a;
+        return b;
+    }
+
+    public Pace getPace(){
+        double distance = 0;
+        double time = 0;
+
+        if(runData.size()==0)
+            return new Pace(0);
+
+        RunStatus lastRun = runData.get(runData.size()-1);
+        for (int i=runData.size()-2; i >= max_int(runData.size()-6, 0); i--){
+            float[] results = new float[1];
+            if (lastRun.location != null && runData.get(i).location != null){
+                Location.distanceBetween(
+                        lastRun.location.latitude,
+                        lastRun.location.longitude,
+                        runData.get(i).location.latitude,
+                        runData.get(i).location.longitude,
+                        results);
+                distance += results[0];
+            }
+            time += lastRun.time - runData.get(i).time;
+            lastRun = runData.get(i);
+        }
+
+        return new Pace(time/distance/60);
+    }
+
     public void update(){
         /*
             Two tasks handled by update:
@@ -364,7 +397,8 @@ public class RunActivity extends AppCompatActivity {
                     getElapsedTime(),
                     getPosition(),
                     getDistance(),
-                    getHeartRate()
+                    getHeartRate(),
+                    getPace()
             ));
             //musicManagerInterface.updateRythm(getHeartRate());
             musicManager.updateRythm(getRunnerRhythm());
@@ -381,7 +415,7 @@ public class RunActivity extends AppCompatActivity {
         final String unit = sharedPreferences.getString("unit","km");
 
         //At the beginning, no status has been recorded. Showing blank information.
-        RunStatus lastStatus = new RunStatus(0, null, new Distance(0),0);
+        RunStatus lastStatus = new RunStatus(0, null, new Distance(0),0, new Pace(0));
         if(runData.size()>0){
             lastStatus = runData.get(runData.size()-1);
         }

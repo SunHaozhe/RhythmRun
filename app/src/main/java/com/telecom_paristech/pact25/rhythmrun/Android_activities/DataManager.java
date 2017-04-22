@@ -187,7 +187,7 @@ class DataManager {
                     Distance distance = new Distance(Double.parseDouble(split[2]));
                     Pace pace = new Pace(Double.parseDouble(localSplit[2]));
                     double heartRate = Double.parseDouble(localSplit[3]);
-                    runData.add(new RunStatus(time,location,distance,heartRate));
+                    runData.add(new RunStatus(time,location,distance,heartRate,pace));
                 }
             }
 

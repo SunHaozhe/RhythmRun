@@ -13,12 +13,12 @@ class RunStatus implements Parcelable {
     public final Pace pace;
     final double heartRate;
 
-    RunStatus(double time, LatLng location, Distance distance, double heartRate) {
+    RunStatus(double time, LatLng location, Distance distance, double heartRate, Pace pace) {
         this.time = time;
         this.location = location;
         this.distance = distance;
         this.heartRate = heartRate;
-        this.pace = new Pace((time/60000)/distance.getValue());
+        this.pace = pace;//new Pace((time/60000)/distance.getValue());
     }
 
     private RunStatus(Parcel in) {
