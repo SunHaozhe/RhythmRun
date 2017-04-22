@@ -24,9 +24,16 @@
 
         <!-- Mains -->
         <activity android:name=".music.MainActivity" />
-        <activity android:name=".music.Main2Activity">
+            <activity
+                android:name=".music.Main2Activity"
+                android:theme="@style/AppTheme.NoActionBar">
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
 
-        </activity>
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+            </activity>
+
 
         <!-- Home -->
         <activity
@@ -88,7 +95,14 @@
         <activity
             android:name=".Client_serveur.BluetoothActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <!-- About -->
         <activity

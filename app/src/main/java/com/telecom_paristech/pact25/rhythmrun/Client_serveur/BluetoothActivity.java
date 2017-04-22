@@ -2,11 +2,14 @@ package com.telecom_paristech.pact25.rhythmrun.Client_serveur;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,17 +21,42 @@ import android.widget.Toast;
 
 import com.telecom_paristech.pact25.rhythmrun.R;
 
+import java.io.IOException;
 import java.util.*;
 
 
 public class BluetoothActivity extends AppCompatActivity {
 
     private BluetoothAdapter bluetoothAdapter = null;
-    private Set<BluetoothDevice> bondedBluetoothDevices = null;
+    private ArrayList<BluetoothDevice> bondedOrDetectedBluetoothDevices = null;
     private ArrayList<String> devices;
     private ArrayAdapter<String> arrayAdapter;
     private ListView listViewBluetoothDevices;
     private BroadcastReceiver broadcastReceiver;
+    private Hashtable<String, BluetoothDevice> hashTable;
+    private boolean pairing = false;
+    private BluetoothDevice currentDevice = null;
+    private final BroadcastReceiver pairReciever = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
+                int state = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
+                int previousState = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
+                if (state == BluetoothDevice.BOND_BONDING && previousState == BluetoothDevice.BOND_NONE) {
+                    Log.i("lucas", "bonding...");
+                } else if (state == BluetoothDevice.BOND_BONDED && previousState == BluetoothDevice.BOND_BONDING) {
+                    Log.i("lucas", "paired");
+                    //BluetoothDevice device = currentDevice;
+                    pairing = false;
+                    whenPaired(currentDevice);
+                } else if (state == BluetoothDevice.BOND_NONE && previousState == BluetoothDevice.BOND_BONDED){
+                    Log.i("lucas", "not bonded");
+                    pairing = false;
+                }
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +73,8 @@ public class BluetoothActivity extends AppCompatActivity {
             return;
         }
 
+        bondedOrDetectedBluetoothDevices = new ArrayList<BluetoothDevice>();
+        hashTable = new Hashtable<String, BluetoothDevice>();
 
         //tests if Bluetooth is actived, if not, starts/actives the Bluetooth
         int REQUEST_CODE_BLUETOOTH = 1;
@@ -59,10 +89,14 @@ public class BluetoothActivity extends AppCompatActivity {
 
         //searches all bonded devices and adds them to the list
         devices = new ArrayList<String>();
-        bondedBluetoothDevices = bluetoothAdapter.getBondedDevices();
+        //bondedBluetoothDevices = bluetoothAdapter.getBondedDevices(); ce set n'est pas modifiable
+        for (BluetoothDevice bluetoothDevice : bluetoothAdapter.getBondedDevices()) {
+            bondedOrDetectedBluetoothDevices.add(bluetoothDevice);
+        }
         Log.d("BluetoothActivity","Searching all bonded devices to add them to a list");
-        for (BluetoothDevice device : bondedBluetoothDevices) {
+        for (BluetoothDevice device : bondedOrDetectedBluetoothDevices) {
             devices.add(device.getName() + "-" + device.getAddress());
+            hashTable.put(device.getName() + "-" + device.getAddress(), device);
         }
         //searches devices who have not yet been bonded
         Log.d("BluetoothActivity","Begins to discover bluetooth devices who have not yet been bonded");
@@ -83,10 +117,22 @@ public class BluetoothActivity extends AppCompatActivity {
         listViewBluetoothDevices = (ListView) findViewById(R.id.list_view_bluetooth_devices);
         listViewBluetoothDevices.setAdapter(arrayAdapter);
         listViewBluetoothDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //TODO click on items of ViewList
-                Toast.makeText(BluetoothActivity.this,"You clicked on this item",Toast.LENGTH_SHORT).show();
+                if (!pairing) {
+                    pairing = true;
+                    Toast.makeText(BluetoothActivity.this, "You clicked on this item", Toast.LENGTH_SHORT).show();
+                    currentDevice = hashTable.get((String) adapterView.getItemAtPosition(i));
+                    Log.i("lucas", "state : " + String.valueOf(currentDevice.getBondState()));
+                    if (currentDevice.getBondState() == BluetoothDevice.BOND_NONE) {
+                        Log.i("lucas", "on va create bond");
+                        currentDevice.createBond();
+                        IntentFilter intent = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+                        registerReceiver(pairReciever, intent);
+                    }
+                }
 
                 //Intent intent = new Intent(BluetoothActivity.this, /* TODO the next activity */);
                 //startActivity(intent);
@@ -103,13 +149,20 @@ public class BluetoothActivity extends AppCompatActivity {
                     //gets the BluetoothDevice object from the intent
                     BluetoothDevice newBluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     Log.d("BluetoothActivity","We discovered a new BluetoothDevice");
-                    // Add the name and address to an array adapter to show in a ListView
-                    bondedBluetoothDevices.add(newBluetoothDevice);
-                    Log.d("BluetoothActivity","This new BluetoothDevice has been added to the set bondedBluetoothDevices");
                     String theNewDevice = newBluetoothDevice.getName() + "-" + newBluetoothDevice.getAddress();
-                    devices.add(theNewDevice);
-                    arrayAdapter.add(theNewDevice);
-                    arrayAdapter.notifyDataSetChanged();
+                    if (!devices.contains(theNewDevice)) {
+                        Log.i("lucas", "new device");
+                        for (String s : devices) {
+                            Log.i("lucas", "devices before : " + s);
+                        }
+                        devices.add(theNewDevice);
+                        hashTable.put(theNewDevice, newBluetoothDevice);
+                        // Add the name and address to an array adapter to show in a ListView
+                        bondedOrDetectedBluetoothDevices.add(newBluetoothDevice);
+                        Log.d("BluetoothActivity","This new BluetoothDevice has been added to the set bondedBluetoothDevices : " + theNewDevice);
+                        //arrayAdapter.add(theNewDevice); pas besoin
+                        arrayAdapter.notifyDataSetChanged();
+                    }
                 }
             }
         };
@@ -124,6 +177,18 @@ public class BluetoothActivity extends AppCompatActivity {
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
         Log.d("BluetoothActivity","We unregistered the BroadcastReceiver to detect Bluetooth devices");
+    }
+
+    private void whenPaired(BluetoothDevice device) {
+        BluetoothSocket bluetoothSocket = null;
+        try {
+            bluetoothSocket = device.createRfcommSocketToServiceRecord(new UUID(123, 456));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (bluetoothSocket != null) {
+            
+        }
     }
 
 }

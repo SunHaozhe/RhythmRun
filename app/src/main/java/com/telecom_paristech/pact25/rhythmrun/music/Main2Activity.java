@@ -2,6 +2,7 @@ package com.telecom_paristech.pact25.rhythmrun.music;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioTrack;
 import android.media.MediaPlayer;
@@ -22,6 +23,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 */
+import com.telecom_paristech.pact25.rhythmrun.Client_serveur.BluetoothActivity;
 import com.telecom_paristech.pact25.rhythmrun.R;
 import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.FastFourierTransform;
@@ -76,7 +78,7 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        int optionsDeDebug = 11;
+        int optionsDeDebug = 12;
         //0 : ecrit les releves de l'accelerometre dans Downloads/donnees.csv
         //1 : affiche la frequence de pas calculee par le podometre
         //2 : calcule le tempo de la musique specifiee dans le thread
@@ -89,6 +91,7 @@ public class Main2Activity extends AppCompatActivity {
         //9 : music manager + native vocoder
         //10 : database test
         //11 : podometre + database + vovoder
+        //12 : capteur cardiaque
 
         test_button = (Button) findViewById(R.id.test_button);
         test_button.setText("L'accelerometre s'allume...");
@@ -654,6 +657,13 @@ public class Main2Activity extends AppCompatActivity {
                     tempoDataBase.close();
                 }
             })).start();
+
+        }
+        if(optionsDeDebug == 12) {
+            Log.i("lucas", "on va creer l'intent");
+            Intent intent = new Intent(this, BluetoothActivity.class);
+            Log.i("lucas", "on va start bluetooth activity");
+            startActivity(intent);
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
