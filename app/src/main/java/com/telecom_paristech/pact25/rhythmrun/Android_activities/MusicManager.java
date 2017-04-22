@@ -62,7 +62,9 @@ public class MusicManager{
     private static void sortSongs(){
         for(int i=1;i<songs.size();i++){
             int j=i;
-            while(j>0 && (songs.get(i).getArtist().compareTo(songs.get(j-1).getArtist())<0 ||
+            while(j>0 && songs.get(i).getArtist()!=null && songs.get(j-1).getArtist()!=null &&
+                    songs.get(i).getTitle()!=null && songs.get(j-1).getTitle()!=null &&
+                    (songs.get(i).getArtist().compareTo(songs.get(j-1).getArtist())<0 ||
                     (songs.get(i).getArtist().compareTo(songs.get(j).getArtist()) == 0 &&
                             songs.get(i).getTitle().compareTo(songs.get(j).getTitle())<0))){
                 j-=1;
