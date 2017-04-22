@@ -358,7 +358,7 @@ public class RunActivity extends AppCompatActivity {
                     getHeartRate()
             ));
             //musicManagerInterface.updateRythm(getHeartRate());
-            musicManager.updateRythm(podometer.getRunningPaceFrequency());
+            musicManager.updateRythm(getRunnerRhythm());
             Log.v("Run","Updating the run status while running is "+isRunning+" ("+runData.size()+" points collected).");
             updateDisplay();
         }
@@ -414,6 +414,12 @@ public class RunActivity extends AppCompatActivity {
         if(podometer == null)
             return -1;
         return podometer.getRunningPaceFrequency()*60;
+    }
+
+    private float getRunnerRhythm(){
+        if(podometer == null)
+            return 1;
+        return podometer.getRunningPaceFrequency();
     }
 
     private String getCurrentSong(){
