@@ -393,15 +393,17 @@ public class RunActivity extends AppCompatActivity {
          */
 
         if(isRunning) {
+            Pace pace = getPace();
             runData.add(new RunStatus(
                     getElapsedTime(),
                     getPosition(),
                     getDistance(),
                     getHeartRate(),
-                    getPace()
+                    pace
             ));
             //musicManagerInterface.updateRythm(getHeartRate());
-            musicManager.updateRythm(getRunnerRhythm());
+            if(pace.getValue() < 15) // Not updating rhythm under 4 km/h
+                musicManager.updateRythm(getRunnerRhythm());
             Log.v("Run","Updating the run status while running is "+isRunning+" ("+runData.size()+" points collected).");
             updateDisplay();
         }
