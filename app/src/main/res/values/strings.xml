@@ -74,6 +74,16 @@
         <item>s</item>
     </string-array>
 
+    <string name="pref_title_gender">Gender</string>
+    <string-array name="pref_gender_titles">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="pref_gender_values">
+        <item>M</item>
+        <item>F</item>
+    </string-array>
+
     <string name="title_activity_about">About</string>
     <string name="about_description">Are you interested in listening to music while running?
         Would you like to hear a music adapted to your own rhythm ?  This application is created

@@ -106,7 +106,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || PrivacyPreferenceFragment.class.getName().equals(fragmentName);
+                || PrivacyPreferenceFragment.class.getName().equals(fragmentName)
+                || UserInfoPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -159,6 +160,31 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 }
             });
 
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public static class UserInfoPreferenceFragment extends PreferenceFragment {
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_user);
+            setHasOptionsMenu(true);
+
+            PreferenceManager.setDefaultValues(getActivity(), R.xml.pref_user, true);
+
+            bindPreferenceSummaryToValue(findPreference("gender"));
+            bindPreferenceSummaryToValue(findPreference("age"));
         }
 
         @Override

@@ -12,4 +12,10 @@
         android:icon="@drawable/ic_lock_black_24dp"
         android:title="Privacy" />
 
+    <header
+        android:fragment="com.telecom_paristech.pact25.rhythmrun.Android_activities.SettingsActivity$UserInfoPreferenceFragment"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="User"
+        />
+
 </preference-headers>
