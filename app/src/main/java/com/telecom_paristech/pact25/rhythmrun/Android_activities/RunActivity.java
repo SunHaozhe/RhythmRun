@@ -48,6 +48,9 @@ public class RunActivity extends AppCompatActivity {
     private TextView tvHeartRate;
     private TextView tvBPM;
     private TextView tvCurrentSong;
+    private TextView tvHeartMessage;
+
+    private HeartBeatCoach heartBeatCoach;
 
     private Podometer podometer=null;
 
@@ -75,6 +78,7 @@ public class RunActivity extends AppCompatActivity {
         tvHeartRate = (TextView) findViewById(R.id.runHeartRate);
         tvBPM = (TextView) findViewById(R.id.runBPM);
         tvCurrentSong = (TextView) findViewById(R.id.runCurrentSong);
+        tvHeartMessage = (TextView) findViewById(R.id.heartBeatMessage);
 
         //Initializing TextViews
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -292,6 +296,9 @@ public class RunActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+
+        heartBeatCoach = new HeartBeatCoach(this);
+
         //Creation of a timer for collecting run data and updating the display.
         //As it is cancelled when the activity is paused, it needs to be reset when resuming.
         t = new Timer();
@@ -309,6 +316,7 @@ public class RunActivity extends AppCompatActivity {
         },0,Macros.UPDATE_IDLE);
 
 
+
         (new Thread(new Runnable() {
             @Override
             public void run() {
@@ -322,6 +330,7 @@ public class RunActivity extends AppCompatActivity {
                 Log.i("RunActivity", "MusicManager plays.");
             }
         })).start();
+
     }
 
     @Override
@@ -383,6 +392,8 @@ public class RunActivity extends AppCompatActivity {
 
         tvBPM.setText(String.format(getString(R.string.run_bpm),getBPM()));
         tvCurrentSong.setText(getCurrentSong());
+
+        tvHeartMessage.setText(heartBeatCoach.messageDuringRun());
     }
 
     private Distance getDistance(){

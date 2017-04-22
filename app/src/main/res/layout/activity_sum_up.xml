@@ -164,7 +164,7 @@
                         android:layout_margin="16dp"
                         android:textSize="15sp"
                         android:textColor="@color/textPrimary"
-                        android:text="Effort evolution" />
+                        android:text="Effort" />
 
                     <ImageButton
                         android:id="@+id/sumUpEffortDownArrow"
@@ -195,9 +195,9 @@
                         android:layout_height="wrap_content">
 
                         <TextView
+                            android:id="@+id/sumUpHeartBeat"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Hello World!"/>
+                            android:layout_height="wrap_content"/>
 
                     </RelativeLayout>
 

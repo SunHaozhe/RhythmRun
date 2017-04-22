@@ -27,6 +27,7 @@ public class SumUpActivity extends AppCompatActivity
     private ArrayList<RunStatus> runData;
     private CustomPolylineOptions route;
     private DataManager dataManager;
+    private HeartBeatCoach heartBeatCoach;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,11 @@ public class SumUpActivity extends AppCompatActivity
             simpleMapFragment.zoomToCurrentLocation();
         }
 
+        heartBeatCoach = new HeartBeatCoach(this);
+
         //Displaying info in TextViews.
+
+        TextView tvHeart = (TextView) findViewById(R.id.sumUpHeartBeat);
         TextView tvDistance = (TextView) findViewById(R.id.sumUpDistance);
         TextView tvPace = (TextView) findViewById(R.id.sumUpPace);
         TextView tvTime = (TextView) findViewById(R.id.sumUpTime);
@@ -93,6 +98,7 @@ public class SumUpActivity extends AppCompatActivity
         tvTime.setText(new Pace(elapsedTime/60000).toStr("km","p",false));
         tvDistance.setText(distance.toStr(unit,true));
         tvPace.setText(pace.toStr(unit,paceMode,true));
+        tvHeart.setText(heartBeatCoach.messageOneMinuteAfterRun());
 
         Button discardButton = (Button) findViewById(R.id.sumUpDiscardButton);
         Button saveButton = (Button) findViewById(R.id.sumUpSaveButton);
@@ -118,6 +124,8 @@ public class SumUpActivity extends AppCompatActivity
 
         if(!recordHistory)
             saveButton.setVisibility(View.GONE);
+
+
 
     }
 }

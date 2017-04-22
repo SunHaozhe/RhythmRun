@@ -1,5 +1,9 @@
 package com.telecom_paristech.pact25.rhythmrun.Android_activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 /**
  * Created by asus on 20/04/2017.
  */
@@ -13,36 +17,39 @@ public class HeartBeatCoach {
     //frequencyAtRest is the value of HeartBeat measured when the user is resting, before the run or hours after it
     //frequencyAfterRun is the value of frequency measured one minut after the runner stops running
 
-    public HeartBeatCoach(int age, int gender)
-    {
-        this.age = age;
-        this.gender = gender;
+    public HeartBeatCoach(Context context){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        this.age = Integer.parseInt(prefs.getString("age", "21"));
+        this.gender = genderConstant(prefs.getString("gender", "M"));
+        this.frequencyAtRest = 65;
     }
 
+    public int genderConstant(String gender){
+        if (gender.equals("M")){
+            return 220;
+        }
+        return 226;
+    }
 
     //Age and gender are to be setteled from the share preferences or the data basis:
     public int getAge()
     {
-        return 20;
+        return age;
     }
 
     public int getGender()
     {
-        return 220;
+        return gender;
     }
 
     //FrequencyAtRest should be returned by the chest strap when the runner is at rest (anytime, not during the run)
-    public int getFrequencyAtRest()
-    {
-        return 65;
-
+    public int getFrequencyAtRest() {
+        return frequencyAtRest;
     }
 
     //FrequencyAfterRun should be returned by the chest strap about 1 minute after the runner decides to stop
-    public int getFrequencyAfterRun()
-    {
-        return 100;
-
+    public int getFrequencyAfterRun() {
+        return frequencyAfterRun;
     }
 
     //HeartBeatFrequency should be returned by the chest strap during the run
