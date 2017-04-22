@@ -128,26 +128,34 @@
                         android:orientation="horizontal"
                         android:weightSum="3">
 
-                        <CheckBox
-                            android:id="@+id/cbDistance"
-                            android:layout_width="wrap_content"
+                        <RadioGroup
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Distance"/>
+                            android:orientation="horizontal"
+                            android:weightSum="3">
 
-                        <CheckBox
-                            android:id="@+id/cbPace"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Pace"/>
+                            <RadioButton
+                                android:id="@+id/cbDistance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Distance"/>
 
-                        <CheckBox
-                            android:id="@+id/cbHeartRate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Heart rate"/>
+                            <RadioButton
+                                android:id="@+id/cbPace"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Pace"/>
+
+                            <RadioButton
+                                android:id="@+id/cbHeartRate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="BPM"/>
+
+                        </RadioGroup>
 
                     </LinearLayout>
 
