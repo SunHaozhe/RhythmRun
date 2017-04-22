@@ -67,8 +67,17 @@ public class SumUpActivity extends AppCompatActivity
         if(runData.size()>0)
             lastStatus = runData.get(runData.size()-1);
 
+        int count = 0;
+        double pace_value = 0;
+        for(RunStatus rs: runData){
+            if(!Double.isInfinite(rs.pace.getValue()) && !Double.isNaN(rs.pace.getValue())) {
+                count += 1;
+                pace_value += rs.pace.getValue();
+            }
+        }
+
         distance = lastStatus.distance;
-        pace = lastStatus.pace;
+        pace = new Pace(pace_value/count);//lastStatus.pace;
         elapsedTime = lastStatus.time;
         Log.d("SumUp","Reading run time: "+elapsedTime);
         Log.d("SumUp","Reading distance: "+distance.getValue()+" km");
