@@ -63,12 +63,21 @@ public class SumUpActivity extends AppCompatActivity
         Intent intent = getIntent();
         runData = intent.getParcelableArrayListExtra(Macros.EXTRA_RUN_DATA);
         Log.d("SumUp","Reading run data from RunActivity intent. "+runData.size()+" points collected.");
-        RunStatus lastStatus = new RunStatus(0,null,new Distance(0),0);
+        RunStatus lastStatus = new RunStatus(0,null,new Distance(0),0,new Pace(0));
         if(runData.size()>0)
             lastStatus = runData.get(runData.size()-1);
 
+        int count = 0;
+        double pace_value = 0;
+        for(RunStatus rs: runData){
+            if(!Double.isInfinite(rs.pace.getValue()) && !Double.isNaN(rs.pace.getValue())) {
+                count += 1;
+                pace_value += rs.pace.getValue();
+            }
+        }
+
         distance = lastStatus.distance;
-        pace = lastStatus.pace;
+        pace = new Pace(pace_value/count);//lastStatus.pace;
         elapsedTime = lastStatus.time;
         Log.d("SumUp","Reading run time: "+elapsedTime);
         Log.d("SumUp","Reading distance: "+distance.getValue()+" km");

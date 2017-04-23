@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LabelFormatter;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
@@ -38,10 +42,39 @@ public class HistoryRunActivity extends AppCompatActivity {
     LineGraphSeries<DataPoint> seriesPace;
     LineGraphSeries<DataPoint> seriesHeartRate;
 
-    Series mainSeries;
-    Series secondSeries;
+    FormattedSeries fsPace;
+    FormattedSeries fsDistance;
+    FormattedSeries fsHeart;
+
+    //Series mainSeries;
+    //Series secondSeries;
 
     GraphView graph;
+
+    private class FormattedSeries {
+        private LineGraphSeries<DataPoint> series;
+        private ArrayList<DataPoint> seriesList;
+        private int[] minMax;
+        private LabelFormatter labelFormatter;
+
+        FormattedSeries(LineGraphSeries<DataPoint> series, ArrayList<DataPoint> seriesList, LabelFormatter labelFormatter){
+            this.series = series;
+            this.seriesList = seriesList;
+            this.minMax = getMinMax(seriesList);
+            this.labelFormatter = labelFormatter;
+        }
+
+        public void display(){
+            graph.removeAllSeries();
+            graph.addSeries(this.series);
+            graph.getGridLabelRenderer().setLabelVerticalWidth(90);
+            graph.getGridLabelRenderer().setTextSize((float) 25);
+            graph.getViewport().setMinY(this.minMax[0]);
+            graph.getViewport().setMaxY(this.minMax[1]);
+            if (this.labelFormatter != null)
+                graph.getGridLabelRenderer().setLabelFormatter(labelFormatter);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,58 +127,37 @@ public class HistoryRunActivity extends AppCompatActivity {
 
         ArrayList<RunStatus> runData = dataManager.getRunData(historyItem.getFilename());
         graph = (GraphView) findViewById(R.id.graph);
+        graph.getViewport().setYAxisBoundsManual(true);
 
         new TaskLoadRunData().execute(runData);
 
-        final CheckBox cbDistance = (CheckBox) findViewById(R.id.cbDistance);
-        final CheckBox cbPace = (CheckBox) findViewById(R.id.cbPace);
-        final CheckBox cbHeart = (CheckBox) findViewById(R.id.cbHeartRate);
+        final RadioButton rbDistance = (RadioButton) findViewById(R.id.cbDistance);
+        final RadioButton rbPace = (RadioButton) findViewById(R.id.cbPace);
+        final RadioButton rbHeart = (RadioButton) findViewById(R.id.cbHeartRate);
 
-        cbDistance.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        rbDistance.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    if(!displaySeries(seriesDistance, getMinMax(seriesDistanceList))){
-                        cbDistance.setChecked(false);
-                    }
-                } else {
-                    deleteSeries(seriesDistance);
-                }
+            public void onClick(View v) {
+                fsDistance.display();
             }
         });
 
-        cbPace.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        rbPace.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    if(!displaySeries(seriesPace, getMinMax(seriesPaceList))){
-                        cbPace.setChecked(false);
-                    }
-                } else {
-                    deleteSeries(seriesPace);
-                }
+            public void onClick(View v) {
+                fsPace.display();
             }
         });
 
-        cbHeart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        rbHeart.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    if(!displaySeries(seriesHeartRate, getMinMax(seriesHeartRateList))){
-                        cbHeart.setChecked(false);
-                    }
-                } else {
-                    deleteSeries(seriesHeartRate);
-                }
+            public void onClick(View v) {
+                fsHeart.display();
             }
         });
 
-        /*graph.addSeries(seriesPace);
-        graph.getSecondScale().addSeries(seriesHeartRate);
-        int[] minMax = getMinMax(seriesHeartRateList);
-        graph.getSecondScale().setMinY(minMax[0]);
-        graph.getSecondScale().setMaxY(minMax[1]);*/
-
+        rbPace.setChecked(true);
+        //displaySeries(seriesPace, getMinMax(seriesPaceList));
     }
 
     private class TaskLoadRunData extends AsyncTask<ArrayList<RunStatus>, Void, Void>{
@@ -162,7 +174,55 @@ public class HistoryRunActivity extends AppCompatActivity {
             seriesPace = new LineGraphSeries<>(seriesPaceList.toArray(new DataPoint[seriesPaceList.size()]));
             seriesHeartRate = new LineGraphSeries<>(seriesHeartRateList.toArray(new DataPoint[seriesHeartRateList.size()]));
 
+            fsPace = new FormattedSeries(seriesPace, seriesPaceList, new LabelFormatter() {
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    if(isValueX)
+                        return new Pace(value/60).toStr("km", "p", false);
+                    return new Pace(value).toStr("km", "p", false);
+                }
+
+                @Override
+                public void setViewport(Viewport viewport) {
+
+                }
+            });
+            fsDistance = new FormattedSeries(seriesDistance, seriesDistanceList, new LabelFormatter() {
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    if(isValueX)
+                        return new Pace(value/60).toStr("km", "p", false);
+                    if(value < 1)
+                        return Integer.toString((int) (value*1000)) + "m";
+                    return Double.toString(value) + "km";
+                    //return Double.toString(value);
+                }
+
+                @Override
+                public void setViewport(Viewport viewport) {
+
+                }
+            });
+            fsHeart = new FormattedSeries(seriesHeartRate, seriesHeartRateList, new LabelFormatter() {
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    if(isValueX)
+                        return new Pace(value/60).toStr("km", "p", false);
+                    return Integer.toString((int) value);
+                }
+
+                @Override
+                public void setViewport(Viewport viewport) {
+
+                }
+            });
+
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+            fsPace.display();
         }
     }
 
@@ -178,30 +238,13 @@ public class HistoryRunActivity extends AppCompatActivity {
         return new int[]{min,max+1};
     }
 
-    private boolean displaySeries(Series series, int[] minMax){
-        if(mainSeries == null){
-            graph.addSeries(series);
-            mainSeries = series;
-            return true;
-        } else if (secondSeries == null){
-            graph.getSecondScale().addSeries(series);
-            graph.getSecondScale().setMinY(minMax[0]);
-            graph.getSecondScale().setMaxY(minMax[1]);
-            secondSeries = series;
-            return true;
-        }
-        return false;
-    }
-
-    private void deleteSeries(Series series){
-        if(series == mainSeries) {
-            graph.removeSeries(series);
-            mainSeries = null;
-        } else if (series == secondSeries){
-            graph.getSecondScale().removeSeries(series);
-            secondSeries = null;
-        }
-    }
+    /*private boolean displaySeries(Series series, int[] minMax){
+        if (mainSeries != null)
+            graph.removeSeries(mainSeries);
+        graph.addSeries(series);
+        mainSeries = series;
+        return true;
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){

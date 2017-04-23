@@ -57,9 +57,9 @@ public class RecapActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Distance distance = intent.getParcelableExtra(Macros.EXTRA_DISTANCE);
         Log.d("Recap","Recap distance: "+distance.getValue()+" km");
-        Pace pace = intent.getParcelableExtra(Macros.EXTRA_PACE);
+        final Pace pace = intent.getParcelableExtra(Macros.EXTRA_PACE);
         Log.d("Recap","Recap pace: "+pace.getValue()+" min/km");
-        String music = intent.getStringExtra(Macros.EXTRA_MUSIC);
+        final String music = intent.getStringExtra(Macros.EXTRA_MUSIC);
         Log.d("Recap","Recap music: "+music);
 
         final CustomPolylineOptions itinerary = intent.getParcelableExtra(Macros.EXTRA_ITINERARY);
@@ -109,6 +109,8 @@ public class RecapActivity extends AppCompatActivity {
                 Log.d("Recap","Creating intent for RunActivity");
                 Intent intent = new Intent(view.getContext(),RunActivity.class);
                 intent.putExtra(Macros.EXTRA_ITINERARY,itinerary);
+                intent.putExtra(Macros.EXTRA_PACE, pace);
+                intent.putExtra(Macros.EXTRA_MUSIC, music);
                 startActivity(intent);
             }
         });
