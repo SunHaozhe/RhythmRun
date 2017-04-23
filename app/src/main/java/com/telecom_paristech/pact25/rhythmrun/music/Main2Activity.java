@@ -580,10 +580,10 @@ public class Main2Activity extends AppCompatActivity {
                     PathAndTempo song = null;
 
                     for(int k=0;k<kmax; k++) {
-                        if ((song = tempoDataBase.getSongThatFit((double)(wantedTempoHz-k*minRatioStep), (double)(wantedTempoHz+k*maxRatioStep))) != null) {
+                        if ((song = tempoDataBase.getSongThatFit((double)(wantedTempoHz-k*minRatioStep), (double)(wantedTempoHz+k*maxRatioStep), null)) != null) {
                             break;
                         }
-                        if ((song = tempoDataBase.getSongThatFit((double)(wantedTempoHz-k*minRatioStep)*2, (double)(wantedTempoHz+k*maxRatioStep)*2)) != null) {
+                        if ((song = tempoDataBase.getSongThatFit((double)(wantedTempoHz-k*minRatioStep)*2, (double)(wantedTempoHz+k*maxRatioStep)*2, null)) != null) {
                             song.tempoHz /= 2;
                             break;
                         }
@@ -650,8 +650,8 @@ public class Main2Activity extends AppCompatActivity {
                         try {
                             Thread.sleep(2000);
                             Log.i("lucas", " ");
-                            //f = pod.getRunningPaceFrequency();
-                            f = fauxPodo[indice]/60; indice = (indice+1)%fauxPodo.length;
+                            f = pod.getRunningPaceFrequency();
+                            //f = fauxPodo[indice]/60; indice = (indice+1)%fauxPodo.length;
                             musicManager.updateRythm(f);//pas dans le bon intervalle
                             //String s = String.valueOf((int)(60*Tempo.dansIntervalle(f))) + " bpm\n";
                             f = musicManager.getWantedTempoHz();
