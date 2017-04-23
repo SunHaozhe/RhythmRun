@@ -16,6 +16,8 @@ import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +60,16 @@ public class Song implements Parcelable {
             artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
             album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
             genre = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
+
+            InputStream inputStream;
+            if (mmr.getEmbeddedPicture() != null) {
+                inputStream = new ByteArrayInputStream(mmr.getEmbeddedPicture());
+                bitmap = BitmapFactory.decodeStream(inputStream);
+            }
+            else{
+                color = Color.BLUE;
+            }
+
         } else if (path.endsWith(".wav")){
             String[] tmp = null;
             try {
@@ -72,6 +84,16 @@ public class Song implements Parcelable {
                 title = tmp[2];
                 genre = tmp[3];
             }
+
+            //InputStream inputStream;
+            String[] pathSplit = path.split("/");
+            String picPath = "/storage/emulated/0/Music/" + pathSplit[pathSplit.length-1].substring(0,2) + ".jpg";
+            //inputStream = new ByteArrayInputStream(FileUtils.readFileToByteArray(new File(picPath)));
+            try {
+                bitmap = BitmapFactory.decodeStream(new FileInputStream(new File(picPath)));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         Log.v("Song", "Detected title:    " + title);
@@ -81,14 +103,7 @@ public class Song implements Parcelable {
         Log.v("Song", "Detected duration: " + duration);
         Log.v("Song", "Detected freq:     " + freq);
 
-        InputStream inputStream;
-        if (mmr.getEmbeddedPicture() != null) {
-            inputStream = new ByteArrayInputStream(mmr.getEmbeddedPicture());
-            bitmap = BitmapFactory.decodeStream(inputStream);
-        }
-        else{
-            color = Color.BLUE;
-        }
+
 
         mmr.release();
     }
