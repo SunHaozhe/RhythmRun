@@ -167,6 +167,7 @@ public class NativeVocoder implements ByteBufferSupplier, ByteBufferPool{ //n'y 
                 this.ratio = ratio_min;
             }
         }
+        //Log.i("lucas", "vocoder ratio : " + String.valueOf(this.ratio));
         //this.ratio = 1.0f;///////test
     }
 
