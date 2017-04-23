@@ -1,6 +1,8 @@
 package com.telecom_paristech.pact25.rhythmrun.sensors;
 
 import com.telecom_paristech.pact25.rhythmrun.interfaces.sensors.PodometerInterface;
+import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
+
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -15,7 +17,7 @@ public class Podometer implements PodometerInterface, SensorEventListener {
 
     Context context;
     private float paceFrequency = -1.0f, lastPaceFrequency = -1.0f;
-    private final float minPaceFrequency = 0.5f, maxPaceFrequency = 3f; // il faut max>=2*min
+    private final float minPaceFrequency = (float)(Tempo.bpmMin/60), maxPaceFrequency = (float)(Tempo.bpmMax/60); // il faut max>=2*min
     //private int min, max; //on restreint le domaine de la tfd car on a un ODG des frequences cherchees
     private final float alpha = 0.25f;
     private boolean[] pas;
@@ -138,12 +140,13 @@ public class Podometer implements PodometerInterface, SensorEventListener {
     }
 
     private final void computeTFD(int index) { //index : 0 pour x, 1 pour y ou 2 pour z, a remplacer par une fft
-        float r = 0, i = 0;
+        float r = 0, i = 0, v;
         for (int k = 0; k<numberOfValuesAfterZeroPadding; k++) {
             r = 0; i = 0;
             for (int n = 0; n<numberOfValues; n++) {
-                r += values[index][n]*Math.cos(2*pi*k*n/numberOfValuesAfterZeroPadding);
-                i -= values[index][n]*Math.sin(2*pi*k*n/numberOfValuesAfterZeroPadding);
+                v = Math.abs(values[0][n]) + Math.abs(values[1][n]) + Math.abs(values[2][n]) + 20; //+20 pour ne pas que les valeurs absolues ne changent la forme du signal
+                r += v*Math.cos(2*pi*k*n/numberOfValuesAfterZeroPadding);
+                i -= v*Math.sin(2*pi*k*n/numberOfValuesAfterZeroPadding);
             }
             tfd[k][0] = r;
             tfd[k][1] = i;
