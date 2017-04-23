@@ -272,6 +272,10 @@ public class MusicManager implements MusicManagerInterface {
         public void pause() {
             musicReader.pause();
         }
+
+        public String getCurrentSong() {
+            return songPath;
+        }
     }
 
 }
