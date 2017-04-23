@@ -110,7 +110,7 @@ public class TempoDataBase extends SQLiteOpenHelper {
         String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + " WHERE " + KEY_TEMPO + " BETWEEN '" + String.valueOf(tempoMin) + "' AND '" + String.valueOf(tempoMax) + "'" ;
         if (except != null) {
             while (except.hasNext()) {
-                selectQuery += " AND " + KEY_PATH + " <> '" + except.next() + "'";
+                selectQuery += " AND " + KEY_PATH + " <> '" + except.next().replaceAll("'", "''") + "'";
             }
         }
         //SQLiteDatabase db = this.getReadableDatabase();
