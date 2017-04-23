@@ -196,6 +196,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
         protected void onPostExecute(Void voids){
             super.onPostExecute(voids);
             isTempoDatabaseLoaded = true;
+            //HomeActivity.getDB().clear();
             new TaskLoadMusicFiles().execute();
         }
 

@@ -111,7 +111,7 @@ public class MusicManager{
     }
 
     public static Song getCurrentSong(){
-        if(songs.size()>0)
+        if(songs != null && songs.size()>0)
             return songs.get(currentSong);
         return null;
     }

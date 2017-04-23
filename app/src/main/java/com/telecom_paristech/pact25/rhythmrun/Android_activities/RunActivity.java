@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.crypto.Mac;
+
 @SuppressWarnings("deprecation")
 public class RunActivity extends AppCompatActivity {
 
@@ -50,6 +52,8 @@ public class RunActivity extends AppCompatActivity {
     private TextView tvBPM;
     private TextView tvCurrentSong;
     private TextView tvHeartMessage;
+
+    private Pace paceOrder;
 
     private HeartBeatCoach heartBeatCoach;
 
@@ -102,6 +106,7 @@ public class RunActivity extends AppCompatActivity {
                 Log.d("Run","Found an itinerary in the intent.");
                 runMapFragment.drawnPolyline(itinerary.getPolylineOptions());
             }
+            paceOrder = intent.getParcelableExtra(Macros.EXTRA_PACE);
             //MusicManager.playCurrentSong();
         }
 
@@ -401,9 +406,19 @@ public class RunActivity extends AppCompatActivity {
                     getHeartRate(),
                     pace
             ));
-            //musicManagerInterface.updateRythm(getHeartRate());
-            if(pace.getValue() < 15) // Not updating rhythm under 4 km/h
-                musicManager.updateRythm(getRunnerRhythm());
+
+            try{
+                if(paceOrder != null && paceOrder.getValue() >= 0){
+                    Log.v("Run","Update: using pace order " + (100/paceOrder.getValue()/6));
+                    musicManager.updateRythm((float) (100/paceOrder.getValue()/6)); //Pas de 1m
+                } else {
+                    //if(pace.getValue() < 15) // Not updating rhythm under 4 km/h
+                    musicManager.updateRythm(getRunnerRhythm());
+                }
+            } catch (Exception e){
+
+            }
+
             Log.v("Run","Updating the run status while running is "+isRunning+" ("+runData.size()+" points collected).");
             updateDisplay();
         }
@@ -427,7 +442,11 @@ public class RunActivity extends AppCompatActivity {
         tvHeartRate.setText(String.format(getString(R.string.run_heart_rate),lastStatus.heartRate));
 
         tvBPM.setText(String.format(getString(R.string.run_bpm),getBPM()));
-        tvCurrentSong.setText(getCurrentSong());
+        try{
+            tvCurrentSong.setText(getCurrentSong());
+        } catch (Exception e){
+            //pass
+        }
 
         tvHeartMessage.setText(heartBeatCoach.messageDuringRun());
     }

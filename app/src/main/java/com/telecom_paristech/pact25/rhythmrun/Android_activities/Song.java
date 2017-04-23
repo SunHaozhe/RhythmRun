@@ -12,7 +12,6 @@ import android.util.Log;
 
 import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
 
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -51,8 +50,8 @@ public class Song implements Parcelable {
         if(duration != null)
             duration = Pace.fancyPace(Double.parseDouble(duration)/60000);
 
-        double freq = Tempo.findTempoHzFast(path);
-        HomeActivity.getDB().addSongAndTempo(path, freq);
+        //double freq = Tempo.findTempoHzFast(path);
+        //HomeActivity.getDB().addSongAndTempo(path, freq);
 
 
         if (path.endsWith(".mp3")){
@@ -101,7 +100,7 @@ public class Song implements Parcelable {
         Log.v("Song", "Detected album:    " + album);
         Log.v("Song", "Detected genre:    " + genre);
         Log.v("Song", "Detected duration: " + duration);
-        Log.v("Song", "Detected freq:     " + freq);
+        //Log.v("Song", "Detected freq:     " + freq);
 
 
 
