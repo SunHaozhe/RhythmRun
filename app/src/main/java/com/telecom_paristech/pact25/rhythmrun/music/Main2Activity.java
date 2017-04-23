@@ -642,15 +642,27 @@ public class Main2Activity extends AppCompatActivity {
                     Log.i("lucas", "podometre actif");
                     musicManager.play();
                     Log.i("lucas", "music manager play");
+                    
+                    float f;
+                    int indice = 0;
+                    float fauxPodo[] = {100, 105, 110, 115, 120, 180, 125, 130, 135, 140, 145, 145, 150, 155, 160, 165, 170, 100, 170, 175, 178, 180, 185, 188, 190, 200};
                     while (k==0) { //clic sur le bouton
                         try {
-                            Thread.sleep(500);
-                            musicManager.updateRythm(pod.getRunningPaceFrequency());//pas dans le bon intervalle
-                            setTextViewToString(String.valueOf(musicManager.getWantedTempoHz()));
+                            Thread.sleep(2000);
+                            Log.i("lucas", " ");
+                            //f = pod.getRunningPaceFrequency();
+                            f = fauxPodo[indice]/60; indice = (indice+1)%fauxPodo.length;
+                            musicManager.updateRythm(f);//pas dans le bon intervalle
+                            //String s = String.valueOf((int)(60*Tempo.dansIntervalle(f))) + " bpm\n";
+                            f = musicManager.getWantedTempoHz();
+                            //setTextViewToString(s);
+                            //Log.i("lucas", "podo : " + s);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
+                    musicManager.stop();
+                    tempoDataBase.clear();
                     tempoDataBase.close();
                 }
             })).start();

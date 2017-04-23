@@ -91,7 +91,7 @@ public class Tempo { //faire le tri entre les int et les long
         } catch (WavFileException e) {
             e.printStackTrace();
         }
-        tempo = tempoDansIntervalle(tempo);
+        tempo = dansIntervalle(tempo);
         return tempo;
     }
 
@@ -193,9 +193,9 @@ public class Tempo { //faire le tri entre les int et les long
         return a;
     }
 
-    private static final double tempoDansIntervalle(double tempo) {
+    public static final double dansIntervalle(double tempo) {
         //return tempo;
-        double bpmMin = 100, bpmMax = 201;
+        double bpmMin = 100, bpmMax = 200; //bornes exactes comprises
         while(tempo*60<bpmMin) {
             tempo *= 2;
         }

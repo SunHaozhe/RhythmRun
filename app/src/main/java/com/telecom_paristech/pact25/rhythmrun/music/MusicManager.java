@@ -11,6 +11,7 @@ import com.telecom_paristech.pact25.rhythmrun.data.TempoDataBase;
 import com.telecom_paristech.pact25.rhythmrun.interfaces.music.MusicManagerInterface;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.NativeVocoder;
 import com.telecom_paristech.pact25.rhythmrun.music.phase_vocoder.SongSpeedChanger;
+import com.telecom_paristech.pact25.rhythmrun.music.tempo.Tempo;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavFileException;
 import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavProcess;
 
@@ -103,18 +104,19 @@ public class MusicManager implements MusicManagerInterface {
         variance /= l;
         ecartType = sqrt(variance);
 
-        if (ecartType <= moyenne / 10) {
+        if (ecartType <= moyenne / 20) {
             wantedTempoHz = (float)moyenne;
-        }
-        if (!aSongIsSelected) {
+        }/*
+        if (!aSongIsSelected && wantedTempoHz>0) { cela est maintenant fait par le thread de lecture
             loadNewTrack();
-        }
+        }*/
         //Log.i("ComputeTempo classe", "Sortie de la classe");
     }
 
     public void updateRythm(float paceFrequency)
     {
-        this.paceFrequency[indice] = paceFrequency;
+        this.paceFrequency[indice] = (float)Tempo.dansIntervalle(paceFrequency);
+        Log.i("lucas", "pacefreq[" + String.valueOf(indice) + "] = " + String.valueOf((int)(60*Tempo.dansIntervalle(paceFrequency))));
         if (indice == l-1)
         {
             premierTour = false;
@@ -128,7 +130,10 @@ public class MusicManager implements MusicManagerInterface {
 
     public float getWantedTempoHz()
     {
-        //Log.i("MusicManager","retour du tempo voulu");
+        /*for (int i=0;i<l;i++) {
+            Log.i("lucas", "liste :                        " + String.valueOf((int)(60*paceFrequency[i])));
+        }
+        Log.i("lucas", "wanted tempo :       " + String.valueOf((int)(60*wantedTempoHz)));*/
 
         return wantedTempoHz;
     }
@@ -228,7 +233,7 @@ public class MusicManager implements MusicManagerInterface {
                         if (musicReader.getNumberOfBuffers() < 2) {
                             //Log.i("lucas", "on charge un buffer");
                             byteBufferSupplier.setRatio(wantedTempoHz/songTempoHz);
-                            //Log.i("lucas", "ratio : " + String .valueOf(wantedTempoHz/songTempoHz));
+                            //Log.i("lucas", "set ratio : " + String .valueOf(wantedTempoHz/songTempoHz) + "    " + String.valueOf(wantedTempoHz) + "    " + String.valueOf(songTempoHz));
                             musicReader.addBuffer(byteBufferSupplier.getNextBuffer());
                         }
                     } else {
