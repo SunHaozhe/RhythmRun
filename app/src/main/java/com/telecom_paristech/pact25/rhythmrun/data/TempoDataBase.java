@@ -65,7 +65,7 @@ public class TempoDataBase extends SQLiteOpenHelper {
         Log.d("TempoDataBase", "Found file: "+cursor.getCount());
 
         if(cursor.getCount() == 0){
-            Log.d("TempoDataBase", "Inserting file in database.");
+            Log.d("TempoDataBase", "Inserting file in database. " + path + "    " + String.valueOf((int)(60*freq)) + " bpm");
             ContentValues values = new ContentValues();
             values.put(KEY_PATH, path); // chemin d'acces
             values.put(KEY_TEMPO, freq); // tempo

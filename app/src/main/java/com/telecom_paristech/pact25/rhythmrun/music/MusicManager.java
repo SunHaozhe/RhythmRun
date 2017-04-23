@@ -62,9 +62,10 @@ public class MusicManager implements MusicManagerInterface {
     }
 
     private final void loadNewTrack() {
-        while(wantedTempoHz<0) {
+        while(wantedTempoHz<0 || tempoDataBase.getASong() == null) {
             try {
                 Thread.sleep(100);
+                Log.i("lucas", "attente dans music manager");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
