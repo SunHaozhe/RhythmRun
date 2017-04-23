@@ -17,6 +17,8 @@ import com.telecom_paristech.pact25.rhythmrun.music.waveFileReaderLib.WavProcess
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
@@ -44,6 +46,8 @@ public class MusicManager implements MusicManagerInterface {
     private boolean CVocoder = true;
 
     TempoDataBase tempoDataBase;
+    private ArrayList<String> alreadyPlayed;
+    private ListIterator<String> alreadyPlayedIterator;
 
     final float minRatioStep = 0.05f; // voir loadNewTrack
     final float maxRatioStep = 0.1f; // voir loadNewTrack
@@ -59,6 +63,7 @@ public class MusicManager implements MusicManagerInterface {
         this.CVocoder = CVocoder;
         //musicReader = new MusicReader(bufferSize, 0);
         this.tempoDataBase = tempoDataBase;
+        alreadyPlayed = new ArrayList<String>();
     }
 
     private final void loadNewTrack() {
@@ -74,21 +79,29 @@ public class MusicManager implements MusicManagerInterface {
         //tenir une liste des moreaux deja joues (et penser a verifier les intervalles (je me comprends))
         PathAndTempo song = null;
 
-        for(int k=0;k<kmax; k++) {
-            if ((song = tempoDataBase.getSongThatFit((double)(wantedTempoHz-k*minRatioStep), (double)(wantedTempoHz+k*maxRatioStep))) != null) {
-                break;
-            }
-            if ((song = tempoDataBase.getSongThatFit((double)(wantedTempoHz-k*minRatioStep)*2, (double)(wantedTempoHz+k*maxRatioStep)*2)) != null) {
-                song.tempoHz /= 2;
-                break;
+        int i = 0;
+        while(song == null && i < alreadyPlayed.size()) { //on omet touts les morceaux deja joues, puis tous sauf le premier etc...
+            alreadyPlayedIterator = alreadyPlayed.listIterator(i);
+            i++;
+            for (int k = 0; k < kmax; k++) {
+                if ((song = tempoDataBase.getSongThatFit((double) (wantedTempoHz - k * minRatioStep), (double) (wantedTempoHz + k * maxRatioStep), alreadyPlayedIterator)) != null) {
+                    break;
+                }
+                if ((song = tempoDataBase.getSongThatFit((double) (wantedTempoHz - k * minRatioStep) * 2, (double) (wantedTempoHz + k * maxRatioStep) * 2, alreadyPlayedIterator)) != null) {
+                    song.tempoHz /= 2;
+                    break;
+                }
             }
         }
+        Log.i("lucas", "i = " + String.valueOf(i) + " or " + String.valueOf(alreadyPlayed.size()));
         if (song == null) {
             song = tempoDataBase.getASong();
+
         }
         //lever une exception si la bdd est vide
         songPath = song.path;
         songTempoHz = song.tempoHz;
+        alreadyPlayed.add(songPath);
     }
 
     private void computeTempo()
@@ -107,6 +120,7 @@ public class MusicManager implements MusicManagerInterface {
 
         if (ecartType <= moyenne / 20) {
             wantedTempoHz = (float)moyenne;
+            //Log.i("lucas", "wanted tempo set to " + String.valueOf(wantedTempoHz));
         }/*
         if (!aSongIsSelected && wantedTempoHz>0) { cela est maintenant fait par le thread de lecture
             loadNewTrack();
@@ -117,7 +131,7 @@ public class MusicManager implements MusicManagerInterface {
     public void updateRythm(float paceFrequency)
     {
         this.paceFrequency[indice] = (float)Tempo.dansIntervalle(paceFrequency);
-        Log.i("lucas", "pacefreq[" + String.valueOf(indice) + "] = " + String.valueOf((int)(60*Tempo.dansIntervalle(paceFrequency))));
+        Log.i("lucas", "pacefreq[" + String.valueOf(indice) + "] = " + String.valueOf((int)(60*paceFrequency)));
         if (indice == l-1)
         {
             premierTour = false;
@@ -133,8 +147,8 @@ public class MusicManager implements MusicManagerInterface {
     {
         /*for (int i=0;i<l;i++) {
             Log.i("lucas", "liste :                        " + String.valueOf((int)(60*paceFrequency[i])));
-        }
-        Log.i("lucas", "wanted tempo :       " + String.valueOf((int)(60*wantedTempoHz)));*/
+        }*/
+        //Log.i("lucas", "wanted tempo :       " + String.valueOf((int)(60*wantedTempoHz)));
 
         return wantedTempoHz;
     }
@@ -234,7 +248,7 @@ public class MusicManager implements MusicManagerInterface {
                         if (musicReader.getNumberOfBuffers() < 2) {
                             //Log.i("lucas", "on charge un buffer");
                             byteBufferSupplier.setRatio(wantedTempoHz/songTempoHz);
-                            //Log.i("lucas", "set ratio : " + String .valueOf(wantedTempoHz/songTempoHz) + "    " + String.valueOf(wantedTempoHz) + "    " + String.valueOf(songTempoHz));
+                            Log.i("lucas", "set ratio : " + String .valueOf(wantedTempoHz/songTempoHz) + "    " + String.valueOf((int)(60*wantedTempoHz)) + "    " + String.valueOf((int)(60*songTempoHz)));
                             musicReader.addBuffer(byteBufferSupplier.getNextBuffer());
                         }
                     } else {

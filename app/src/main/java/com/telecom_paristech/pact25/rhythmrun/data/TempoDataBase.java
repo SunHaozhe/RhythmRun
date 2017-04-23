@@ -9,6 +9,9 @@ import android.util.Log;
 
 import com.telecom_paristech.pact25.rhythmrun.music.PathAndTempo;
 
+import java.util.ArrayList;
+import java.util.ListIterator;
+
 /**
  * Created by ClemSurfaceBook on 30/01/2017.
  */
@@ -61,6 +64,9 @@ public class TempoDataBase extends SQLiteOpenHelper {
         Log.d("TempoDataBase","Checking file: "+path);
 
         String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + " WHERE " + KEY_PATH + "=\"" + path + "\"";
+        if (readableDatabase == null || (!readableDatabase.isOpen())) {
+            readableDatabase = this.getReadableDatabase();
+        }
         Cursor cursor = readableDatabase.rawQuery(selectQuery, null);
         Log.d("TempoDataBase", "Found file: "+cursor.getCount());
 
@@ -84,6 +90,9 @@ public class TempoDataBase extends SQLiteOpenHelper {
         String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + " WHERE " + KEY_PATH + "=\"" + songPath + "\"" ;
 
         //SQLiteDatabase db = this.getReadableDatabase();
+        if (readableDatabase == null || (!readableDatabase.isOpen())) {
+            readableDatabase = this.getReadableDatabase();
+        }
         Cursor cursor = readableDatabase.rawQuery(selectQuery, null);
         double tempo = -1;
         if (cursor != null && cursor.moveToNext()) { //licite
@@ -97,9 +106,17 @@ public class TempoDataBase extends SQLiteOpenHelper {
         return tempo;
     }
 
-    public PathAndTempo getSongThatFit(double tempoMin, double tempoMax) { //rajouter une liste de song a eviter (deja lues)
+    public PathAndTempo getSongThatFit(double tempoMin, double tempoMax, ListIterator<String> except) { //rajouter une liste de song a eviter (deja lues)
         String selectQuery = "SELECT  * FROM " + TABLE_TEMPO + " WHERE " + KEY_TEMPO + " BETWEEN '" + String.valueOf(tempoMin) + "' AND '" + String.valueOf(tempoMax) + "'" ;
+        if (except != null) {
+            while (except.hasNext()) {
+                selectQuery += " AND " + KEY_PATH + " <> '" + except.next() + "'";
+            }
+        }
         //SQLiteDatabase db = this.getReadableDatabase();
+        if (readableDatabase == null || (!readableDatabase.isOpen())) {
+            readableDatabase = this.getReadableDatabase();
+        }
         Cursor cursor = readableDatabase.rawQuery(selectQuery, null);
         PathAndTempo song = null;
         if (cursor != null && cursor.moveToNext()) {
@@ -118,6 +135,9 @@ public class TempoDataBase extends SQLiteOpenHelper {
     public PathAndTempo getASong() {
         String selectQuery = "SELECT  * FROM " + TABLE_TEMPO;
         //SQLiteDatabase db = this.getReadableDatabase();
+        if (readableDatabase == null || (!readableDatabase.isOpen())) {
+            readableDatabase = this.getReadableDatabase();
+        }
         Cursor cursor = readableDatabase.rawQuery(selectQuery, null);
         PathAndTempo song = null;
         if (cursor != null && cursor.moveToNext()) {
@@ -134,6 +154,9 @@ public class TempoDataBase extends SQLiteOpenHelper {
     }
 
     public void clear() { //pour les tests
+        if (readableDatabase == null || (!readableDatabase.isOpen())) {
+            readableDatabase = this.getReadableDatabase();
+        }
         readableDatabase.execSQL("DELETE FROM "+ TABLE_TEMPO);
     }
 }
