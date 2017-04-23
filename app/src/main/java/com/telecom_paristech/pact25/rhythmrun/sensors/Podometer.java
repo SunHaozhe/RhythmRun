@@ -117,7 +117,7 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         computeTFD(0);
         //Log.i("lucas", "on va calculer l'indice max");
         //Log.i("Podomètre","Calcul de l'indice max");
-        int indice = indiceMaxiEntre(tfd, (int)(minPaceFrequency*tempsRelevesApresZeroPadding), (int)(maxPaceFrequency*tempsRelevesApresZeroPadding));
+        int indice = indiceMaxiEntre(tfd, (int)(minPaceFrequency*tempsRelevesApresZeroPadding), Math.min((int)(maxPaceFrequency*tempsRelevesApresZeroPadding), numberOfValuesAfterZeroPadding));
         lastPaceFrequency = paceFrequency;
         paceFrequency = indice/tempsRelevesApresZeroPadding;
 
@@ -144,7 +144,8 @@ public class Podometer implements PodometerInterface, SensorEventListener {
         for (int k = 0; k<numberOfValuesAfterZeroPadding; k++) {
             r = 0; i = 0;
             for (int n = 0; n<numberOfValues; n++) {
-                v = Math.abs(values[0][n]) + Math.abs(values[1][n]) + Math.abs(values[2][n]) + 20; //+20 pour ne pas que les valeurs absolues ne changent la forme du signal
+                //v = Math.abs(values[0][n]) + Math.abs(values[1][n]) + Math.abs(values[2][n]) + 20; //+20 pour ne pas que les valeurs absolues ne changent la forme du signal
+                v = values[index][n];
                 r += v*Math.cos(2*pi*k*n/numberOfValuesAfterZeroPadding);
                 i -= v*Math.sin(2*pi*k*n/numberOfValuesAfterZeroPadding);
             }

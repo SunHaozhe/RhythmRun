@@ -23,7 +23,8 @@
 
         <!-- Mains -->
         <activity android:name=".music.MainActivity" />
-        <activity android:name=".music.Main2Activity"></activity>
+        <activity android:name=".music.Main2Activity">
+        </activity>
 
         <!-- Home -->
         <activity
