@@ -137,4 +137,12 @@ public class MusicManager{
     public static void stopPlaying(){
         mediaPlayer.reset();
     }
+
+    public static Song getSongFromPath(String path){
+        for(Song song : songs){
+            if(song.getPath().equals(path))
+                return song;
+        }
+        return null;
+    }
 }

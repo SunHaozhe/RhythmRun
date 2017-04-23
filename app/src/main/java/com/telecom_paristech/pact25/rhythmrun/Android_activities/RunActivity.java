@@ -489,7 +489,7 @@ public class RunActivity extends AppCompatActivity {
     }
 
     private String getCurrentSong(){
-        return MusicManager.getCurrentSong().getString();
+        return MusicManager.getSongFromPath(musicManager.getSongPath()).getString();
     }
 
     private int getBPM(){
