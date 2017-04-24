@@ -24,7 +24,7 @@ import java.util.*;
 public class BluetoothActivity extends AppCompatActivity {
 
     private BluetoothAdapter bluetoothAdapter = null;
-    private Set<BluetoothDevice> bondedBluetoothDevices = null;
+    private ArrayList<BluetoothDevice> bondedBluetoothDevices = null;
     private ArrayList<String> devices;
     private ArrayAdapter<String> arrayAdapter;
     private ListView listViewBluetoothDevices;
@@ -59,7 +59,10 @@ public class BluetoothActivity extends AppCompatActivity {
 
         //searches all bonded devices and adds them to the list
         devices = new ArrayList<String>();
-        bondedBluetoothDevices = bluetoothAdapter.getBondedDevices();
+        for (BluetoothDevice bluetoothDevice : bluetoothAdapter.getBondedDevices()) {
+            bondedBluetoothDevices.add(bluetoothDevice);
+        }
+
         Log.d("BluetoothActivity","Searching all bonded devices to add them to a list");
         for (BluetoothDevice device : bondedBluetoothDevices) {
             devices.add(device.getName() + "-" + device.getAddress());
