@@ -17,7 +17,7 @@ public class Podometer implements PodometerInterface, SensorEventListener {
 
     Context context;
     private float paceFrequency = -1.0f, lastPaceFrequency = -1.0f;
-    private final float minPaceFrequency = (float)(Tempo.bpmMin/60), maxPaceFrequency = (float)(Tempo.bpmMax/60); // il faut max>=2*min
+    private final float minPaceFrequency = 0.5f, maxPaceFrequency = 4f; // il faut max>=2*min
     //private int min, max; //on restreint le domaine de la tfd car on a un ODG des frequences cherchees
     private final float alpha = 0.25f;
     private boolean[] pas;
